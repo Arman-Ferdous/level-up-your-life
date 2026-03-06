@@ -11,16 +11,16 @@ import { notFound, errorHandler } from "./middlewares/error.middleware.js";
 export function createApp() {
   const app = express();
 
-  app.use(helmet());
-  app.use(express.json());
-  app.use(cookieParser());
-
   app.use(
     cors({
       origin: env.clientOrigin,
       credentials: true
     })
   );
+
+  app.use(helmet());
+  app.use(express.json());
+  app.use(cookieParser());
 
   app.use(
     rateLimit({

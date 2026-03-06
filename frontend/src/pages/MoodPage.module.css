@@ -1,0 +1,215 @@
+/* Page Container */
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 1rem;
+  padding-bottom: 3rem;
+}
+
+/* History Card */
+.historyCard {
+  max-width: 480px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  animation: slideIn 0.6s ease-out 0.1s both;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* History Title */
+.historyTitle {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* History List */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* List Item */
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: #f9f8ff;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s ease;
+}
+
+.listItem:hover {
+  background: #efefff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+  transform: translateX(4px);
+}
+
+/* Date */
+.date {
+  font-size: 0.85rem;
+  color: #888;
+  min-width: 100px;
+  font-weight: 500;
+}
+
+/* Emoji */
+.emoji {
+  font-size: 1.75rem;
+  min-width: 2rem;
+  text-align: center;
+}
+
+/* Note */
+.note {
+  font-size: 0.9rem;
+  color: #555;
+  flex: 1;
+  word-break: break-word;
+}
+
+/* Empty State */
+.empty {
+  color: #aaa;
+  font-style: italic;
+  margin: 0;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+/* Error Message */
+.error {
+  color: #e74c3c;
+  margin: 0 0 1.5rem 0;
+  font-size: 0.9rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #fee;
+  border-left: 4px solid #e74c3c;
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page {
+    padding: 1.5rem 1rem;
+    padding-bottom: 2rem;
+  }
+
+  .historyCard {
+    max-width: 90%;
+    margin: 1.5rem auto;
+    padding: 1.5rem;
+  }
+
+  .historyTitle {
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .list {
+    gap: 0.5rem;
+  }
+
+  .listItem {
+    padding: 0.875rem;
+    gap: 0.75rem;
+  }
+
+  .date {
+    font-size: 0.8rem;
+    min-width: 90px;
+  }
+
+  .emoji {
+    font-size: 1.5rem;
+  }
+
+  .note {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 1rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .historyCard {
+    max-width: 100%;
+    margin: 1rem auto;
+    padding: 1.25rem;
+  }
+
+  .historyTitle {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .listItem {
+    padding: 0.75rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .date {
+    font-size: 0.75rem;
+    min-width: 80px;
+  }
+
+  .emoji {
+    font-size: 1.5rem;
+    min-width: 1.5rem;
+  }
+
+  .note {
+    font-size: 0.8rem;
+    flex-basis: 100%;
+  }
+
+  .empty {
+    padding: 1.5rem 1rem;
+  }
+
+  .error {
+    font-size: 0.8rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+}
