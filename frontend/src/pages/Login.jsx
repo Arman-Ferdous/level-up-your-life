@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
@@ -12,6 +14,7 @@ export default function Login() {
     setErr("");
     try {
       await login(email, password);
+      navigate("/");
     } catch (e2) {
       setErr(e2?.response?.data?.message || "Login failed");
     }
@@ -39,6 +42,9 @@ export default function Login() {
           Login
         </button>
       </form>
+      <p style={{ marginTop: 16, textAlign: "center" }}>
+        No account? <Link to="/register">Register</Link>
+      </p>
     </div>
   );
 }

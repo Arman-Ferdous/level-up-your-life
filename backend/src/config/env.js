@@ -1,5 +1,10 @@
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 import dotenv from "dotenv";
-dotenv.config();
+
+// Resolve .env relative to backend/ root (two levels up from src/config/)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const required = [
   "MONGO_URI",
