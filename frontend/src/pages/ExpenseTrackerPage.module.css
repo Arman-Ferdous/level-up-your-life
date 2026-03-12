@@ -1,0 +1,135 @@
+.page {
+  min-height: calc(100vh - 70px);
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(16, 163, 127, 0.26), transparent 40%),
+    radial-gradient(circle at 100% 0%, rgba(48, 130, 206, 0.2), transparent 38%),
+    linear-gradient(180deg, #f5fafc 0%, #eef4f8 100%);
+}
+
+.hero {
+  max-width: 1120px;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  animation: fadeInUp 420ms ease-out;
+}
+
+.kicker {
+  margin: 0;
+  color: #0e8f76;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+}
+
+.title {
+  margin: 0.25rem 0 0.35rem;
+  color: #123049;
+  font-size: clamp(1.5rem, 2.4vw, 2.15rem);
+}
+
+.subtitle {
+  margin: 0;
+  color: #46627b;
+  max-width: 660px;
+}
+
+.filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.filterField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 132px;
+}
+
+.filterField span {
+  color: #2f475c;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.filterField select {
+  background: #fff;
+  border: 1px solid #bfd1de;
+  border-radius: 10px;
+  padding: 0.55rem 0.6rem;
+  color: #1f3f56;
+  font-size: 0.92rem;
+}
+
+.stack {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  animation: stagger 600ms ease;
+}
+
+.error {
+  max-width: 1120px;
+  margin: 0 auto 0.9rem;
+  color: #a33816;
+  background: #ffe6de;
+  border: 1px solid #ffc7b7;
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+}
+
+.loading {
+  max-width: 1120px;
+  margin: 0 auto;
+  color: #31516b;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stagger {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 860px) {
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters {
+    width: 100%;
+  }
+
+  .filterField {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 1rem 0.85rem 1.25rem;
+  }
+}
