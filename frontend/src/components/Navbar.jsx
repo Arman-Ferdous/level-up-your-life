@@ -20,6 +20,7 @@ export default function Navbar() {
           <>
             <Link to="/" style={styles.link}>Home</Link>
             <Link to="/mood" style={styles.link}>Mood</Link>
+            <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>
             <button onClick={handleLogout} style={styles.logoutBtn}>
               Logout
             </button>
@@ -41,7 +42,7 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0.75rem 1.5rem",
-    backgroundColor: "#6c63ff",
+    background: "linear-gradient(120deg, #0f172a, #1e3a5f)",
     color: "#fff",
   },
   left: {
@@ -63,10 +64,11 @@ const styles = {
     color: "#fff",
     textDecoration: "none",
     fontSize: "0.95rem",
+    opacity: 0.95,
   },
   logoutBtn: {
     background: "none",
-    border: "1px solid #fff",
+    border: "1px solid rgba(255, 255, 255, 0.7)",
     color: "#fff",
     padding: "0.3rem 0.75rem",
     borderRadius: 6,
