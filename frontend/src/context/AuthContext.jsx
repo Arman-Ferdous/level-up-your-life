@@ -10,12 +10,16 @@ export default function AuthProvider({ children }) {
 
   async function bootstrap() {
     try {
-      // If access token exists, try /me; refresh will happen automatically on 401
       if (localStorage.getItem("accessToken")) {
-        const res = await AuthAPI.me();
+        // Timeout after 8 s so a dead backend never freezes the UI on "Loading..."
+        const timeout = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("auth timeout")), 8000)
+        );
+        const res = await Promise.race([AuthAPI.me(), timeout]);
         setUser(res.data.user);
       }
     } catch {
+      localStorage.removeItem("accessToken");
       setUser(null);
     } finally {
       setLoading(false);
