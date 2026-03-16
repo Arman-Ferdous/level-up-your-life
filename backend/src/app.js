@@ -8,6 +8,7 @@ import { authRouter } from "./routes/auth.routes.js";
 import { moodRouter } from "./routes/moodRoutes.js";
 import { transactionRouter } from "./routes/transactionRoutes.js";
 import { adminRouter } from "./routes/admin.routes.js";
+import { taskRouter } from "./routes/taskRoutes.js";
 import { notFound, errorHandler } from "./middlewares/error.middleware.js";
 
 export function createApp() {
@@ -38,6 +39,7 @@ export function createApp() {
   app.use("/api/mood", moodRouter);
   app.use("/api/transactions", transactionRouter);
   app.use("/api/admin", adminRouter);
+  app.use("/api/tasks", taskRouter);
 
   app.use(notFound);
   app.use(errorHandler);
