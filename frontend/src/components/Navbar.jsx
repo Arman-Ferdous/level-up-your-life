@@ -19,6 +19,7 @@ export default function Navbar() {
         {user ? (
           <>
             <Link to="/" style={styles.link}>Home</Link>
+            <Link to="/pomodoro" style={styles.link}>Pomodoro</Link>
             <Link to="/tasks" style={styles.link}>Tasks</Link>
             <Link to="/mood" style={styles.link}>Mood</Link>
             <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>

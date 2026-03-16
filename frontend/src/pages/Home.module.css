@@ -57,6 +57,56 @@
   font-size: 1.05rem;
 }
 
+.pomodoroBanner {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #0f172a 0%, #1d4ed8 55%, #0ea5e9 100%);
+  box-shadow: 0 14px 34px rgba(14, 116, 144, 0.24);
+  animation: fadeInUp 450ms ease-out both;
+}
+
+.pomodoroBanner:hover {
+  transform: translateY(-2px);
+}
+
+.pomodoroKicker {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pomodoroTitle {
+  margin: 0.35rem 0 0.2rem;
+  color: #fff;
+  font-size: 1.3rem;
+}
+
+.pomodoroDesc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.93rem;
+}
+
+.pomodoroCta {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 /* ── Feature cards ── */
 .cards {
   max-width: 1000px;
@@ -133,5 +183,10 @@
   .page {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  .pomodoroBanner {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
