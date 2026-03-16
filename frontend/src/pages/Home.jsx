@@ -31,6 +31,15 @@ export default function Home() {
           </div>
         </section>
 
+        <Link to="/pomodoro" className={styles.pomodoroBanner}>
+          <div>
+            <p className={styles.pomodoroKicker}>Focus Sprint</p>
+            <h3 className={styles.pomodoroTitle}>Start a 25-minute Pomodoro</h3>
+            <p className={styles.pomodoroDesc}>One click to enter focus mode and run your timer.</p>
+          </div>
+          <span className={styles.pomodoroCta}>Start Now</span>
+        </Link>
+
         {/* ── Feature cards ── */}
         <section className={styles.cards}>
           <Link to="/mood" className={styles.card}>
