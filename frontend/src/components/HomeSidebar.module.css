@@ -1,0 +1,86 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: sticky;
+  top: 80px;
+  height: fit-content;
+}
+
+/* ── Mood Card ── */
+.moodCard {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(108, 99, 255, 0.08);
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+}
+
+.moodEmoji {
+  display: block;
+  font-size: 3.5rem;
+  animation: floatBounce 3s ease-in-out infinite;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.moodEmojiEmpty {
+  display: block;
+  font-size: 3rem;
+  opacity: 0.45;
+  animation: pulse 2.5s ease-in-out infinite;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.moodPlaceholder {
+  display: block;
+  font-size: 2rem;
+  opacity: 0.3;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.moodLabel {
+  margin: 0 0 0.3rem;
+  font-weight: 700;
+  color: #2d2d6e;
+  font-size: 0.95rem;
+}
+
+.moodNote {
+  margin: 0;
+  color: #666;
+  font-size: 0.8rem;
+  font-style: italic;
+  word-break: break-word;
+}
+
+.moodCta {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #6c63ff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.moodCta:hover {
+  text-decoration: underline;
+}
+
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.08); }
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: static;
+  }
+}

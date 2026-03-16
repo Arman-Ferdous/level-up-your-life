@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MoodPage from "./pages/MoodPage";
 import ExpenseTrackerPage from "./pages/ExpenseTrackerPage";
+import TasksPage from "./pages/TasksPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 
 function ProtectedRoute({ children }) {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
         <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
         <Route path="/mood" element={<ProtectedRoute><MoodProvider><MoodPage /></MoodProvider></ProtectedRoute>} />
         <Route path="/expense-tracker" element={<ProtectedRoute><ExpenseTrackerPage /></ProtectedRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />

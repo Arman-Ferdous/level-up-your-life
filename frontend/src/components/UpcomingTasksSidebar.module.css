@@ -1,0 +1,255 @@
+.sidebar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 1.25rem;
+  color: #fff;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.addButton {
+  text-decoration: none;
+  color: #1e3a5f;
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.addButton:hover {
+  background: #eff6ff;
+}
+
+.message {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 2rem 1rem;
+  font-size: 0.9rem;
+}
+
+.error {
+  color: #fca5a5;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.sectionDivider {
+  position: relative;
+  margin: 0.25rem 0;
+  padding-top: 0.35rem;
+}
+
+.sectionDivider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.sectionDividerText {
+  position: relative;
+  display: inline-block;
+  padding-right: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.taskItem {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.875rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.completeButton {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.completeButton:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.35);
+}
+
+.completeButton:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+.taskItem:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.taskOverdue {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.taskHabit {
+  border-left: 3px solid rgba(255, 255, 255, 0.6);
+}
+
+.taskOnce {
+  background: rgba(15, 23, 42, 0.28);
+  border-color: rgba(191, 219, 254, 0.28);
+}
+
+.taskItemBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.taskItemTitle {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  word-break: break-word;
+}
+
+.scheduleText {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.daysLabel {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.daysNormal {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.daysSoon {
+  background: rgba(251, 146, 60, 0.3);
+  color: #fed7aa;
+}
+
+.daysOverdue {
+  background: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.daysAnytime {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+  background: rgba(191, 219, 254, 0.25);
+  color: #dbeafe;
+}
+
+.typeTag {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.typeDeadline {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.typeHabit {
+  background: rgba(34, 197, 94, 0.3);
+  color: #86efac;
+}
+
+.typeOnce {
+  background: rgba(191, 219, 254, 0.22);
+  color: #dbeafe;
+}
+
+.taskMeta {
+  display: flex;
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    min-height: auto;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .taskItemTitle {
+    font-size: 0.85rem;
+  }
+
+  .daysLabel {
+    font-size: 0.65rem;
+  }
+}
