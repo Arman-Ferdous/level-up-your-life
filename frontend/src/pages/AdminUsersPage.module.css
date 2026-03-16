@@ -1,0 +1,81 @@
+.page {
+  max-width: 980px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #0f172a;
+}
+
+.refreshBtn {
+  border: none;
+  border-radius: 8px;
+  background: #1e3a5f;
+  color: #fff;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+}
+
+.refreshBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #b91c1c;
+  margin: 0.5rem 0;
+}
+
+.muted {
+  color: #475569;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 740px;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.table th {
+  background: #f8fafc;
+  color: #334155;
+}
+
+.deleteBtn {
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: #fff;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+}
+
+.deleteBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

@@ -27,7 +27,11 @@ export const env = {
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
 
   accessExpires: process.env.ACCESS_TOKEN_EXPIRES || "15m",
-  refreshExpires: process.env.REFRESH_TOKEN_EXPIRES || "7d"
+  refreshExpires: process.env.REFRESH_TOKEN_EXPIRES || "7d",
+
+  adminName: process.env.ADMIN_NAME || "",
+  adminEmail: process.env.ADMIN_EMAIL || "",
+  adminPassword: process.env.ADMIN_PASSWORD || ""
 };
 
 export const isProd = env.nodeEnv === "production";

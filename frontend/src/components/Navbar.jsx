@@ -21,6 +21,7 @@ export default function Navbar() {
             <Link to="/" style={styles.link}>Home</Link>
             <Link to="/mood" style={styles.link}>Mood</Link>
             <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>
+            {user.role === "admin" && <Link to="/admin/users" style={styles.link}>Admin</Link>}
             <button onClick={handleLogout} style={styles.logoutBtn}>
               Logout
             </button>
