@@ -10,7 +10,7 @@ import {
 } from "../utils/tokens.js";
 
 function userDto(user) {
-  return { id: user._id, name: user.name, email: user.email };
+  return { id: user._id, name: user.name, email: user.email, role: user.role };
 }
 
 export const register = asyncHandler(async (req, res) => {
@@ -23,7 +23,7 @@ export const register = asyncHandler(async (req, res) => {
   const user = await User.create({ name, email, passwordHash });
 
   // Issue tokens
-  const accessToken = signAccessToken({ sub: user._id.toString(), email });
+  const accessToken = signAccessToken({ sub: user._id.toString(), email, role: user.role });
   const refreshToken = signRefreshToken({ sub: user._id.toString() });
 
   // Store refresh hash (so we can revoke)
@@ -43,7 +43,7 @@ export const login = asyncHandler(async (req, res) => {
   const ok = await bcrypt.compare(password, user.passwordHash);
   if (!ok) throw new AppError("Invalid credentials", 401);
 
-  const accessToken = signAccessToken({ sub: user._id.toString(), email });
+  const accessToken = signAccessToken({ sub: user._id.toString(), email, role: user.role });
   const refreshToken = signRefreshToken({ sub: user._id.toString() });
 
   const refreshTokenHash = await bcrypt.hash(refreshToken, 12);
@@ -89,7 +89,7 @@ export const refresh = asyncHandler(async (req, res) => {
   const newRefreshHash = await bcrypt.hash(newRefresh, 12);
   await User.updateOne({ _id: user._id }, { refreshTokenHash: newRefreshHash });
 
-  const accessToken = signAccessToken({ sub: user._id.toString(), email: user.email });
+  const accessToken = signAccessToken({ sub: user._id.toString(), email: user.email, role: user.role });
 
   res.cookie("refreshToken", newRefresh, refreshCookieOptions());
   res.json({ accessToken });

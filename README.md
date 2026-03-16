@@ -30,6 +30,13 @@ npm install
 ### Environment Variables
 I'll provide you with a file named ".env". Put this in the same location as ".env.example". It should be located in the backend folder and never shared publicly.
 
+Optional admin bootstrap values (in `backend/.env`) to create/promote an admin account automatically when backend starts:
+```
+ADMIN_NAME=Your Admin Name
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=strong-password-here
+```
+
 
 ## Running the Project
 Open two terminals from VsCode.
@@ -50,3 +57,8 @@ Open two terminals from VsCode.
 
 ## Final notes
 Please create your own branch whenever creating a new feature, and only push to that branch. After pushing into your own branch make a pull request. It is best to know what you are doing before merging into main.
+
+## Admin Features
+- Admin users can open `/admin/users` in the frontend.
+- Admin can view all registered users.
+- Admin can delete any user account except their own account.
