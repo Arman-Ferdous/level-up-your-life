@@ -3,43 +3,36 @@ import { groupService } from "../api/groupService";
 
 export default function CreateGroup({ onGroupCreated, onNotify }) {
   const [name, setName] = useState("");
-  const [joinCode, setJoinCode] = useState("");
+  const [description, setDescription] = useState("");
+  const [isPublic, setIsPublic] = useState(false);
+  const [createdGroup, setCreatedGroup] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCopying, setIsCopying] = useState(false);
-
-  const copyJoinCode = async () => {
-    if (!joinCode || isCopying) return;
-
-    try {
-      setIsCopying(true);
-      await navigator.clipboard.writeText(joinCode);
-      onNotify?.("Join code copied to clipboard.", "success");
-    } catch {
-      onNotify?.("Could not copy code. Copy it manually.", "error");
-    } finally {
-      setIsCopying(false);
-    }
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setJoinCode("");
 
     if (!name.trim()) {
-      onNotify?.("Please enter a group name.", "error");
+      onNotify?.("Please enter a guild name.", "error");
       return;
     }
 
     try {
       setIsSubmitting(true);
-      const response = await groupService.createGroup({ name: name.trim() });
-      const createdGroup = response.data.group;
-      setJoinCode(createdGroup.joinCode);
+      const response = await groupService.createGroup({
+        name: name.trim(),
+        description: description.trim(),
+        isPublic
+      });
+
+      const group = response.data.group;
+      setCreatedGroup(group);
       setName("");
-      onNotify?.(`Group created. Share code ${createdGroup.joinCode}.`, "success");
-      if (onGroupCreated) onGroupCreated(createdGroup);
+      setDescription("");
+      setIsPublic(false);
+      onNotify?.(`Guild created. Share code ${group.joinCode}.`, "success");
+      onGroupCreated?.(group);
     } catch (err) {
-      const message = err?.response?.data?.message || "Failed to create group.";
+      const message = err?.response?.data?.message || "Failed to create guild.";
       onNotify?.(message, "error");
     } finally {
       setIsSubmitting(false);
@@ -47,40 +40,60 @@ export default function CreateGroup({ onGroupCreated, onNotify }) {
   };
 
   return (
-    <section className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900">Create Group</h2>
-      <p className="mt-1 text-sm text-slate-600">Create a group and share its join code with friends.</p>
+    <section className="w-full max-w-xl rounded-2xl border border-amber-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-6 text-slate-100 shadow-xl shadow-slate-900/20">
+      <h2 className="text-xl font-semibold text-white">Create Guild</h2>
+      <p className="mt-1 text-sm text-slate-300">
+        Forge a new guild, choose whether it is public, and share the join code with your party.
+      </p>
 
-      <form onSubmit={handleSubmit} className="mt-4 space-y-3">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Group name"
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 outline-none ring-0 transition focus:border-slate-500"
-        />
+      <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-200">Guild Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Example: The Midnight Adventurers"
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-amber-400"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-200">Description</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Describe your guild, quests, or weekly goals."
+            rows={4}
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition focus:border-amber-400"
+          />
+        </div>
+
+        <label className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-slate-200">
+          <input
+            type="checkbox"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
+            className="h-4 w-4 rounded border-slate-500 bg-slate-900 text-amber-500 focus:ring-amber-400"
+          />
+          Make this a Public Guild
+        </label>
+
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded-xl bg-amber-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSubmitting ? "Creating..." : "Create Group"}
+          {isSubmitting ? "Forging Guild..." : "Create Guild"}
         </button>
       </form>
 
-      {joinCode && (
-        <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-emerald-800">
-          <p>
-            Join code: <span className="font-mono font-semibold tracking-wider">{joinCode}</span>
+      {createdGroup && (
+        <div className="mt-5 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-emerald-100">
+          <p className="text-sm font-medium">Guild created successfully</p>
+          <p className="mt-2 text-sm text-emerald-50/90">
+            Join code: <span className="font-mono text-base font-semibold">{createdGroup.joinCode}</span>
           </p>
-          <button
-            type="button"
-            onClick={copyJoinCode}
-            disabled={isCopying}
-            className="mt-3 rounded-md border border-emerald-300 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-900 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isCopying ? "Copying..." : "Copy Code"}
-          </button>
         </div>
       )}
     </section>
