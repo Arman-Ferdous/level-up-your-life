@@ -1,10 +1,71 @@
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import fs from "node:fs";
 import dotenv from "dotenv";
 
 // Resolve .env relative to backend/ root (two levels up from src/config/)
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+
+function applyParsedEnv(parsed) {
+  for (const [key, value] of Object.entries(parsed)) {
+    if (process.env[key] === undefined) {
+      process.env[key] = value;
+    }
+  }
+}
+
+function tryParseEnvText(text) {
+  const normalized = text.replace(/^\uFEFF/, "");
+  const parsed = dotenv.parse(normalized);
+  return Object.keys(parsed).length > 0 ? parsed : null;
+}
+
+function loadEnvFromFile(filePath) {
+  if (!fs.existsSync(filePath)) return false;
+
+  const raw = fs.readFileSync(filePath);
+
+  // Try UTF-8 first, then UTF-16LE for Windows-saved .env files.
+  const utf8Parsed = tryParseEnvText(raw.toString("utf8"));
+  if (utf8Parsed) {
+    applyParsedEnv(utf8Parsed);
+    return true;
+  }
+
+  const utf16Parsed = tryParseEnvText(raw.toString("utf16le"));
+  if (utf16Parsed) {
+    applyParsedEnv(utf16Parsed);
+    return true;
+  }
+
+  return false;
+}
+
+const envCandidates = [
+  path.resolve(__dirname, "../../.env"),
+  path.resolve(process.cwd(), ".env"),
+  path.resolve(process.cwd(), "backend/.env")
+];
+
+for (const candidate of envCandidates) {
+  if (loadEnvFromFile(candidate)) {
+    break;
+  }
+}
+
+// Safety fallbacks for local development when .env cannot be parsed/read.
+const fallbackEnv = {
+  MONGO_URI: "mongodb://127.0.0.1:27017/level-up-your-life",
+  CLIENT_ORIGIN: "http://localhost:5173",
+  JWT_ACCESS_SECRET: "dev_access_secret_change_me",
+  JWT_REFRESH_SECRET: "dev_refresh_secret_change_me"
+};
+
+for (const [key, value] of Object.entries(fallbackEnv)) {
+  if (!process.env[key]) {
+    process.env[key] = value;
+  }
+}
 
 const required = [
   "MONGO_URI",
