@@ -1,6 +1,7 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+﻿import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { MoodProvider } from "./context/MoodContext";
+import { NotificationProvider } from "./context/NotificationContext";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -33,7 +34,7 @@ function AdminRoute({ children }) {
 
 function App() {
   return (
-    <>
+    <NotificationProvider>
       <Navbar />
       <Routes>
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
@@ -46,7 +47,7 @@ function App() {
         <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </>
+    </NotificationProvider>
   );
 }
 

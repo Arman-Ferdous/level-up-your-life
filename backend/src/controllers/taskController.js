@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";
 import { Task } from "../models/Task.js";
+import { createNotification } from "./notificationController.js";
 
 export const createTask = asyncHandler(async (req, res) => {
   const userId = req.user.sub;
@@ -17,6 +18,15 @@ export const createTask = asyncHandler(async (req, res) => {
     priority: priority || "medium",
     completed: false
   });
+
+  await createNotification(
+    userId,
+    task._id,
+    "task_reminder",
+    "Task Created",
+    `Your task "${task.title}" was created successfully.`,
+    task.title
+  );
 
   res.status(201).json({ task });
 });
@@ -46,6 +56,11 @@ export const updateTask = asyncHandler(async (req, res) => {
     throw new AppError("Invalid task id", 400);
   }
 
+  const existingTask = await Task.findOne({ _id: id, userId }).lean();
+  if (!existingTask) {
+    throw new AppError("Task not found", 404);
+  }
+
   const updateData = {};
   if (title !== undefined) updateData.title = title;
   if (description !== undefined) updateData.description = description;
@@ -73,6 +88,29 @@ export const updateTask = asyncHandler(async (req, res) => {
 
   if (!task) {
     throw new AppError("Task not found", 404);
+  }
+
+  if (completed === true && existingTask.completed !== true) {
+    await createNotification(
+      userId,
+      task._id,
+      "task_completed",
+      "Task Completed",
+      `Great work! You completed "${task.title}".`,
+      task.title
+    );
+  }
+
+  const hadDueDate = Boolean(existingTask.dueDate);
+  if (dueDate !== undefined && dueDate && !hadDueDate) {
+    await createNotification(
+      userId,
+      task._id,
+      "task_due",
+      "Deadline Added",
+      `A due date was set for "${task.title}".`,
+      task.title
+    );
   }
 
   res.status(200).json({ task });

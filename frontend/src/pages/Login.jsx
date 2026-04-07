@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     setErr("");
     try {
-      await login(email, password);
+      await login(email.trim(), password);
       navigate("/");
     } catch (e2) {
       setErr(e2?.response?.data?.message || "Login failed");
