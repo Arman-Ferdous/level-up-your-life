@@ -108,24 +108,30 @@ export const createNotificationIfNotExists = async ({
 }) => {
   try {
     const query = { userId, taskId, type };
-
-    if (createdAtGte || createdAtLte) {
-      query.createdAt = {};
-      if (createdAtGte) query.createdAt.$gte = createdAtGte;
-      if (createdAtLte) query.createdAt.$lte = createdAtLte;
-    }
-
-    const existing = await Notification.findOne(query).lean();
-    if (existing) return existing;
-
-    return await Notification.create({
+    const payload = {
       userId,
       taskId,
       type,
       title,
       message,
       taskTitle: taskTitle || ""
-    });
+    };
+
+    let dayKey = null;
+    if (createdAtGte || createdAtLte) {
+      const sourceDate = createdAtGte || createdAtLte;
+      dayKey = sourceDate.toISOString().slice(0, 10);
+      query.dayKey = dayKey;
+      payload.dayKey = dayKey;
+    }
+
+    await Notification.findOneAndUpdate(
+      query,
+      { $setOnInsert: payload },
+      { upsert: true, new: true }
+    );
+
+    return await Notification.findOne(query).lean();
   } catch (error) {
     console.error("Error creating deduplicated notification:", error);
     return null;
@@ -139,9 +145,18 @@ export const createNotificationOncePerDay = async ({
   title,
   message,
   taskTitle,
-  date = new Date()
+  date = new Date(),
+  dayKey
 }) => {
   const { start, end } = getDayBounds(date);
+  let normalizedDate = date;
+
+  if (dayKey) {
+    normalizedDate = new Date(`${dayKey}T00:00:00.000Z`);
+  }
+
+  const dayStart = dayKey ? normalizedDate : start;
+  const dayEnd = dayKey ? new Date(`${dayKey}T23:59:59.999Z`) : end;
 
   return createNotificationIfNotExists({
     userId,
@@ -150,8 +165,8 @@ export const createNotificationOncePerDay = async ({
     title,
     message,
     taskTitle,
-    createdAtGte: start,
-    createdAtLte: end
+    createdAtGte: dayStart,
+    createdAtLte: dayEnd
   });
 };
 

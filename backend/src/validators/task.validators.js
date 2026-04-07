@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { z } from "zod";
 
 const weekdaySchema = z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
+const reminderTimeSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Time must be HH:mm format").nullable().optional();
 
 export const createTaskSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(120),
@@ -16,6 +17,7 @@ export const createTaskSchema = z.object({
     z.string().datetime().nullable().optional()
   ),
   reminderWeekdays: z.array(weekdaySchema).max(7).default([]),
+  reminderTime: reminderTimeSchema,
   priority: z.enum(["low", "medium", "high"]).default("medium")
 }).superRefine((data, ctx) => {
   const isGroupTask = Boolean(data.groupId);
@@ -62,6 +64,7 @@ export const updateTaskSchema = z.object({
     z.string().datetime().nullable().optional()
   ),
   reminderWeekdays: z.array(weekdaySchema).max(7).optional(),
+  reminderTime: reminderTimeSchema,
   completed: z.boolean().optional(),
   priority: z.enum(["low", "medium", "high"]).optional()
 });

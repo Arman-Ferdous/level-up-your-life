@@ -30,6 +30,7 @@ export default function TodoList({ initialShowForm = false, groupId, groupName }
     type: "once",
     dueDate: "",
     reminderWeekdays: [],
+    reminderTime: "",
     priority: "medium"
   });
 
@@ -93,7 +94,8 @@ export default function TodoList({ initialShowForm = false, groupId, groupName }
         dueDate: (formData.type === "deadline" || (isGroupScope && formData.type === "once")) && formData.dueDate
           ? new Date(formData.dueDate).toISOString()
           : null,
-        reminderWeekdays: formData.type === "habit" ? formData.reminderWeekdays : []
+        reminderWeekdays: formData.type === "habit" ? formData.reminderWeekdays : [],
+        reminderTime: formData.reminderTime || null
       };
 
       const res = await TaskAPI.createTask(payload);
@@ -104,6 +106,7 @@ export default function TodoList({ initialShowForm = false, groupId, groupName }
         type: "once",
         dueDate: "",
         reminderWeekdays: [],
+        reminderTime: "",
         priority: "medium"
       });
       setShowForm(false);
@@ -208,6 +211,17 @@ export default function TodoList({ initialShowForm = false, groupId, groupName }
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
+          </div>
+
+          <div className={styles.formRow}>
+            <label className={styles.label}>Reminder Time (Optional):</label>
+            <input
+              type="time"
+              value={formData.reminderTime}
+              onChange={(e) => setFormData({ ...formData, reminderTime: e.target.value })}
+              className={styles.input}
+            />
+            <small className={styles.hint}>Leave empty for immediate reminders</small>
           </div>
 
           {(formData.type === "deadline" || (isGroupScope && formData.type === "once")) && (

@@ -78,13 +78,19 @@ for (const key of required) {
   if (!process.env[key]) throw new Error(`Missing env var: ${key}`);
 }
 
+const parsedReminderIntervalMs = Number(process.env.REMINDER_INTERVAL_MS || 60000);
+
 export const env = {
   port: process.env.PORT || 5001,
   nodeEnv: process.env.NODE_ENV || "development",
   mongoUri: process.env.MONGO_URI,
   clientOrigin: process.env.CLIENT_ORIGIN,
   remindersEnabled: process.env.REMINDERS_ENABLED !== "false",
-  reminderIntervalMs: Number(process.env.REMINDER_INTERVAL_MS || 60000),
+  reminderIntervalMs:
+    Number.isFinite(parsedReminderIntervalMs) && parsedReminderIntervalMs > 0
+      ? parsedReminderIntervalMs
+      : 60000,
+  reminderTimeZone: process.env.REMINDER_TIMEZONE || "UTC",
 
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,

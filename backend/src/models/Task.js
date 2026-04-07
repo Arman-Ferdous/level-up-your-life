@@ -70,6 +70,11 @@ const taskSchema = new mongoose.Schema(
       enum: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
       default: []
     },
+    reminderTime: {
+      type: String,
+      default: null,
+      match: /^([01]\d|2[0-3]):[0-5]\d$/
+    },
     dueDate: {
       type: Date,
       default: null

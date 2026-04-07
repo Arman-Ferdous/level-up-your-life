@@ -84,7 +84,7 @@ async function ensureTaskAccess(task, userId) {
 
 export const createTask = asyncHandler(async (req, res) => {
   const userId = req.user.sub;
-  const { title, description, type, dueDate, priority, reminderWeekdays, groupId } = req.body;
+  const { title, description, type, dueDate, priority, reminderWeekdays, reminderTime, groupId } = req.body;
   const isGroupTask = Boolean(groupId);
 
   if (isGroupTask) {
@@ -111,6 +111,7 @@ export const createTask = asyncHandler(async (req, res) => {
       ? new Date(dueDate)
       : null,
     reminderWeekdays: normalizedType === "habit" ? reminderWeekdays ?? [] : [],
+    reminderTime: reminderTime || null,
     priority: priority || "medium",
     completed: false,
     groupCompletionUsers: [],
@@ -170,7 +171,7 @@ export const getTasks = asyncHandler(async (req, res) => {
 export const updateTask = asyncHandler(async (req, res) => {
   const userId = req.user.sub;
   const { id } = req.params;
-  const { title, description, type, dueDate, completed, priority, reminderWeekdays } = req.body;
+  const { title, description, type, dueDate, completed, priority, reminderWeekdays, reminderTime } = req.body;
   const isCompletionOnlyUpdate =
     completed !== undefined &&
     title === undefined &&
@@ -195,6 +196,7 @@ export const updateTask = asyncHandler(async (req, res) => {
   if (type !== undefined) updateData.type = type;
   if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
   if (reminderWeekdays !== undefined) updateData.reminderWeekdays = reminderWeekdays;
+  if (reminderTime !== undefined) updateData.reminderTime = reminderTime || null;
   if (priority !== undefined) updateData.priority = priority;
   if (completed !== undefined) {
     updateData.completed = completed;
