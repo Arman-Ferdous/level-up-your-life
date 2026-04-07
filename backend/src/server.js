@@ -2,10 +2,12 @@ import { createApp } from "./app.js";
 import { connectDB } from "./config/db.js";
 import { env } from "./config/env.js";
 import { ensureAdminAccount } from "./utils/adminBootstrap.js";
+import { migrateLegacyGroupTasks } from "./utils/taskMigration.js";
 
 async function main() {
   await connectDB();
   await ensureAdminAccount();
+  await migrateLegacyGroupTasks();
   const app = createApp();
   app.listen(env.port, () => {
     console.log(`✅ API running on http://localhost:${env.port}`);

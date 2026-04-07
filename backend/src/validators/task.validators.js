@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { z } from "zod";
 
 const weekdaySchema = z.enum(["mon", "tue", "wed", "thu", "fri", "sat", "sun"]);
@@ -6,6 +7,10 @@ export const createTaskSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(120),
   description: z.string().trim().max(500).default(""),
   type: z.enum(["habit", "deadline", "once"]),
+  groupId: z.preprocess(
+    (val) => (val === "" || val === undefined ? undefined : val),
+    z.string().trim().refine((value) => mongoose.Types.ObjectId.isValid(value), "Invalid group id").optional()
+  ).optional(),
   dueDate: z.preprocess(
     (val) => (val === "" || val === undefined ? null : val),
     z.string().datetime().nullable().optional()
@@ -13,6 +18,24 @@ export const createTaskSchema = z.object({
   reminderWeekdays: z.array(weekdaySchema).max(7).default([]),
   priority: z.enum(["low", "medium", "high"]).default("medium")
 }).superRefine((data, ctx) => {
+  const isGroupTask = Boolean(data.groupId);
+
+  if (isGroupTask && data.type === "deadline") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["type"],
+      message: "Group tasks do not support deadline type. Use one-time task with a due date."
+    });
+  }
+
+  if (isGroupTask && data.type === "once" && !data.dueDate) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["dueDate"],
+      message: "Due date is required for group one-time tasks"
+    });
+  }
+
   if (data.type === "deadline" && !data.dueDate) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,

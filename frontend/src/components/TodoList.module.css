@@ -20,6 +20,12 @@
   color: #0f172a;
 }
 
+.scope {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
 .addBtn {
   border: none;
   border-radius: 8px;
@@ -293,6 +299,88 @@
   font-size: 0.8rem;
   background: #e0f2fe;
   color: #075985;
+}
+
+.groupProgressBlock {
+  margin-top: 0.8rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background: #eff6ff;
+}
+
+.groupProgressText {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+.groupProgressNames {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: #334155;
+}
+
+.habitHistoryWrap {
+  margin-top: 0.85rem;
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  padding: 0.7rem;
+  background: #f8fbff;
+  overflow-x: auto;
+}
+
+.habitHistoryHeader,
+.habitHistoryRow {
+  display: grid;
+  grid-template-columns: 120px minmax(380px, 1fr);
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.habitHistoryHeader {
+  margin-bottom: 0.4rem;
+}
+
+.habitHistoryMemberLabel {
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.habitMemberName {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.habitHistoryDays {
+  display: grid;
+  grid-template-columns: repeat(15, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+
+.habitDayLabel {
+  text-align: center;
+  font-size: 0.66rem;
+  color: #64748b;
+}
+
+.habitDayDot {
+  width: 100%;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+}
+
+.habitDayDotDone {
+  border-color: #0ea5e9;
+  background: #0ea5e9;
 }
 
 .deleteBtn {

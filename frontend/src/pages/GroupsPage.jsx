@@ -2,6 +2,7 @@ import { useState } from "react";
 import CreateGroup from "../components/CreateGroup";
 import JoinGroup from "../components/JoinGroup";
 import DiscoveryTab from "../components/DiscoveryTab";
+import GroupTaskManager from "../components/GroupTaskManager";
 import MyGroupsList from "../components/MyGroupsList";
 import ToastStack from "../components/ToastStack";
 
@@ -78,6 +79,8 @@ export default function GroupsPage() {
             )}
           </div>
         </section>
+
+        <GroupTaskManager refreshKey={refreshKey} onNotify={notify} />
       </div>
 
       <ToastStack toasts={toasts} onClose={dismissToast} />

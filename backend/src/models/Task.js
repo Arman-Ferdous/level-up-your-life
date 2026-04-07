@@ -1,11 +1,51 @@
 import mongoose from "mongoose";
 
+const groupCompletionSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    completedOn: {
+      type: Date,
+      default: Date.now
+    }
+  },
+  { _id: false }
+);
+
+const habitCompletionHistorySchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    dayKey: {
+      type: String,
+      required: true
+    },
+    completedOn: {
+      type: Date,
+      default: Date.now
+    }
+  },
+  { _id: false }
+);
+
 const taskSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true
+    },
+    groupId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Group",
+      default: null,
       index: true
     },
     title: {
@@ -42,6 +82,14 @@ const taskSchema = new mongoose.Schema(
       type: Date,
       default: null
     },
+    groupCompletionUsers: {
+      type: [groupCompletionSchema],
+      default: []
+    },
+    habitCompletionHistory: {
+      type: [habitCompletionHistorySchema],
+      default: []
+    },
     priority: {
       type: String,
       enum: ["low", "medium", "high"],
@@ -56,5 +104,9 @@ taskSchema.index({ userId: 1, createdAt: -1 });
 taskSchema.index({ userId: 1, type: 1 });
 taskSchema.index({ userId: 1, dueDate: 1 });
 taskSchema.index({ userId: 1, reminderWeekdays: 1 });
+taskSchema.index({ groupId: 1, createdAt: -1 });
+taskSchema.index({ groupId: 1, type: 1 });
+taskSchema.index({ groupId: 1, "groupCompletionUsers.userId": 1 });
+taskSchema.index({ groupId: 1, "habitCompletionHistory.dayKey": 1 });
 
 export const Task = mongoose.model("Task", taskSchema);
