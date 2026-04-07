@@ -59,6 +59,12 @@ export default function Home() {
             <h3 className={styles.cardTitle}>Task Manager</h3>
             <p className={styles.cardDesc}>Manage habits, deadlines, and one-time tasks efficiently.</p>
           </Link>
+
+          <Link to="/calendar" className={styles.card}>
+            <span className={styles.cardIcon}>📅</span>
+            <h3 className={styles.cardTitle}>Calendar Heatmaps</h3>
+            <p className={styles.cardDesc}>See deadline pressure, spending versus earnings, and mood patterns day by day.</p>
+          </Link>
         </section>
       </div>
 

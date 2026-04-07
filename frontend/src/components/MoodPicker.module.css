@@ -36,6 +36,47 @@
   background-clip: text;
 }
 
+.dateCard {
+  border: 2px solid #e8e4ff;
+  border-radius: 12px;
+  padding: 0.9rem;
+  background: #f9f8ff;
+}
+
+.dateLabel {
+  display: block;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4c47ff;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+}
+
+.dateInput {
+  width: 100%;
+  border: 2px solid #d8d2f8;
+  border-radius: 10px;
+  padding: 0.65rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.12);
+}
+
+.dateHint {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
 /* Emoji Row Container */
 .emojiRow {
   display: grid;
@@ -207,6 +248,19 @@
     font-size: 1.5rem;
   }
 
+  .dateCard {
+    padding: 0.75rem;
+  }
+
+  .dateInput {
+    font-size: 0.9rem;
+    padding: 0.55rem 0.6rem;
+  }
+
+  .dateHint {
+    font-size: 0.8rem;
+  }
+
   .emojiRow {
     grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
     gap: 0.75rem;
@@ -246,6 +300,15 @@
 
   .title {
     font-size: 1.35rem;
+  }
+
+  .dateCard {
+    padding: 0.65rem;
+  }
+
+  .dateInput {
+    font-size: 0.86rem;
+    padding: 0.5rem 0.55rem;
   }
 
   .emojiRow {

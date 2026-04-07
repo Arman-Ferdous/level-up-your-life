@@ -22,6 +22,7 @@ export default function Navbar() {
             <Link to="/pomodoro" style={styles.link}>Pomodoro</Link>
             <Link to="/tasks" style={styles.link}>Tasks</Link>
             <Link to="/groups" style={styles.link}>Groups</Link>
+            <Link to="/calendar" style={styles.link}>Calendar</Link>
             <Link to="/mood" style={styles.link}>Mood</Link>
             <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>
             {user.role === "admin" && <Link to="/admin/users" style={styles.link}>Admin</Link>}

@@ -8,11 +8,11 @@ export function MoodProvider({ children }) {
   const [historyError, setHistoryError] = useState(null);
   const [historyLoading, setHistoryLoading] = useState(true);
 
-  // Fetch mood history (last 7 days by timestamp)
+  // Fetch mood history for the last 30 days.
   const fetchHistory = useCallback(async () => {
     setHistoryLoading(true);
     try {
-      const res = await api.get("/api/mood/history");
+      const res = await api.get("/api/mood/history", { params: { days: 30 } });
       setHistory(res.data.entries ?? []);
       setHistoryError(null);
     } catch (e) {
