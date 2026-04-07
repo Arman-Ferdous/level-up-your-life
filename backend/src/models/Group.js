@@ -1,5 +1,21 @@
 import mongoose from "mongoose";
 
+const groupMemberSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    role: {
+      type: String,
+      enum: ["Guild Master", "Veteran", "Novice"],
+      default: "Novice"
+    }
+  },
+  { _id: false }
+);
+
 const groupSchema = new mongoose.Schema(
   {
     name: {
@@ -8,11 +24,10 @@ const groupSchema = new mongoose.Schema(
       trim: true,
       maxlength: 120
     },
-    creatorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      index: true
+    description: {
+      type: String,
+      trim: true,
+      default: ""
     },
     joinCode: {
       type: String,
@@ -23,13 +38,12 @@ const groupSchema = new mongoose.Schema(
       minlength: 6,
       maxlength: 6
     },
+    isPublic: {
+      type: Boolean,
+      default: false
+    },
     members: {
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User"
-        }
-      ],
+      type: [groupMemberSchema],
       default: []
     },
     createdAt: {
@@ -43,6 +57,6 @@ const groupSchema = new mongoose.Schema(
 );
 
 groupSchema.index({ joinCode: 1 }, { unique: true });
-groupSchema.index({ members: 1, createdAt: -1 });
+groupSchema.index({ "members.userId": 1, createdAt: -1 });
 
 export const Group = mongoose.model("Group", groupSchema);

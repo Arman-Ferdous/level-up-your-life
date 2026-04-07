@@ -17,12 +17,12 @@ export default function JoinGroup({ onGroupJoined, onNotify }) {
     try {
       setIsSubmitting(true);
       const response = await groupService.joinGroup(normalizedCode);
-      onNotify?.(response.data.message || "Joined group successfully.", "success");
+      onNotify?.(response.data.message || "Joined guild successfully.", "success");
       setJoinCode("");
       if (onGroupJoined) onGroupJoined(response.data.group);
     } catch (err) {
       const apiMessage = err?.response?.data?.message;
-      onNotify?.(apiMessage || "Could not join the group.", "error");
+      onNotify?.(apiMessage || "Could not join the guild.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -30,7 +30,7 @@ export default function JoinGroup({ onGroupJoined, onNotify }) {
 
   return (
     <section className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900">Join Group</h2>
+      <h2 className="text-xl font-semibold text-slate-900">Join Guild</h2>
       <p className="mt-1 text-sm text-slate-600">Enter a 6-character code shared by another member.</p>
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-3">
@@ -47,7 +47,7 @@ export default function JoinGroup({ onGroupJoined, onNotify }) {
           disabled={isSubmitting}
           className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSubmitting ? "Joining..." : "Join Group"}
+          {isSubmitting ? "Joining..." : "Join Guild"}
         </button>
       </form>
     </section>
