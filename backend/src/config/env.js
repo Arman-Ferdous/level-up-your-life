@@ -83,6 +83,8 @@ export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
   mongoUri: process.env.MONGO_URI,
   clientOrigin: process.env.CLIENT_ORIGIN,
+  remindersEnabled: process.env.REMINDERS_ENABLED !== "false",
+  reminderIntervalMs: Number(process.env.REMINDER_INTERVAL_MS || 60000),
 
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,

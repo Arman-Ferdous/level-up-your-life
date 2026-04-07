@@ -14,7 +14,8 @@ function userDto(user) {
 }
 
 export const register = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, password } = req.body;
+  const email = req.body.email.trim().toLowerCase();
 
   const exists = await User.findOne({ email });
   if (exists) throw new AppError("Email already in use", 409);
@@ -35,7 +36,8 @@ export const register = asyncHandler(async (req, res) => {
 });
 
 export const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { password } = req.body;
+  const email = req.body.email.trim().toLowerCase();
 
   const user = await User.findOne({ email }).select("+passwordHash");
   if (!user) throw new AppError("Invalid credentials", 401);

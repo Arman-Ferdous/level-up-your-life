@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import NotificationPanel from "./NotificationPanel";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -26,6 +27,7 @@ export default function Navbar() {
             <Link to="/mood" style={styles.link}>Mood</Link>
             <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>
             {user.role === "admin" && <Link to="/admin/users" style={styles.link}>Admin</Link>}
+            <NotificationPanel />
             <button onClick={handleLogout} style={styles.logoutBtn}>
               Logout
             </button>

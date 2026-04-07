@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";
 import { Task } from "../models/Task.js";
+import { createNotification } from "./notificationController.js";
 import { Group } from "../models/Group.js";
 import { User } from "../models/User.js";
 
@@ -116,6 +117,15 @@ export const createTask = asyncHandler(async (req, res) => {
     habitCompletionHistory: []
   });
 
+  await createNotification(
+    userId,
+    task._id,
+    "task_reminder",
+    "Task Created",
+    `Your task "${task.title}" was created successfully.`,
+    task.title
+  );
+
   const taskResponse = normalizeTaskForResponse(task.toObject(), isGroupTask);
   res.status(201).json({ task: taskResponse });
 });
@@ -172,6 +182,11 @@ export const updateTask = asyncHandler(async (req, res) => {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new AppError("Invalid task id", 400);
+  }
+
+  const existingTask = await Task.findById(id).lean();
+  if (!existingTask) {
+    throw new AppError("Task not found", 404);
   }
 
   const updateData = {};
@@ -312,6 +327,29 @@ export const updateTask = asyncHandler(async (req, res) => {
 
   const updatedTask = normalizeTaskForResponse(updatedTaskDoc.toObject(), isGroupTask);
   const groupMembers = isGroupTask && group ? await buildGroupMembersPayload(group) : [];
+
+  if (!isGroupTask && completed === true && existingTask.completed !== true) {
+    await createNotification(
+      userId,
+      task._id,
+      "task_completed",
+      "Task Completed",
+      `Great work! You completed "${task.title}".`,
+      task.title
+    );
+  }
+
+  const hadDueDate = Boolean(existingTask.dueDate);
+  if (!isGroupTask && dueDate !== undefined && dueDate && !hadDueDate) {
+    await createNotification(
+      userId,
+      task._id,
+      "task_due",
+      "Deadline Added",
+      `A due date was set for "${task.title}".`,
+      task.title
+    );
+  }
 
   res.status(200).json({ task: updatedTask, groupMembers });
 });
