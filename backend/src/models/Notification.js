@@ -37,6 +37,11 @@ const notificationSchema = new mongoose.Schema(
     taskTitle: {
       type: String,
       maxlength: 120
+    },
+    dayKey: {
+      type: String,
+      default: null,
+      maxlength: 10
     }
   },
   { timestamps: true }
@@ -44,5 +49,12 @@ const notificationSchema = new mongoose.Schema(
 
 notificationSchema.index({ userId: 1, createdAt: -1 });
 notificationSchema.index({ userId: 1, read: 1 });
+notificationSchema.index(
+  { userId: 1, taskId: 1, type: 1, dayKey: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { dayKey: { $type: "string" } }
+  }
+);
 
 export const Notification = mongoose.model("Notification", notificationSchema);
