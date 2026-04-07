@@ -10,6 +10,7 @@ import { transactionRouter } from "./routes/transactionRoutes.js";
 import { adminRouter } from "./routes/admin.routes.js";
 import { taskRouter } from "./routes/taskRoutes.js";
 import { notificationRouter } from "./routes/notificationRoutes.js";
+import { groupRouter } from "./routes/group.routes.js";
 import { notFound, errorHandler } from "./middlewares/error.middleware.js";
 
 export function createApp() {
@@ -41,6 +42,8 @@ export function createApp() {
   app.use("/api/transactions", transactionRouter);
   app.use("/api/admin", adminRouter);
   app.use("/api/tasks", taskRouter);
+  app.use("/api/notifications", notificationRouter);
+  app.use("/api/groups", groupRouter);
   app.use("/api/notifications", notificationRouter);
 
   app.use(notFound);

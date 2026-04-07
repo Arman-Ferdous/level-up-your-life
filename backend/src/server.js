@@ -3,10 +3,12 @@ import { connectDB } from "./config/db.js";
 import { env } from "./config/env.js";
 import { ensureAdminAccount } from "./utils/adminBootstrap.js";
 import { startTaskReminderWorker } from "./services/taskReminderWorker.js";
+import { migrateLegacyGroupTasks } from "./utils/taskMigration.js";
 
 async function main() {
   await connectDB();
   await ensureAdminAccount();
+  await migrateLegacyGroupTasks();
   startTaskReminderWorker();
   const app = createApp();
   app.listen(env.port, () => {

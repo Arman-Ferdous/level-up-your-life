@@ -11,7 +11,7 @@ export default function MoodPage() {
       <MoodPicker />
 
       <div className={styles.historyCard}>
-        <h3 className={styles.historyTitle}>Last 7 Days</h3>
+        <h3 className={styles.historyTitle}>Last 30 Days</h3>
         {historyError && <p className={styles.error}>{historyError}</p>}
         {history.length === 0 && !historyError && (
           <p className={styles.empty}>No mood entries yet.</p>

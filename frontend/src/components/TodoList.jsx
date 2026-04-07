@@ -13,9 +13,12 @@ const WEEKDAY_OPTIONS = [
   { value: "sun", label: "Sun" }
 ];
 
-export default function TodoList({ initialShowForm = false }) {
+export default function TodoList({ initialShowForm = false, groupId, groupName }) {
   const { user } = useAuth();
+  const currentUserId = String(user?.id || user?._id || "");
+  const isGroupScope = Boolean(groupId);
   const [tasks, setTasks] = useState([]);
+  const [groupMembers, setGroupMembers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("all");
@@ -34,9 +37,13 @@ export default function TodoList({ initialShowForm = false }) {
     setLoading(true);
     setError("");
     try {
-      const typeFilter = activeTab === "all" ? null : activeTab;
-      const res = await TaskAPI.getTasks(typeFilter);
+      const query = {
+        ...(activeTab === "all" ? {} : { type: activeTab }),
+        ...(groupId ? { groupId } : {})
+      };
+      const res = await TaskAPI.getTasks(query);
       setTasks(res.data.tasks || []);
+      setGroupMembers(res.data.groupMembers || []);
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to load tasks");
     } finally {
@@ -46,13 +53,19 @@ export default function TodoList({ initialShowForm = false }) {
 
   useEffect(() => {
     loadTasks();
-  }, [activeTab]);
+  }, [activeTab, groupId]);
 
   useEffect(() => {
     if (initialShowForm) {
       setShowForm(true);
     }
   }, [initialShowForm]);
+
+  useEffect(() => {
+    if (isGroupScope && activeTab === "deadline") {
+      setActiveTab("all");
+    }
+  }, [isGroupScope, activeTab]);
 
   async function handleCreateTask(e) {
     e.preventDefault();
@@ -63,8 +76,8 @@ export default function TodoList({ initialShowForm = false }) {
       return;
     }
 
-    if (formData.type === "deadline" && !formData.dueDate) {
-      setError("Please set a due date for deadline tasks");
+    if ((formData.type === "deadline" || (isGroupScope && formData.type === "once")) && !formData.dueDate) {
+      setError(isGroupScope ? "Please set a deadline for this group one-time task" : "Please set a due date for deadline tasks");
       return;
     }
 
@@ -76,14 +89,15 @@ export default function TodoList({ initialShowForm = false }) {
     try {
       const payload = {
         ...formData,
-        dueDate: formData.type === "deadline" && formData.dueDate
+        ...(groupId ? { groupId } : {}),
+        dueDate: (formData.type === "deadline" || (isGroupScope && formData.type === "once")) && formData.dueDate
           ? new Date(formData.dueDate).toISOString()
           : null,
         reminderWeekdays: formData.type === "habit" ? formData.reminderWeekdays : []
       };
 
       const res = await TaskAPI.createTask(payload);
-      setTasks([res.data.task, ...tasks]);
+      setTasks((current) => [res.data.task, ...current]);
       setFormData({
         title: "",
         description: "",
@@ -101,9 +115,12 @@ export default function TodoList({ initialShowForm = false }) {
   async function handleToggleComplete(taskId, currentStatus) {
     try {
       const res = await TaskAPI.updateTask(taskId, { completed: !currentStatus });
-      setTasks(tasks.map((t) => (t._id === taskId ? res.data.task : t)));
+      setTasks((current) => current.map((task) => (task._id === taskId ? res.data.task : task)));
+      if (Array.isArray(res.data.groupMembers)) {
+        setGroupMembers(res.data.groupMembers);
+      }
     } catch (err) {
-      setError("Failed to update task");
+      setError(err?.response?.data?.message || "Failed to update task");
     }
   }
 
@@ -112,19 +129,22 @@ export default function TodoList({ initialShowForm = false }) {
 
     try {
       await TaskAPI.deleteTask(taskId);
-      setTasks(tasks.filter((t) => t._id !== taskId));
+      setTasks((current) => current.filter((task) => task._id !== taskId));
     } catch (err) {
       setError("Failed to delete task");
     }
   }
 
-  const filteredTasks = activeTab === "all" ? tasks : tasks.filter((t) => t.type === activeTab);
-  const completedCount = filteredTasks.filter((t) => t.completed).length;
+  const filteredTasks = activeTab === "all" ? tasks : tasks.filter((task) => task.type === activeTab);
+  const last15DayKeys = getLast15DayKeys();
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 className={styles.title}>My Tasks</h2>
+        <div>
+          <h2 className={styles.title}>{groupName ? `${groupName} Tasks` : "My Tasks"}</h2>
+          {groupName && <p className={styles.scope}>Managing tasks in this guild</p>}
+        </div>
         <button
           className={styles.addBtn}
           onClick={() => setShowForm(!showForm)}
@@ -164,13 +184,15 @@ export default function TodoList({ initialShowForm = false }) {
               onChange={(e) => setFormData((current) => ({
                 ...current,
                 type: e.target.value,
-                dueDate: e.target.value === "deadline" ? current.dueDate : "",
+                dueDate: (e.target.value === "deadline" || (isGroupScope && e.target.value === "once"))
+                  ? current.dueDate
+                  : "",
                 reminderWeekdays: e.target.value === "habit" ? current.reminderWeekdays : []
               }))}
               className={styles.select}
             >
               <option value="once">One-time Task</option>
-              <option value="deadline">Task with Deadline</option>
+              {!isGroupScope && <option value="deadline">Task with Deadline</option>}
               <option value="habit">Daily Habit</option>
             </select>
           </div>
@@ -188,9 +210,9 @@ export default function TodoList({ initialShowForm = false }) {
             </select>
           </div>
 
-          {formData.type === "deadline" && (
+          {(formData.type === "deadline" || (isGroupScope && formData.type === "once")) && (
             <div className={styles.formRow}>
-              <label className={styles.label}>Due Date:</label>
+              <label className={styles.label}>Deadline:</label>
               <input
                 type="date"
                 value={formData.dueDate}
@@ -245,12 +267,14 @@ export default function TodoList({ initialShowForm = false }) {
         >
           One-time
         </button>
-        <button
-          className={`${styles.tab} ${activeTab === "deadline" ? styles.tabActive : ""}`}
-          onClick={() => setActiveTab("deadline")}
-        >
-          Deadlines
-        </button>
+        {!isGroupScope && (
+          <button
+            className={`${styles.tab} ${activeTab === "deadline" ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab("deadline")}
+          >
+            Deadlines
+          </button>
+        )}
         <button
           className={`${styles.tab} ${activeTab === "habit" ? styles.tabActive : ""}`}
           onClick={() => setActiveTab("habit")}
@@ -265,16 +289,20 @@ export default function TodoList({ initialShowForm = false }) {
         <p className={styles.message}>No tasks yet. Add one to get started!</p>
       ) : (
         <div className={styles.taskList}>
-          {filteredTasks.map((task) => (
-            <div
-              key={task._id}
-              className={`${styles.taskItem} ${task.completed ? styles.taskCompleted : ""}`}
-            >
+          {filteredTasks.map((task) => {
+            const checked = getCurrentUserCompletion(task, currentUserId, isGroupScope);
+            const isCompletedCard = isGroupScope && task.type === "habit" ? checked : task.completed;
+
+            return (
+              <div
+                key={task._id}
+                className={`${styles.taskItem} ${isCompletedCard ? styles.taskCompleted : ""}`}
+              >
               <div className={styles.taskCheckbox}>
                 <input
                   type="checkbox"
-                  checked={task.completed}
-                  onChange={() => handleToggleComplete(task._id, task.completed)}
+                  checked={checked}
+                  onChange={() => handleToggleComplete(task._id, checked)}
                   className={styles.checkbox}
                 />
               </div>
@@ -301,6 +329,53 @@ export default function TodoList({ initialShowForm = false }) {
                     </span>
                   )}
                 </div>
+
+                {isGroupScope && task.type === "once" && (
+                  <div className={styles.groupProgressBlock}>
+                    <p className={styles.groupProgressText}>
+                      Completed by {getCheckedUsers(task).length}/{groupMembers.length} members
+                    </p>
+                    {!task.completed && (
+                      <p className={styles.groupProgressNames}>
+                        {getCheckedUsers(task)
+                          .map((checkedUserId) => groupMembers.find((member) => member.userId === checkedUserId)?.name)
+                          .filter(Boolean)
+                          .join(", ") || "No one has checked this task yet"}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {isGroupScope && task.type === "habit" && (
+                  <div className={styles.habitHistoryWrap}>
+                    <div className={styles.habitHistoryHeader}>
+                      <span className={styles.habitHistoryMemberLabel}>Member</span>
+                      <div className={styles.habitHistoryDays}>
+                        {last15DayKeys.map((dayKey) => (
+                          <span key={dayKey} className={styles.habitDayLabel}>{formatShortDay(dayKey)}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {groupMembers.map((member) => (
+                      <div key={member.userId} className={styles.habitHistoryRow}>
+                        <span className={styles.habitMemberName}>{member.name}</span>
+                        <div className={styles.habitHistoryDays}>
+                          {last15DayKeys.map((dayKey) => {
+                            const completed = hasHabitCompletion(task, member.userId, dayKey);
+                            return (
+                              <span
+                                key={`${member.userId}-${dayKey}`}
+                                className={`${styles.habitDayDot} ${completed ? styles.habitDayDotDone : ""}`}
+                                title={`${member.name} • ${dayKey}`}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <button
@@ -311,11 +386,75 @@ export default function TodoList({ initialShowForm = false }) {
                 ✕
               </button>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
   );
+}
+
+function getCheckedUsers(task) {
+  if (!Array.isArray(task.groupCompletionUsers)) {
+    return [];
+  }
+
+  return task.groupCompletionUsers.map((entry) => String(entry.userId));
+}
+
+function getCurrentUserCompletion(task, currentUserId, isGroupScope) {
+  if (!isGroupScope) {
+    return Boolean(task.completed);
+  }
+
+  if (!currentUserId) {
+    return false;
+  }
+
+  if (task.type === "once") {
+    return getCheckedUsers(task).includes(currentUserId);
+  }
+
+  if (task.type === "habit") {
+    return hasHabitCompletion(task, currentUserId, toLocalDayKey());
+  }
+
+  return Boolean(task.completed);
+}
+
+function hasHabitCompletion(task, userId, dayKey) {
+  if (!Array.isArray(task.habitCompletionHistory)) {
+    return false;
+  }
+
+  return task.habitCompletionHistory.some(
+    (entry) => String(entry.userId) === String(userId) && entry.dayKey === dayKey
+  );
+}
+
+function getLast15DayKeys() {
+  const today = new Date();
+  const dayKeys = [];
+
+  for (let offset = 14; offset >= 0; offset -= 1) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - offset);
+    dayKeys.push(toLocalDayKey(date));
+  }
+
+  return dayKeys;
+}
+
+function toLocalDayKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function formatShortDay(dayKey) {
+  const [, month, day] = dayKey.split("-");
+  return `${month}/${day}`;
 }
 
 function formatType(type) {
