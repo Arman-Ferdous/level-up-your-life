@@ -11,6 +11,7 @@ import ExpenseTrackerPage from "./pages/ExpenseTrackerPage";
 import TasksPage from "./pages/TasksPage";
 import PomodoroPage from "./pages/PomodoroPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
+import GroupsPage from "./pages/GroupsPage";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -41,6 +42,7 @@ function App() {
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/pomodoro" element={<ProtectedRoute><PomodoroPage /></ProtectedRoute>} />
         <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
+        <Route path="/groups" element={<ProtectedRoute><GroupsPage /></ProtectedRoute>} />
         <Route path="/mood" element={<ProtectedRoute><MoodProvider><MoodPage /></MoodProvider></ProtectedRoute>} />
         <Route path="/expense-tracker" element={<ProtectedRoute><ExpenseTrackerPage /></ProtectedRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
