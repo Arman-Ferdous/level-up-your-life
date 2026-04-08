@@ -11,6 +11,7 @@ import MoodPage from "./pages/MoodPage";
 import ExpenseTrackerPage from "./pages/ExpenseTrackerPage";
 import TasksPage from "./pages/TasksPage";
 import PomodoroPage from "./pages/PomodoroPage";
+import ChallengesPage from "./pages/ChallengesPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import GroupsPage from "./pages/GroupsPage";
 import CalendarPage from "./pages/CalendarPage";
@@ -44,6 +45,7 @@ function App() {
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/pomodoro" element={<ProtectedRoute><PomodoroPage /></ProtectedRoute>} />
         <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
+        <Route path="/challenges" element={<ProtectedRoute><ChallengesPage /></ProtectedRoute>} />
         <Route path="/groups" element={<ProtectedRoute><GroupsPage /></ProtectedRoute>} />
         <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
         <Route path="/mood" element={<ProtectedRoute><MoodProvider><MoodPage /></MoodProvider></ProtectedRoute>} />

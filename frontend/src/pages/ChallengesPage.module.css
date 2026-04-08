@@ -1,0 +1,174 @@
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.header {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.kicker {
+  color: #6366f1;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.8rem, 2.4vw, 2.6rem);
+}
+
+.description {
+  margin: 0;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.panel {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.panelTitle {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: #0f172a;
+}
+
+.error {
+  margin: 0 0 1rem 0;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.fieldGroup {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.fieldRow {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+input,
+textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
+}
+
+.submitBtn,
+.completeBtn,
+.failBtn {
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0.9rem 1.2rem;
+}
+
+.submitBtn {
+  background: #4338ca;
+  color: #fff;
+}
+
+.completeBtn {
+  background: #22c55e;
+  color: #fff;
+}
+
+.failBtn {
+  background: #ef4444;
+  color: #fff;
+}
+
+.message {
+  color: #475569;
+  margin: 0;
+}
+
+.list {
+  display: grid;
+  gap: 1rem;
+}
+
+.challengeCard {
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 1rem;
+  background: #f8fafc;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.statusBadge {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statusActive { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+.statusWon { background: #d1fae5; color: #166534; }
+.statusLost { background: #fee2e2; color: #991b1b; }
+
+.challengeDesc {
+  margin: 0.75rem 0 0.75rem 0;
+  color: #334155;
+}
+
+.cardMeta {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.cardActions {
+  margin-top: 0.85rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}

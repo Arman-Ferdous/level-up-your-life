@@ -198,9 +198,15 @@ export const updateTask = asyncHandler(async (req, res) => {
   if (reminderWeekdays !== undefined) updateData.reminderWeekdays = reminderWeekdays;
   if (reminderTime !== undefined) updateData.reminderTime = reminderTime || null;
   if (priority !== undefined) updateData.priority = priority;
+  let rewardTaskCompletion = false;
   if (completed !== undefined) {
     updateData.completed = completed;
     updateData.completedOn = completed ? new Date() : null;
+
+    if (completed && !existingTask.completed && !existingTask.rewarded && !existingTask.groupId) {
+      updateData.rewarded = true;
+      rewardTaskCompletion = true;
+    }
   }
 
   if (type === "habit") {
@@ -326,6 +332,10 @@ export const updateTask = asyncHandler(async (req, res) => {
     updateData,
     { new: true, runValidators: true }
   );
+
+  if (rewardTaskCompletion) {
+    await User.findByIdAndUpdate(userId, { $inc: { points: 10 } });
+  }
 
   const updatedTask = normalizeTaskForResponse(updatedTaskDoc.toObject(), isGroupTask);
   const groupMembers = isGroupTask && group ? await buildGroupMembersPayload(group) : [];

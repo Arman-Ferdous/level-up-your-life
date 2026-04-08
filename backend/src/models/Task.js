@@ -87,6 +87,10 @@ const taskSchema = new mongoose.Schema(
       type: Date,
       default: null
     },
+    rewarded: {
+      type: Boolean,
+      default: false
+    },
     groupCompletionUsers: {
       type: [groupCompletionSchema],
       default: []

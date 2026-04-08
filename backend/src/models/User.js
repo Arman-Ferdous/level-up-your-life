@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema(
     email: { type: String, trim: true, lowercase: true, required: true, unique: true },
     role: { type: String, enum: ["user", "admin"], default: "user", required: true },
     passwordHash: { type: String, required: true, select: false },
-    refreshTokenHash: { type: String, select: false, default: null }
+    refreshTokenHash: { type: String, select: false, default: null },
+    points: { type: Number, default: 0 }
   },
   { timestamps: true }
 );

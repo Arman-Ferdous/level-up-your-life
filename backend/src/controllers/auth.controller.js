@@ -10,7 +10,13 @@ import {
 } from "../utils/tokens.js";
 
 function userDto(user) {
-  return { id: user._id, name: user.name, email: user.email, role: user.role };
+  return {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    points: user.points ?? 0
+  };
 }
 
 export const register = asyncHandler(async (req, res) => {

@@ -22,10 +22,12 @@ export default function Navbar() {
             <Link to="/" style={styles.link}>Home</Link>
             <Link to="/pomodoro" style={styles.link}>Pomodoro</Link>
             <Link to="/tasks" style={styles.link}>Tasks</Link>
+            <Link to="/challenges" style={styles.link}>Challenges</Link>
             <Link to="/groups" style={styles.link}>Groups</Link>
             <Link to="/calendar" style={styles.link}>Calendar</Link>
             <Link to="/mood" style={styles.link}>Mood</Link>
             <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>
+            <span style={styles.points}>Points: {user?.points ?? 0}</span>
             {user.role === "admin" && <Link to="/admin/users" style={styles.link}>Admin</Link>}
             <NotificationPanel />
             <button onClick={handleLogout} style={styles.logoutBtn}>
@@ -66,6 +68,13 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "1rem",
+  },
+  points: {
+    color: "#fff",
+    fontSize: "0.95rem",
+    padding: "0.3rem 0.75rem",
+    border: "1px solid rgba(255, 255, 255, 0.35)",
+    borderRadius: 999,
   },
   link: {
     color: "#fff",
