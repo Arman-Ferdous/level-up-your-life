@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import HomeSidebar from "../components/HomeSidebar";
+import Badge from "../components/Badge";
 import styles from "./Home.module.css";
 
 function getGreeting() {
@@ -28,6 +29,9 @@ export default function Home() {
             <p className={styles.sub}>
               Here's your daily overview. Keep leveling up!
             </p>
+          </div>
+          <div className={styles.badgeContainer}>
+            <Badge streak={user.streak || 0} />
           </div>
         </section>
 

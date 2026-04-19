@@ -36,6 +36,14 @@
   flex: 1;
 }
 
+.badgeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2rem;
+  animation: fadeInUp 550ms ease-out both;
+}
+
 .greeting {
   margin: 0;
   font-size: 1.1rem;
