@@ -1,0 +1,75 @@
+/* Badge Container */
+.badgeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Main Badge Circle */
+.badge {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover effect - scale up */
+.badge:hover {
+  transform: scale(1.1);
+}
+
+/* Badge Icon */
+.icon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+/* Badge Levels */
+
+/* Beginner - Green with 🌱 */
+.badge-beginner {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+/* Bronze - Orange/Brown with 🔥 */
+.badge-bronze {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: white;
+}
+
+/* Silver - Gray/Blue with ⚡ */
+.badge-silver {
+  background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
+  color: #1f2937;
+}
+
+/* Gold - Yellow/Gold with 👑 */
+.badge-gold {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: white;
+}
+
+/* Badge Name Text */
+.badgeName {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  color: #1f2937;
+  min-height: 20px;
+}
+
+/* Streak Counter */
+.streak {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+  font-weight: 500;
+}
