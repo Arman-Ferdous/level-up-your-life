@@ -1,0 +1,80 @@
+.hexWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0 0.5rem;
+}
+
+.circle {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+}
+
+.moodBtn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  transform-origin: center center;
+}
+
+.moodBtn:hover { transform: scale(1.04) translateZ(0); }
+
+.emoji { font-size: 1.6rem; }
+.label { font-size: 0.72rem; color: #0f172a; font-weight: 700; }
+
+.selected {
+  background: linear-gradient(135deg, #f97316 0%, #f43f5e 100%);
+  color: white;
+  box-shadow: 0 10px 30px rgba(249, 115, 22, 0.14);
+}
+
+.centerBadge {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 86px;
+  height: 86px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96));
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  border: 1px solid rgba(15,23,42,0.04);
+}
+
+/* Collapsed state: hide peripheral buttons and enlarge center badge */
+.collapsed .moodBtn {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6) !important;
+  pointer-events: none;
+}
+
+.collapsed .centerBadge {
+  width: 140px;
+  height: 140px;
+  border-radius: 20px;
+  font-size: 2.4rem;
+  transition: width 320ms ease, height 320ms ease, font-size 320ms ease;
+}
+
+@media (max-width: 768px) {
+  .circle { width: 200px; height: 200px; }
+  .moodBtn { width: 58px; height: 58px; }
+  .centerBadge { width: 72px; height: 72px; }
+}
