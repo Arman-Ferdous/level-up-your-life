@@ -50,14 +50,15 @@ export const saveMood = asyncHandler(async (req, res) => {
 
   // Check if entry already exists
   const existingEntry = await MoodEntry.findOne({ userId, date });
-  
-  // Only set createdAt/updatedAt for new entries
+
+  // Prepare update payload. We always set `updatedAt` so clients and consumers
+  // can rely on a change timestamp. For new entries, also set `createdAt`.
+  const nowTs = timestamp ? new Date(timestamp) : new Date();
   const updateData = { $set: { emoji, note: note ?? "", date } };
-  if (timestamp && !existingEntry) {
-    // Only set timestamps for NEW entries, not updates
-    updateData.$set.createdAt = new Date(timestamp);
-    updateData.$set.updatedAt = new Date(timestamp);
+  if (!existingEntry) {
+    updateData.$set.createdAt = nowTs;
   }
+  updateData.$set.updatedAt = nowTs;
 
   const entry = await MoodEntry.findOneAndUpdate(
     { userId, date },

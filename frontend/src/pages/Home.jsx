@@ -1,8 +1,14 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { api } from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import HomeSidebar from "../components/HomeSidebar";
 import Badge from "../components/Badge";
+import UpcomingTasksSidebar from "../components/UpcomingTasksSidebar";
+import MoodHexPicker from "../components/MoodHexPicker";
+import HabitStreakGrid from "../components/HabitStreakGrid";
 import styles from "./Home.module.css";
+import { TransactionAPI } from "../api/transaction.api";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -13,67 +19,181 @@ function getGreeting() {
 
 export default function Home() {
   const { user } = useAuth();
+  const [todayMood, setTodayMood] = useState(null);
+  const [moodLoading, setMoodLoading] = useState(true);
+  const [balanceLoading, setBalanceLoading] = useState(true);
+  const [balance, setBalance] = useState(null);
+
+  useEffect(() => {
+    const today = new Date();
+    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+    api
+      .get("/api/mood/today", { params: { date } })
+      .then((res) => setTodayMood(res.data.entry))
+      .catch(() => setTodayMood(null))
+      .finally(() => setMoodLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    setBalanceLoading(true);
+
+    TransactionAPI.stats({ year, month })
+      .then((res) => {
+        setBalance(res.data.summary?.balance ?? 0);
+      })
+      .catch(() => setBalance(0))
+      .finally(() => setBalanceLoading(false));
+  }, []);
 
   if (!user) return null;
 
   const firstName = user.name?.split(" ")[0] || user.name;
+  const badgeMilestones = [
+    { key: "beginner", icon: "🌱", name: "First Step", unlockAt: 1 },
+    { key: "bronze", icon: "🔥", name: "Starter Spark", unlockAt: 7 },
+    { key: "silver", icon: "⚡", name: "Consistency Builder", unlockAt: 14 },
+    { key: "gold", icon: "👑", name: "Unstoppable Force", unlockAt: 30 },
+  ];
+  const streak = Math.max(0, Number(user.streak) || 0);
 
   return (
     <main className={styles.page}>
+      <HomeSidebar />
+
       <div className={styles.mainContent}>
-        {/* ── Hero ── */}
-        <section className={styles.hero}>
-          <div className={styles.heroText}>
+        <section className={`${styles.section} ${styles.heroSection}`}>
+          <div className={styles.heroCopy}>
             <p className={styles.greeting}>{getGreeting()},</p>
             <h1 className={styles.name}>{firstName} 👋</h1>
             <p className={styles.sub}>
-              Here's your daily overview. Keep leveling up!
+              Today's focus lives here. Jump straight into Pomodoro, track what matters, and keep the momentum moving.
+            </p>
+
+            <div className={styles.heroActions}>
+              <Link to="/pomodoro" className={styles.primaryAction} aria-label="Start Pomodoro">
+                <span aria-hidden="true">🕒</span>
+              </Link>
+              <p className={styles.heroHint}>25-minute focus sprint</p>
+            </div>
+          </div>
+
+          <div className={styles.tasksPanel}>
+            <UpcomingTasksSidebar />
+          </div>
+        </section>
+
+        <section className={`${styles.section} ${styles.moodSection}`}>
+          <div className={styles.sectionHeader}>
+            <p className={styles.sectionKicker}>Section 02</p>
+            <h2 className={styles.sectionTitle}>Mood, expense, and calendar</h2>
+            <p className={styles.sectionSubtitle}>
+              Check how today feels, then jump to money tracking or the heatmap calendar with one click.
             </p>
           </div>
-          <div className={styles.badgeContainer}>
-            <Badge streak={user.streak || 0} />
+
+          <div className={styles.secondaryGrid}>
+            <article className={styles.moodCard}>
+              <div className={styles.cardHeaderRow}>
+                <div>
+                  <p className={styles.cardEyebrow}>Today's mood</p>
+                  <h3 className={styles.cardTitle}>Log how you feel</h3>
+                </div>
+                <Link to="/mood" className={styles.cardButton}>
+                  Mood Journal
+                </Link>
+              </div>
+
+              {moodLoading ? (
+                <p className={styles.loadingText}>Loading mood...</p>
+              ) : (
+                <>
+                  <MoodHexPicker initial={todayMood} onSaved={(entry) => setTodayMood(entry)} />
+
+                  <div className={styles.moodHintRow}>
+                    <p className={styles.moodNote}>Tap one to set today's mood. You can edit entries in the Mood Journal.</p>
+                  </div>
+                </>
+              )}
+            </article>
+
+            <div className={styles.quickLinks}>
+              <div className={styles.balanceCard}>
+                <div>
+                  <p className={styles.cardEyebrow}>Current balance</p>
+                  <h2 className={styles.balanceValue}>
+                    {balanceLoading ? "—" : balance >= 0 ? `$${balance.toFixed(2)}` : `-$${Math.abs(balance).toFixed(2)}`}
+                  </h2>
+                  <p className={styles.balanceSub}>This month</p>
+                </div>
+
+                <div>
+                  <Link to="/expense-tracker" className={styles.cardButton}>
+                    Update in Expense Manager
+                  </Link>
+                </div>
+              </div>
+
+              <Link to="/calendar" className={styles.quickLinkCard}>
+                <span className={styles.quickLinkIcon}>📅</span>
+                <div>
+                  <h3>Heatmap Calendar</h3>
+                  <p>See task pressure, expenses, and mood trends across the month.</p>
+                </div>
+              </Link>
+            </div>
           </div>
         </section>
 
-        <Link to="/pomodoro" className={styles.pomodoroBanner}>
-          <div>
-            <p className={styles.pomodoroKicker}>Focus Sprint</p>
-            <h3 className={styles.pomodoroTitle}>Start a 25-minute Pomodoro</h3>
-            <p className={styles.pomodoroDesc}>One click to enter focus mode and run your timer.</p>
+        <section className={`${styles.section} ${styles.badgeSection}`}>
+          <div className={styles.sectionHeaderSplit}>
+            <div className={styles.sectionHeader}>
+              <p className={styles.sectionKicker}>Section 03</p>
+              <h2 className={styles.sectionTitle}>Badges collected</h2>
+              <p className={styles.sectionSubtitle}>
+                Your streak unlocks a new badge track as you build consistency.
+              </p>
+            </div>
+
+            <div className={styles.sectionHeaderRight}>
+              <h2 className={styles.sectionTitle}>Habit consistency</h2>
+              <p className={styles.sectionSubtitle}>Last 12 weeks</p>
+            </div>
           </div>
-          <span className={styles.pomodoroCta}>Start Now</span>
-        </Link>
 
-        {/* ── Feature cards ── */}
-        <section className={styles.cards}>
-          <Link to="/mood" className={styles.card}>
-            <span className={styles.cardIcon}>🧠</span>
-            <h3 className={styles.cardTitle}>Mood Tracker</h3>
-            <p className={styles.cardDesc}>Log how you feel and review your 7-day mood history.</p>
-          </Link>
+          <div className={styles.badgeLayout}>
+            <div className={styles.badgesSection}>
+              <div className={styles.badgeSpotlight}>
+                <Badge streak={streak} />
+              </div>
 
-          <Link to="/expense-tracker" className={styles.card}>
-            <span className={styles.cardIcon}>💰</span>
-            <h3 className={styles.cardTitle}>Expense Tracker</h3>
-            <p className={styles.cardDesc}>Track income and expenses with charts and monthly summaries.</p>
-          </Link>
+              <div className={styles.badgeGrid}>
+                {badgeMilestones.map((badge) => {
+                  const unlocked = streak >= badge.unlockAt;
 
-          <Link to="/tasks" className={styles.card}>
-            <span className={styles.cardIcon}>✓</span>
-            <h3 className={styles.cardTitle}>Task Manager</h3>
-            <p className={styles.cardDesc}>Manage habits, deadlines, and one-time tasks efficiently.</p>
-          </Link>
+                  return (
+                    <article
+                      key={badge.key}
+                      className={`${styles.badgeTile} ${unlocked ? styles.badgeTileUnlocked : ""} badge-${badge.key}`}
+                    >
+                      <div className={styles.badgeTileIcon}>{badge.icon}</div>
+                      <h3>{badge.name}</h3>
+                      <p>{unlocked ? "Collected" : `Unlock at ${badge.unlockAt} days`}</p>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
 
-          <Link to="/calendar" className={styles.card}>
-            <span className={styles.cardIcon}>📅</span>
-            <h3 className={styles.cardTitle}>Calendar Heatmaps</h3>
-            <p className={styles.cardDesc}>See deadline pressure, spending versus earnings, and mood patterns day by day.</p>
-          </Link>
+            <div className={styles.habitsSection}>
+              <HabitStreakGrid showHeader={false} />
+            </div>
+          </div>
         </section>
       </div>
-
-      {/* ── Sidebar ── */}
-      <HomeSidebar />
     </main>
   );
 }

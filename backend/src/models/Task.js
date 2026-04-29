@@ -99,6 +99,10 @@ const taskSchema = new mongoose.Schema(
       type: [habitCompletionHistorySchema],
       default: []
     },
+    habitRewardMilestones: {
+      type: [Number],
+      default: []
+    },
     priority: {
       type: String,
       enum: ["low", "medium", "high"],

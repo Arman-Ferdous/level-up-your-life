@@ -13,6 +13,49 @@ function toLocalDayKey(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
+const DAY_ORDER = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+const HABIT_STREAK_REWARDS = [
+  { days: 2, points: 5 },
+  { days: 5, points: 15 },
+  { days: 10, points: 50 },
+  { days: 15, points: 100 },
+  { days: 30, points: 200 }
+];
+
+function getWeekdayCode(date) {
+  return DAY_ORDER[date.getDay()] || "sun";
+}
+
+function hasHabitCompletionForDay(history, userId, dayKey) {
+  if (!Array.isArray(history)) return false;
+  return history.some((entry) => String(entry.userId) === String(userId) && entry.dayKey === dayKey);
+}
+
+function computeHabitCurrentStreak({ reminderWeekdays, history, userId, today = new Date() }) {
+  if (!Array.isArray(reminderWeekdays) || reminderWeekdays.length === 0) return 0;
+
+  const scheduled = new Set(reminderWeekdays);
+  let streak = 0;
+  const cursor = new Date(today);
+  cursor.setHours(0, 0, 0, 0);
+
+  for (let i = 0; i < 400; i += 1) {
+    const weekday = getWeekdayCode(cursor);
+    if (scheduled.has(weekday)) {
+      const dayKey = toLocalDayKey(cursor);
+      if (hasHabitCompletionForDay(history, userId, dayKey)) {
+        streak += 1;
+      } else {
+        break;
+      }
+    }
+
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return streak;
+}
+
 function normalizeTaskType(taskType, isGroupTask) {
   if (isGroupTask && taskType === "deadline") {
     return "once";
@@ -199,15 +242,6 @@ export const updateTask = asyncHandler(async (req, res) => {
   if (reminderTime !== undefined) updateData.reminderTime = reminderTime || null;
   if (priority !== undefined) updateData.priority = priority;
   let rewardTaskCompletion = false;
-  if (completed !== undefined) {
-    updateData.completed = completed;
-    updateData.completedOn = completed ? new Date() : null;
-
-    if (completed && !existingTask.completed && !existingTask.rewarded && !existingTask.groupId) {
-      updateData.rewarded = true;
-      rewardTaskCompletion = true;
-    }
-  }
 
   if (type === "habit") {
     updateData.dueDate = null;
@@ -253,22 +287,56 @@ export const updateTask = asyncHandler(async (req, res) => {
     updateData.type = nextType;
   }
 
-  if (nextType === "habit") {
-    updateData.dueDate = null;
-    if (type !== undefined && currentType !== "habit") {
-      updateData.groupCompletionUsers = [];
-    }
-  }
+  if (completed !== undefined) {
+    if (nextType === "habit") {
+      const todayKey = toLocalDayKey();
+      let history = Array.isArray(task.habitCompletionHistory)
+        ? [...task.habitCompletionHistory]
+        : [];
 
-  if (nextType === "once") {
-    updateData.reminderWeekdays = [];
-    if (type !== undefined && currentType !== "once") {
-      updateData.habitCompletionHistory = [];
-    }
-  }
+      history = history.filter((entry) => entry?.dayKey);
 
-  if (isGroupTask && completed !== undefined) {
-    if (nextType === "once") {
+      const currentUserId = String(userId);
+      const existingIndex = history.findIndex(
+        (entry) => String(entry.userId) === currentUserId && entry.dayKey === todayKey
+      );
+
+      if (completed && existingIndex === -1) {
+        history.push({ userId, dayKey: todayKey, completedOn: new Date() });
+      }
+
+      if (!completed && existingIndex >= 0) {
+        history.splice(existingIndex, 1);
+      }
+
+      updateData.habitCompletionHistory = history;
+      if (completed) {
+        const currentStreak = computeHabitCurrentStreak({
+          reminderWeekdays: task.reminderWeekdays,
+          history,
+          userId
+        });
+
+        const claimedMilestones = new Set((task.habitRewardMilestones || []).map(Number));
+        const newRewards = HABIT_STREAK_REWARDS.filter(
+          (milestone) => currentStreak >= milestone.days && !claimedMilestones.has(milestone.days)
+        );
+
+        if (newRewards.length > 0) {
+          const earnedPoints = newRewards.reduce((sum, milestone) => sum + milestone.points, 0);
+          const nextMilestones = [...claimedMilestones, ...newRewards.map((milestone) => milestone.days)]
+            .map(Number)
+            .sort((a, b) => a - b);
+
+          updateData.habitRewardMilestones = nextMilestones;
+          await User.findByIdAndUpdate(userId, { $inc: { points: earnedPoints } });
+        }
+      }
+
+      // Habit completion is tracked per-day in history; keep task recurring and active.
+      updateData.completed = false;
+      updateData.completedOn = null;
+    } else if (isGroupTask && nextType === "once") {
       const completionUsers = Array.isArray(task.groupCompletionUsers)
         ? [...task.groupCompletionUsers]
         : [];
@@ -294,36 +362,28 @@ export const updateTask = asyncHandler(async (req, res) => {
       updateData.groupCompletionUsers = completionUsers;
       updateData.completed = allMembersComplete;
       updateData.completedOn = allMembersComplete ? new Date() : null;
+    } else {
+      updateData.completed = completed;
+      updateData.completedOn = completed ? new Date() : null;
+
+      if (completed && !existingTask.completed && !existingTask.rewarded && !isGroupTask) {
+        updateData.rewarded = true;
+        rewardTaskCompletion = true;
+      }
     }
+  }
 
-    if (nextType === "habit") {
-      const todayKey = toLocalDayKey();
-      let history = Array.isArray(task.habitCompletionHistory)
-        ? [...task.habitCompletionHistory]
-        : [];
+  if (nextType === "habit") {
+    updateData.dueDate = null;
+    if (type !== undefined && currentType !== "habit") {
+      updateData.groupCompletionUsers = [];
+    }
+  }
 
-      history = history.filter((entry) => entry?.dayKey);
-
-      const currentUserId = String(userId);
-      const existingIndex = history.findIndex(
-        (entry) => String(entry.userId) === currentUserId && entry.dayKey === todayKey
-      );
-
-      if (completed && existingIndex === -1) {
-        history.push({ userId, dayKey: todayKey, completedOn: new Date() });
-      }
-
-      if (!completed && existingIndex >= 0) {
-        history.splice(existingIndex, 1);
-      }
-
-      const currentUserCompletedToday = history.some(
-        (entry) => String(entry.userId) === currentUserId && entry.dayKey === todayKey
-      );
-
-      updateData.habitCompletionHistory = history;
-      updateData.completed = currentUserCompletedToday;
-      updateData.completedOn = currentUserCompletedToday ? new Date() : null;
+  if (nextType === "once") {
+    updateData.reminderWeekdays = [];
+    if (type !== undefined && currentType !== "once") {
+      updateData.habitCompletionHistory = [];
     }
   }
 

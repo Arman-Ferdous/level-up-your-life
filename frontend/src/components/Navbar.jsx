@@ -1,10 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import NotificationPanel from "./NotificationPanel";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomeRoute = location.pathname === "/";
 
   async function handleLogout() {
     await logout();
@@ -19,14 +21,18 @@ export default function Navbar() {
       <div style={styles.right}>
         {user ? (
           <>
-            <Link to="/" style={styles.link}>Home</Link>
-            <Link to="/pomodoro" style={styles.link}>Pomodoro</Link>
-            <Link to="/tasks" style={styles.link}>Tasks</Link>
-            <Link to="/challenges" style={styles.link}>Challenges</Link>
-            <Link to="/groups" style={styles.link}>Groups</Link>
-            <Link to="/calendar" style={styles.link}>Calendar</Link>
-            <Link to="/mood" style={styles.link}>Mood</Link>
-            <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>
+            {!isHomeRoute && (
+              <>
+                <Link to="/" style={styles.link}>Home</Link>
+                <Link to="/pomodoro" style={styles.link}>Pomodoro</Link>
+                <Link to="/tasks" style={styles.link}>Tasks</Link>
+                <Link to="/challenges" style={styles.link}>Challenges</Link>
+                <Link to="/groups" style={styles.link}>Groups</Link>
+                <Link to="/calendar" style={styles.link}>Calendar</Link>
+                <Link to="/mood" style={styles.link}>Mood</Link>
+                <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>
+              </>
+            )}
             <span style={styles.points}>Points: {user?.points ?? 0}</span>
             {user.role === "admin" && <Link to="/admin/users" style={styles.link}>Admin</Link>}
             <NotificationPanel />

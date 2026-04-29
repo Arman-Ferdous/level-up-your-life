@@ -417,6 +417,15 @@ function getCheckedUsers(task) {
 }
 
 function getCurrentUserCompletion(task, currentUserId, isGroupScope) {
+  if (task.type === "habit") {
+    const effectiveUserId = currentUserId || String(task.userId || "");
+    if (!effectiveUserId) {
+      return false;
+    }
+
+    return hasHabitCompletion(task, effectiveUserId, toLocalDayKey());
+  }
+
   if (!isGroupScope) {
     return Boolean(task.completed);
   }
@@ -427,10 +436,6 @@ function getCurrentUserCompletion(task, currentUserId, isGroupScope) {
 
   if (task.type === "once") {
     return getCheckedUsers(task).includes(currentUserId);
-  }
-
-  if (task.type === "habit") {
-    return hasHabitCompletion(task, currentUserId, toLocalDayKey());
   }
 
   return Boolean(task.completed);

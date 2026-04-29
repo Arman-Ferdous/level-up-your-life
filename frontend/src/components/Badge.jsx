@@ -1,5 +1,4 @@
 import styles from './Badge.module.css';
-import { useMemo } from 'react';
 
 const BADGE_LEVELS = [
   {
@@ -63,11 +62,6 @@ export function Badge({ streak = 0 }) {
   const safeStreak = Math.max(0, Number(streak) || 0);
   const badge = getBadge(safeStreak);
 
-  const lockedBadges = useMemo(
-    () => BADGE_LEVELS.filter((level) => safeStreak < level.minDays),
-    [safeStreak]
-  );
-
   return (
     <div className={styles.badgeContainer}>
       <div className={`${styles.badge} ${styles[badge.className]}`}>
@@ -75,36 +69,6 @@ export function Badge({ streak = 0 }) {
       </div>
       <p className={styles.badgeName}>{badge.name}</p>
       <p className={styles.streak}>{safeStreak} day streak</p>
-
-      <div className={styles.lockedHoverArea}>
-        <button type="button" className={styles.lockedTrigger}>
-          <span aria-hidden="true">🔒</span> Locked badges
-        </button>
-
-        <div className={styles.lockedPopover}>
-          <h4 className={styles.lockedTitle}>Upcoming Badges</h4>
-          {lockedBadges.length === 0 ? (
-            <p className={styles.allUnlocked}>All badges unlocked. Amazing work!</p>
-          ) : (
-            <ul className={styles.lockedList}>
-              {lockedBadges.map((level) => {
-                const daysLeft = Math.max(0, level.unlockAt - safeStreak);
-                return (
-                  <li key={level.key} className={styles.lockedItem}>
-                    <span className={styles.lockedIcon}>{level.icon}</span>
-                    <div>
-                      <p className={styles.lockedName}>{level.name}</p>
-                      <p className={styles.unlockInfo}>
-                        Unlock at {level.unlockAt} days ({daysLeft} day{daysLeft === 1 ? '' : 's'} left)
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
-      </div>
     </div>
   );
 }

@@ -2,8 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { api } from "../api/axios";
 import { MoodContext } from "../context/MoodContext";
 import styles from "./MoodPicker.module.css";
+import { EMOJI_LIST } from "../constants/moods";
 
-const EMOJIS = ["😄", "🙂", "😐", "😔", "😡", "😴"];
+const EMOJIS = EMOJI_LIST;
 
 // Get today's date in local timezone as YYYY-MM-DD
 function getTodayLocalDate() {

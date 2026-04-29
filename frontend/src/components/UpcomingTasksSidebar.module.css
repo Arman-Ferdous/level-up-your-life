@@ -1,48 +1,60 @@
 .sidebar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  padding: 1.25rem;
-  color: #fff;
-  min-height: 400px;
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  padding: 0 0 5.5rem 0;
+  color: #101828;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .title {
   margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #101828;
 }
 
 .addButton {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: inline-grid;
+  place-items: center;
+  width: 4.75rem;
+  height: 4.75rem;
   text-decoration: none;
-  color: #1e3a5f;
-  background: #fff;
-  border-radius: 999px;
-  padding: 0.45rem 0.8rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  white-space: nowrap;
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 1.25rem;
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 18px 40px rgba(124, 58, 237, 0.28);
+  z-index: 2;
 }
 
 .addButton:hover {
-  background: #eff6ff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 22px 48px rgba(124, 58, 237, 0.34);
 }
 
 .message {
   text-align: center;
-  color: rgba(255, 255, 255, 0.8);
-  padding: 2rem 1rem;
-  font-size: 0.9rem;
+  color: rgba(16, 24, 40, 0.75);
+  padding: 1.5rem 1rem;
+  font-size: 1rem;
 }
 
 .error {
@@ -61,62 +73,76 @@
   flex: 1;
 }
 
-.sectionDivider {
-  position: relative;
-  margin: 0.25rem 0;
-  padding-top: 0.35rem;
-}
-
-.sectionDivider::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.sectionDividerText {
-  position: relative;
-  display: inline-block;
-  padding-right: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.taskItem {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 0.875rem;
+.taskSections {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.taskSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.subheading {
+  margin: 0;
+  color: #101828;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sectionRule {
+  position: relative;
+  height: 1px;
+  background: rgba(16, 24, 40, 0.18);
+}
+
+.taskRows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.sectionEmpty {
+  margin: 0;
+  color: rgba(16, 24, 40, 0.62);
+  font-size: 1rem;
+}
+
+.taskRow {
+  display: flex;
+  align-items: center;
   gap: 0.75rem;
-  transition: all 0.2s;
-  backdrop-filter: blur(10px);
+  padding: 0.35rem 0;
+}
+
+.taskTextBlock {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 
 .completeButton {
   flex-shrink: 0;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border: none;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
-  color: #fff;
+  border-radius: 10px;
+  background: rgba(16, 24, 40, 0.08);
+  color: #101828;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 900;
   cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
 }
 
 .completeButton:hover:not(:disabled) {
-  background: rgba(34, 197, 94, 0.35);
+  background: rgba(16, 185, 129, 0.2);
 }
 
 .completeButton:disabled {
@@ -124,50 +150,63 @@
   opacity: 0.75;
 }
 
-.taskItem:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
 .taskOverdue {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.4);
+  color: #b42318;
 }
 
-.taskHabit {
-  border-left: 3px solid rgba(255, 255, 255, 0.6);
-}
-
-.taskOnce {
-  background: rgba(15, 23, 42, 0.28);
-  border-color: rgba(191, 219, 254, 0.28);
-}
-
-.taskItemBody {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.taskItemTitle {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 500;
+.taskCompleting .completeButton {
+  transform: scale(0.96);
+  background: rgba(34, 197, 94, 0.38);
   color: #fff;
+}
+
+.taskCompletedFlash .completeButton {
+  background: rgba(34, 197, 94, 0.58);
+  color: #fff;
+}
+
+.taskTitle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.taskTitleText {
+  position: relative;
+  display: inline-block;
+  color: #101828;
+  font-size: 1.08rem;
+  font-weight: 700;
   word-break: break-word;
+}
+
+.taskTitleCompleted .taskTitleText {
+  color: rgba(16, 24, 40, 0.72);
+}
+
+.taskTitleCompleted .taskTitleText::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 2px;
+  width: 100%;
+  background: #101828;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: strikeThrough 620ms ease forwards;
 }
 
 .scheduleText {
   margin: 0;
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.9rem;
+  color: rgba(16, 24, 40, 0.72);
 }
 
 .daysLabel {
   display: inline-block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
@@ -177,67 +216,135 @@
 }
 
 .daysNormal {
-  background: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(16, 24, 40, 0.08);
+  color: #475467;
 }
 
 .daysSoon {
-  background: rgba(251, 146, 60, 0.3);
-  color: #fed7aa;
+  background: rgba(251, 146, 60, 0.18);
+  color: #9a3412;
 }
 
 .daysOverdue {
-  background: rgba(239, 68, 68, 0.4);
-  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.16);
+  color: #b42318;
 }
 
 .daysAnytime {
   display: inline-block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   width: fit-content;
-  background: rgba(191, 219, 254, 0.25);
-  color: #dbeafe;
+  background: rgba(16, 24, 40, 0.08);
+  color: #475467;
 }
 
-.typeTag {
-  flex-shrink: 0;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-}
-
-.typeDeadline {
-  background: rgba(255, 255, 255, 0.25);
-  color: #fff;
-}
-
-.typeHabit {
-  background: rgba(34, 197, 94, 0.3);
-  color: #86efac;
-}
-
-.typeOnce {
-  background: rgba(191, 219, 254, 0.22);
-  color: #dbeafe;
-}
-
-.taskMeta {
+.undoToast {
+  position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.18);
+}
+
+.undoStack {
+  position: absolute;
+  right: 1.1rem;
+  bottom: 6.5rem;
+  width: min(420px, calc(100% - 2.2rem));
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.undoStack .undoToast {
+  pointer-events: auto;
+}
+
+.undoTitle {
+  margin: 0 0 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.undoText {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.undoButton {
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.undoButton:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.undoProgressTrack {
+  width: 100%;
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.14);
+  order: 3;
+  flex-basis: 100%;
+}
+
+.undoProgressBar {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f472b6 0%, #c084fc 100%);
+  transform-origin: left center;
+  animation: undoProgress 5s linear forwards;
+}
+
+@keyframes strikeThrough {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes undoProgress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
 }
 
 @media (max-width: 768px) {
   .sidebar {
     min-height: auto;
+    padding-bottom: 5rem;
   }
 
   .header {
@@ -245,11 +352,30 @@
     flex-direction: column;
   }
 
-  .taskItemTitle {
-    font-size: 0.85rem;
+  .taskTitleText {
+    font-size: 0.95rem;
   }
 
   .daysLabel {
     font-size: 0.65rem;
+  }
+
+  .undoToast {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .undoStack {
+    right: 0.75rem;
+    bottom: 5.75rem;
+    width: calc(100% - 1.5rem);
+  }
+
+  .addButton {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: 4.25rem;
+    height: 4.25rem;
+    border-radius: 1rem;
   }
 }

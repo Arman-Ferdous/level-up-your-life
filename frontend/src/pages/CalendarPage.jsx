@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useContext } from "react";
 import {
   CartesianGrid,
   Line,
@@ -11,6 +11,7 @@ import {
 import { TaskAPI } from "../api/task.api";
 import { TransactionAPI } from "../api/transaction.api";
 import { MoodAPI } from "../api/mood.api";
+import { MoodContext } from "../context/MoodContext";
 import styles from "./CalendarPage.module.css";
 
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -20,13 +21,14 @@ const MODE_OPTIONS = [
   { value: "mood", label: "Mood Trend (30 Days)" }
 ];
 
+// Mapping from emoji to numeric mood score (1 = worst, 6 = best)
 const MOOD_SCORE = {
-  "😄": 6,
-  "🙂": 5,
-  "😴": 4,
+  "😭": 1,
+  "😞": 2,
   "😐": 3,
-  "😔": 2,
-  "😡": 1
+  "🙂": 4,
+  "😊": 5,
+  "🤩": 6
 };
 
 function getMonthMeta(monthDate) {
@@ -91,17 +93,17 @@ export default function CalendarPage() {
       setError("");
 
       try {
-        const [taskRes, txRes, moodRes] = await Promise.all([
+        const [taskRes, txRes] = await Promise.all([
           TaskAPI.getTasks(),
-          TransactionAPI.list({ year, month }),
-          MoodAPI.getHistory({ days: 30 })
+          TransactionAPI.list({ year, month })
         ]);
 
         if (!isMounted) return;
 
         setTasks(taskRes.data.tasks || []);
         setTransactions(txRes.data.transactions || []);
-        setMoods(moodRes.data.entries || []);
+        // moods come from MoodContext (keeps calendar in sync when mood entries update)
+        // leave setMoods to the separate effect below that listens to context
       } catch (err) {
         if (isMounted) {
           setError(err?.response?.data?.message || "Failed to load calendar data.");
@@ -119,6 +121,13 @@ export default function CalendarPage() {
       isMounted = false;
     };
   }, [year, month]);
+
+  // Listen to global mood history and map into calendar moods
+  const { history: moodHistory } = useContext(MoodContext);
+
+  useEffect(() => {
+    setMoods(moodHistory || []);
+  }, [moodHistory]);
 
   const taskDueByDay = useMemo(() => {
     const daily = new Map();
@@ -165,8 +174,8 @@ export default function CalendarPage() {
       if (!value) return;
 
       const existing = latestByDate.get(entry.date);
-      const existingTs = existing ? new Date(existing.createdAt || 0).getTime() : -1;
-      const nextTs = new Date(entry.createdAt || 0).getTime();
+      const existingTs = existing ? new Date(existing.updatedAt || existing.createdAt || 0).getTime() : -1;
+      const nextTs = new Date(entry.updatedAt || entry.createdAt || 0).getTime();
 
       if (!existing || nextTs >= existingTs) {
         latestByDate.set(entry.date, entry);
