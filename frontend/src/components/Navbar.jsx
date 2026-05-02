@@ -27,6 +27,7 @@ export default function Navbar() {
                 <Link to="/pomodoro" style={styles.link}>Pomodoro</Link>
                 <Link to="/tasks" style={styles.link}>Tasks</Link>
                 <Link to="/challenges" style={styles.link}>Challenges</Link>
+                <Link to="/avatar-shop" style={styles.link}>Avatar Shop</Link>
                 <Link to="/groups" style={styles.link}>Groups</Link>
                 <Link to="/calendar" style={styles.link}>Calendar</Link>
                 <Link to="/mood" style={styles.link}>Mood</Link>
