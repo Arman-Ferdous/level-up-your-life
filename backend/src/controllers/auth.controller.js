@@ -15,7 +15,14 @@ function userDto(user) {
     name: user.name,
     email: user.email,
     role: user.role,
-    points: user.points ?? 0
+    points: user.points ?? 0,
+    selectedAvatar: user.selectedAvatar
+      ? {
+          id: user.selectedAvatar._id || user.selectedAvatar.id,
+          name: user.selectedAvatar.name,
+          emoji: user.selectedAvatar.emoji
+        }
+      : null
   };
 }
 
@@ -38,7 +45,8 @@ export const register = asyncHandler(async (req, res) => {
   await User.updateOne({ _id: user._id }, { refreshTokenHash });
 
   res.cookie("refreshToken", refreshToken, refreshCookieOptions());
-  res.status(201).json({ user: userDto(user), accessToken });
+  const fullUser = await User.findById(user._id).populate("selectedAvatar");
+  res.status(201).json({ user: userDto(fullUser), accessToken });
 });
 
 export const login = asyncHandler(async (req, res) => {
@@ -57,8 +65,10 @@ export const login = asyncHandler(async (req, res) => {
   const refreshTokenHash = await bcrypt.hash(refreshToken, 12);
   await User.updateOne({ _id: user._id }, { refreshTokenHash });
 
+  const fullUser = await User.findById(user._id).populate("selectedAvatar");
+
   res.cookie("refreshToken", refreshToken, refreshCookieOptions());
-  res.json({ user: userDto(user), accessToken });
+  res.json({ user: userDto(fullUser), accessToken });
 });
 
 export const logout = asyncHandler(async (req, res) => {
@@ -104,7 +114,7 @@ export const refresh = asyncHandler(async (req, res) => {
 });
 
 export const me = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.sub);
+  const user = await User.findById(req.user.sub).populate("selectedAvatar");
   if (!user) throw new AppError("User not found", 404);
   res.json({ user: userDto(user) });
 });

@@ -8,6 +8,7 @@ const MENU_ITEMS = [
   { to: "/pomodoro", label: "Pomodoro", icon: "⏱" },
   { to: "/tasks", label: "Tasks", icon: "✓" },
   { to: "/challenges", label: "Challenges", icon: "🏆" },
+  { to: "/avatar-shop", label: "Avatar Shop", icon: "🎭" },
   { to: "/groups", label: "Groups", icon: "👥" },
   { to: "/calendar", label: "Calendar", icon: "📅" },
   { to: "/mood", label: "Mood", icon: "🧠" },
@@ -51,7 +52,9 @@ export default function HomeSidebar() {
         <div className={styles.footer}>
           <div className={styles.footerRow}>
             <NotificationPanel />
-            <span className={styles.points}>Pts {user?.points ?? 0}</span>
+            <span className={styles.points}>
+              {user?.selectedAvatar?.emoji} Pts {user?.points ?? 0}
+            </span>
           </div>
 
           <div className={styles.footerActions}>

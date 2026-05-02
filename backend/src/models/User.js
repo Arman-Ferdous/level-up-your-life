@@ -7,8 +7,18 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ["user", "admin"], default: "user", required: true },
     passwordHash: { type: String, required: true, select: false },
     refreshTokenHash: { type: String, select: false, default: null },
-    points: { type: Number, default: 0 },
-    streak: { type: Number, default: 0 }
+    points: { type: Number, default: 100 },
+    streak: { type: Number, default: 0 },
+    ownedAvatars: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Avatar",
+      default: []
+    },
+    selectedAvatar: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Avatar",
+      default: null
+    }
   },
   { timestamps: true }
 );

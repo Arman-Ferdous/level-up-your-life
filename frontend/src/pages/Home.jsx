@@ -83,7 +83,9 @@ export default function Home() {
         <section className={`${styles.section} ${styles.heroSection}`}>
           <div className={styles.heroCopy}>
             <p className={styles.greeting}>{getGreeting()},</p>
-            <h1 className={styles.name}>{firstName} 👋</h1>
+            <h1 className={styles.name}>
+              {user.selectedAvatar?.emoji} {firstName} 👋
+            </h1>
             <p className={styles.sub}>
               Today's focus lives here. Jump straight into Pomodoro, track what matters, and keep the momentum moving.
             </p>
