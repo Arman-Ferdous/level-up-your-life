@@ -1,69 +1,159 @@
 .card {
-  border-radius: 12px;
-  background: linear-gradient(180deg, #ffffff, #f8fafc);
-  box-shadow: 0 8px 24px rgba(2,6,23,0.08);
-  padding: 1rem;
-  border: 1px solid #e6eef8;
-  max-width: 720px;
-  margin: 1rem 0;
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 38%),
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.compact {
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.surface_sidebar {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.88));
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.surface_notifications {
+  background: linear-gradient(180deg, #ffffff, #f8fbff);
 }
 
 .header {
-  display:flex;
-  align-items: baseline;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 1rem;
+  padding: 1rem 1rem 0;
 }
 
 .title {
   margin: 0;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #0f172a;
+  color: inherit;
+  font-size: 1.02rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
 }
 
 .sub {
-  margin: 0;
+  margin: 0.3rem 0 0;
   color: #64748b;
-  font-size: 0.85rem;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.surface_sidebar .sub {
+  color: rgba(226, 232, 240, 0.78);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.6rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
 }
 
 .body {
-  margin-top: 0.75rem;
+  padding: 0.9rem 1rem 1rem;
 }
 
 .message {
-  margin: 0 0 0.75rem 0;
+  margin: 0;
   color: #0f172a;
+  font-size: 0.95rem;
   font-weight: 600;
+  line-height: 1.55;
 }
 
-.actions {
-  display:flex;
-  gap: 0.75rem;
-  flex-wrap:wrap;
-  margin-bottom: 0.5rem;
+.surface_sidebar .message {
+  color: #f8fafc;
 }
 
-.btn {
-  background: #eef2ff;
-  color: #3730a3;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+.suggestions {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.9rem;
+}
+
+.suggestionCard,
+.suggestionCompact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-radius: 14px;
   text-decoration: none;
-  font-weight: 700;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
-.btnPrimary {
-  background: #3b82f6;
-  color: #fff;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  text-decoration: none;
+.suggestionCard {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(248, 250, 252, 0.94);
+}
+
+.suggestionCompact {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.suggestionCard:hover,
+.suggestionCompact:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.suggestionLabel {
+  color: inherit;
   font-weight: 800;
+  font-size: 0.93rem;
+}
+
+.suggestionDescription {
+  color: #64748b;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.surface_sidebar .suggestionLabel,
+.surface_sidebar .suggestionDescription {
+  color: #f8fafc;
+}
+
+.surface_sidebar .suggestionCompact {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .footer {
-  margin-top: 0.5rem;
-  color: #94a3b8;
-  font-size: 0.85rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.16);
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
+.surface_sidebar .footer {
+  color: rgba(226, 232, 240, 0.76);
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 768px) {
+  .header,
+  .body {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
 }

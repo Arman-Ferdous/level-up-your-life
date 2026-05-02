@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AiGuide from "./AiGuide";
 import NotificationPanel from "./NotificationPanel";
 import styles from "./HomeSidebar.module.css";
 
@@ -48,6 +49,8 @@ export default function HomeSidebar() {
             );
           })}
         </nav>
+
+        <AiGuide surface="sidebar" compact />
 
         <div className={styles.footer}>
           <div className={styles.footerRow}>

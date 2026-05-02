@@ -105,7 +105,7 @@ export default function Home() {
         </section>
 
         {/* AI Guide */}
-        <AiGuide todayMood={todayMood} />
+        <AiGuide todayMood={todayMood} surface="home" />
 
         {!monthlyChallengeLoading && monthlyChallenge && (
           <section className={`${styles.section} ${styles.challengeSection}`}>
