@@ -8,6 +8,7 @@ const MENU_ITEMS = [
   { to: "/pomodoro", label: "Pomodoro", icon: "⏱" },
   { to: "/tasks", label: "Tasks", icon: "✓" },
   { to: "/challenges", label: "Challenges", icon: "🏆" },
+  { to: "/avatar-shop", label: "Avatar Shop", icon: "🎭" },
   { to: "/groups", label: "Groups", icon: "👥" },
   { to: "/calendar", label: "Calendar", icon: "📅" },
   { to: "/mood", label: "Mood", icon: "🧠" },
