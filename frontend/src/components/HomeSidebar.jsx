@@ -52,7 +52,9 @@ export default function HomeSidebar() {
         <div className={styles.footer}>
           <div className={styles.footerRow}>
             <NotificationPanel />
-            <span className={styles.points}>Pts {user?.points ?? 0}</span>
+            <span className={styles.points}>
+              {user?.selectedAvatar?.emoji} Pts {user?.points ?? 0}
+            </span>
           </div>
 
           <div className={styles.footerActions}>
