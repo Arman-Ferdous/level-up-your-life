@@ -14,6 +14,8 @@ import ChallengesPage from "./pages/ChallengesPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import GroupsPage from "./pages/GroupsPage";
 import CalendarPage from "./pages/CalendarPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
+import ThemeSelectionPage from "./pages/ThemeSelectionPage";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -50,6 +52,8 @@ function App() {
         <Route path="/mood" element={<ProtectedRoute><MoodPage /></ProtectedRoute>} />
         <Route path="/expense-tracker" element={<ProtectedRoute><ExpenseTrackerPage /></ProtectedRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
+        <Route path="/settings/theme" element={<ProtectedRoute><ThemeSelectionPage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MoodProvider>

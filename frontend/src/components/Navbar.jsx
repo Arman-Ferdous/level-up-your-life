@@ -31,6 +31,7 @@ export default function Navbar() {
                 <Link to="/calendar" style={styles.link}>Calendar</Link>
                 <Link to="/mood" style={styles.link}>Mood</Link>
                 <Link to="/expense-tracker" style={styles.link}>Expense Tracker</Link>
+                <Link to="/leaderboard" style={styles.link}>Leaderboard</Link>
               </>
             )}
             <span style={styles.points}>Points: {user?.points ?? 0}</span>

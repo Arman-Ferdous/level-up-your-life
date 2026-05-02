@@ -12,6 +12,7 @@ import { challengeRouter } from "./routes/challengeRoutes.js";
 import { taskRouter } from "./routes/taskRoutes.js";
 import { notificationRouter } from "./routes/notificationRoutes.js";
 import { groupRouter } from "./routes/group.routes.js";
+import leaderboardRoutes from "./routes/leaderboardRoutes.js";
 import { notFound, errorHandler } from "./middlewares/error.middleware.js";
 
 export function createApp() {
@@ -46,6 +47,7 @@ export function createApp() {
   app.use("/api/challenges", challengeRouter);
   app.use("/api/notifications", notificationRouter);
   app.use("/api/groups", groupRouter);
+  app.use("/api/leaderboard", leaderboardRoutes);
   app.use("/api/notifications", notificationRouter);
 
   app.use(notFound);

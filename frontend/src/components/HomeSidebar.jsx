@@ -12,6 +12,7 @@ const MENU_ITEMS = [
   { to: "/calendar", label: "Calendar", icon: "📅" },
   { to: "/mood", label: "Mood", icon: "🧠" },
   { to: "/expense-tracker", label: "Expenses", icon: "💰" },
+  { to: "/leaderboard", label: "Leaderboard", icon: "🥇" },
 ];
 
 export default function HomeSidebar() {
@@ -63,6 +64,13 @@ export default function HomeSidebar() {
             <button type="button" className={styles.logoutButton} onClick={handleLogout}>
               Logout
             </button>
+            <Link
+              to="/settings/theme"
+              className={styles.footerLink}
+              style={{ marginTop: "0.5rem", display: "block", textAlign: "center" }}
+            >
+              🎨 Theme
+            </Link>
           </div>
         </div>
       </div>
