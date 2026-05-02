@@ -9,6 +9,7 @@ import MoodHexPicker from "../components/MoodHexPicker";
 import HabitStreakGrid from "../components/HabitStreakGrid";
 import styles from "./Home.module.css";
 import { TransactionAPI } from "../api/transaction.api";
+import { ChallengeAPI } from "../api/challenge.api";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -23,6 +24,8 @@ export default function Home() {
   const [moodLoading, setMoodLoading] = useState(true);
   const [balanceLoading, setBalanceLoading] = useState(true);
   const [balance, setBalance] = useState(null);
+  const [monthlyChallenge, setMonthlyChallenge] = useState(null);
+  const [monthlyChallengeLoading, setMonthlyChallengeLoading] = useState(true);
 
   useEffect(() => {
     const today = new Date();
@@ -47,6 +50,18 @@ export default function Home() {
       })
       .catch(() => setBalance(0))
       .finally(() => setBalanceLoading(false));
+  }, []);
+
+  useEffect(() => {
+    ChallengeAPI.getMonthly()
+      .then((res) => {
+        const challenges = res.data.monthlyChallenges || [];
+        if (challenges.length > 0) {
+          setMonthlyChallenge(challenges[0]);
+        }
+      })
+      .catch(() => setMonthlyChallenge(null))
+      .finally(() => setMonthlyChallengeLoading(false));
   }, []);
 
   if (!user) return null;
@@ -85,6 +100,53 @@ export default function Home() {
             <UpcomingTasksSidebar />
           </div>
         </section>
+
+        {!monthlyChallengeLoading && monthlyChallenge && (
+          <section className={`${styles.section} ${styles.challengeSection}`}>
+            <article className={styles.challengeCard}>
+              <div className={styles.challengeCardContent}>
+                <div className={styles.challengeCardTop}>
+                  <div>
+                    <p className={styles.challengeKicker}>Global Challenge</p>
+                    <h2 className={styles.challengeTitle}>{monthlyChallenge.title}</h2>
+                    <p className={styles.challengeDesc}>{monthlyChallenge.description}</p>
+                  </div>
+                </div>
+
+                <div className={styles.challengeCardStats}>
+                  <div className={styles.challengeStat}>
+                    <span className={styles.challengeStatLabel}>Participants</span>
+                    <span className={styles.challengeStatValue}>{monthlyChallenge.participantCount}</span>
+                  </div>
+                  <div className={styles.challengeStat}>
+                    <span className={styles.challengeStatLabel}>Completed</span>
+                    <span className={styles.challengeStatValue}>{monthlyChallenge.completedCount}</span>
+                  </div>
+                  {monthlyChallenge.winner && (
+                    <div className={styles.challengeStat}>
+                      <span className={styles.challengeStatLabel}>Winner</span>
+                      <span className={styles.challengeStatWinner}>👑 {monthlyChallenge.winner.name}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className={styles.challengeCardActions}>
+                  {!monthlyChallenge.currentUserEntry ? (
+                    <Link to="/challenges" className={styles.challengeActionBtn}>
+                      Register Now
+                    </Link>
+                  ) : !monthlyChallenge.currentUserEntry.completed ? (
+                    <Link to="/challenges" className={styles.challengeActionBtn}>
+                      Complete Challenge
+                    </Link>
+                  ) : (
+                    <span className={styles.challengeCompleted}>✓ You completed this!</span>
+                  )}
+                </div>
+              </div>
+            </article>
+          </section>
+        )}
 
         <section className={`${styles.section} ${styles.moodSection}`}>
           <div className={styles.sectionHeader}>

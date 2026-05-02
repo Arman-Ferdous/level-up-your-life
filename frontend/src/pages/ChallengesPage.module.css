@@ -153,6 +153,16 @@ textarea:focus {
 .statusWon { background: #d1fae5; color: #166534; }
 .statusLost { background: #fee2e2; color: #991b1b; }
 
+.rewardBadge {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
 .challengeDesc {
   margin: 0.75rem 0 0.75rem 0;
   color: #334155;
@@ -171,4 +181,31 @@ textarea:focus {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+}
+
+.leaderboardBox {
+  margin-top: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 0.9rem;
+  background: #ffffff;
+}
+
+.leaderboardBox h4 {
+  margin: 0 0 0.65rem 0;
+}
+
+.leaderboardList {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.leaderboardRow {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 0.65rem;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
 }

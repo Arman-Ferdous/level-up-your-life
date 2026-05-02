@@ -8,6 +8,10 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  function syncUser(nextUser) {
+    setUser(nextUser);
+  }
+
   async function bootstrap() {
     try {
       if (localStorage.getItem("accessToken")) {
@@ -52,7 +56,7 @@ export default function AuthProvider({ children }) {
   }
 
   return (
-    <AuthCtx.Provider value={{ user, loading, login, register, logout }}>
+    <AuthCtx.Provider value={{ user, loading, login, register, logout, syncUser }}>
       {children}
     </AuthCtx.Provider>
   );
