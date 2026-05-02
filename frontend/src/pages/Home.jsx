@@ -10,6 +10,7 @@ import HabitStreakGrid from "../components/HabitStreakGrid";
 import styles from "./Home.module.css";
 import { TransactionAPI } from "../api/transaction.api";
 import { ChallengeAPI } from "../api/challenge.api";
+import AiGuide from "../components/AiGuide";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -102,6 +103,9 @@ export default function Home() {
             <UpcomingTasksSidebar />
           </div>
         </section>
+
+        {/* AI Guide */}
+        <AiGuide todayMood={todayMood} />
 
         {!monthlyChallengeLoading && monthlyChallenge && (
           <section className={`${styles.section} ${styles.challengeSection}`}>
