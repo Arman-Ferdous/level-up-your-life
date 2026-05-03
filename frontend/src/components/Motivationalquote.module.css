@@ -1,0 +1,47 @@
+/* ===== MOTIVATIONAL QUOTE ===== */
+.quoteCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, rgba(245, 166, 35, 0.1), rgba(240, 109, 6, 0.08));
+  border-left: 4px solid #f5a623;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0 1rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.quoteCard.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quoteIcon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.quoteBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.quoteText {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text, #1a1a2e);
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.quoteAuthor {
+  font-size: 0.82rem;
+  color: var(--text-muted, #888);
+  margin: 0;
+  font-weight: 600;
+}

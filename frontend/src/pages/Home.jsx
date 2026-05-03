@@ -1,3 +1,4 @@
+import MotivationalQuote from "../components/MotivationalQuote";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/axios";
@@ -84,6 +85,7 @@ export default function Home() {
           <div className={styles.heroCopy}>
             <p className={styles.greeting}>{getGreeting()},</p>
             <h1 className={styles.name}>{firstName} 👋</h1>
+            <MotivationalQuote />
             <p className={styles.sub}>
               Today's focus lives here. Jump straight into Pomodoro, track what matters, and keep the momentum moving.
             </p>
