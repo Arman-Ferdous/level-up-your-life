@@ -53,6 +53,9 @@ export default function HomeSidebar() {
           <div className={styles.footerRow}>
             <NotificationPanel />
             <span className={styles.points}>Pts {user?.points ?? 0}</span>
+            <Link to="/settings/theme" className={styles.footerLink} title="Change Theme">
+              🎨
+            </Link>
           </div>
 
           <div className={styles.footerActions}>
@@ -64,13 +67,6 @@ export default function HomeSidebar() {
             <button type="button" className={styles.logoutButton} onClick={handleLogout}>
               Logout
             </button>
-            <Link
-              to="/settings/theme"
-              className={styles.footerLink}
-              style={{ marginTop: "0.5rem", display: "block", textAlign: "center" }}
-            >
-              🎨 Theme
-            </Link>
           </div>
         </div>
       </div>
