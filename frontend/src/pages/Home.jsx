@@ -104,8 +104,47 @@ export default function Home() {
           </div>
         </section>
 
-        {/* AI Guide */}
-        <AiGuide todayMood={todayMood} surface="home" />
+        <section className={`${styles.section} ${styles.aiSection}`} aria-labelledby="ai-assistant-title">
+          <div className={styles.sectionHeader}>
+            <p className={styles.sectionKicker}>Section 02</p>
+            <h2 id="ai-assistant-title" className={styles.sectionTitle}>
+              AI Assistant
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              Get a personalized nudge, ask for help, or open the chat whenever you want the AI to think with you.
+            </p>
+          </div>
+
+          <div className={styles.aiLayout}>
+            <AiGuide todayMood={todayMood} surface="home" />
+
+            <article className={styles.aiChatCard}>
+              <div>
+                <p className={styles.cardEyebrow}>AI chat</p>
+                <h3 className={styles.cardTitle}>Talk through your next move</h3>
+              </div>
+
+              <p className={styles.aiChatText}>
+                Use the floating chat button anytime, or open the bot here to get help with planning, motivation,
+                mood, or tasks.
+              </p>
+
+              <button
+                type="button"
+                className={styles.aiChatButton}
+                onClick={() => window.dispatchEvent(new Event("open-ai-chat"))}
+              >
+                Open AI chat
+              </button>
+
+              <ul className={styles.aiPromptList}>
+                <li>Plan my day in 3 steps</li>
+                <li>Help me start one task</li>
+                <li>Motivate me when I feel stuck</li>
+              </ul>
+            </article>
+          </div>
+        </section>
 
         {!monthlyChallengeLoading && monthlyChallenge && (
           <section className={`${styles.section} ${styles.challengeSection}`}>
@@ -156,7 +195,7 @@ export default function Home() {
 
         <section className={`${styles.section} ${styles.moodSection}`}>
           <div className={styles.sectionHeader}>
-            <p className={styles.sectionKicker}>Section 02</p>
+            <p className={styles.sectionKicker}>Section 03</p>
             <h2 className={styles.sectionTitle}>Mood, expense, and calendar</h2>
             <p className={styles.sectionSubtitle}>
               Check how today feels, then jump to money tracking or the heatmap calendar with one click.
@@ -219,7 +258,7 @@ export default function Home() {
         <section className={`${styles.section} ${styles.badgeSection}`}>
           <div className={styles.sectionHeaderSplit}>
             <div className={styles.sectionHeader}>
-              <p className={styles.sectionKicker}>Section 03</p>
+              <p className={styles.sectionKicker}>Section 04</p>
               <h2 className={styles.sectionTitle}>Badges collected</h2>
               <p className={styles.sectionSubtitle}>
                 Your streak unlocks a new badge track as you build consistency.

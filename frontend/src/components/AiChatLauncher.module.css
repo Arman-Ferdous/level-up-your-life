@@ -1,0 +1,226 @@
+.launcher {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1200;
+}
+
+.fab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0f172a 0%, #2563eb 55%, #06b6d4 100%);
+  color: #fff;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.26);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.fabIcon {
+  font-size: 1.05rem;
+}
+
+.fabText {
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
+}
+
+.panel {
+  width: min(24rem, calc(100vw - 2rem));
+  max-height: min(38rem, calc(100vh - 2rem));
+  display: flex;
+  flex-direction: column;
+  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 28px 64px rgba(15, 23, 42, 0.22);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.85rem;
+  background: linear-gradient(135deg, #0f172a, #1d4ed8 50%, #0ea5e9);
+  color: #fff;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.title {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.providerBadge {
+  margin: 0.35rem 0 0;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.providerBadge[data-provider="gemini"] {
+  background: rgba(59, 130, 246, 0.18);
+}
+
+.providerBadge[data-provider="openai"] {
+  background: rgba(16, 185, 129, 0.18);
+}
+
+.providerBadge[data-provider="fallback"] {
+  background: rgba(245, 158, 11, 0.18);
+}
+
+.closeButton {
+  border: 0;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.messages {
+  padding: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  overflow-y: auto;
+}
+
+.messageRow {
+  display: flex;
+}
+
+.user {
+  justify-content: flex-end;
+}
+
+.assistant {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 86%;
+  padding: 0.8rem 0.95rem;
+  border-radius: 18px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.user .bubble {
+  background: linear-gradient(135deg, #0f172a, #1d4ed8);
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+
+.assistant .bubble {
+  background: #f8fafc;
+  color: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-bottom-left-radius: 6px;
+}
+
+.typing {
+  color: #64748b;
+  font-size: 0.84rem;
+}
+
+.quickPrompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+}
+
+.quickPrompt {
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quickPrompt[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0 1rem 1rem;
+}
+
+.input {
+  width: 100%;
+  resize: none;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  padding: 0.85rem 0.95rem;
+  font: inherit;
+  color: #0f172a;
+  background: #fff;
+}
+
+.input:focus {
+  outline: 2px solid rgba(37, 99, 235, 0.22);
+  outline-offset: 2px;
+}
+
+.sendButton {
+  border: 0;
+  border-radius: 14px;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(135deg, #0f172a, #2563eb);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.sendButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .launcher {
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+
+  .fabText {
+    display: none;
+  }
+
+  .panel {
+    width: min(22rem, calc(100vw - 1.5rem));
+  }
+}
