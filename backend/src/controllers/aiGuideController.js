@@ -468,30 +468,30 @@ export const getAiGuide = asyncHandler(async (req, res) => {
   let guide = null;
   let provider = "fallback";
   try {
-    console.log("[AI Guide] Requesting OpenAI with context:", {
+    console.log("[AI Guide] Requesting Gemini with context:", {
       surface: context.surface,
       userName: context.userName,
       userPoints: context.userPoints,
       moodTag: context.moodTag,
       incompleteTaskCount: context.incompleteTaskCount
     });
-    guide = await requestOpenAI(context);
+    guide = await requestGeminiGuide(context);
     if (guide) {
-      provider = "openai";
-      console.log("[AI Guide] ✅ OpenAI returned:", guide.headline);
+      provider = "gemini";
+      console.log("[AI Guide] ✅ Gemini returned:", guide.headline);
     } else {
-      console.log("[AI Guide] OpenAI unavailable, trying Gemini...");
-      guide = await requestGeminiGuide(context);
+      console.log("[AI Guide] Gemini unavailable, trying OpenAI...");
+      guide = await requestOpenAI(context);
       if (guide) {
-        provider = "gemini";
-        console.log("[AI Guide] ✅ Gemini returned:", guide.headline);
+        provider = "openai";
+        console.log("[AI Guide] ✅ OpenAI returned:", guide.headline);
       }
     }
   } catch (error) {
-    console.error("[AI Guide] OpenAI call failed:", error.message);
-    console.log("[AI Guide] Trying Gemini after OpenAI error...");
-    guide = await requestGeminiGuide(context);
-    if (guide) provider = "gemini";
+    console.error("[AI Guide] Primary AI call failed:", error.message);
+    console.log("[AI Guide] Trying fallback provider (OpenAI)...");
+    guide = await requestOpenAI(context);
+    if (guide) provider = "openai";
   }
 
   if (!guide || typeof guide !== "object") {
@@ -593,24 +593,24 @@ export const chatWithAi = asyncHandler(async (req, res) => {
   let reply = null;
   let provider = "fallback";
   try {
-    console.log("[Chat] Calling OpenAI...");
-    reply = await requestOpenAIChat(context, safeMessages);
+    console.log("[Chat] Calling Gemini chat...");
+    reply = await requestGeminiChat(context, safeMessages);
     if (reply) {
-      provider = "openai";
-      console.log("[Chat] OpenAI reply received:", reply.slice(0, 80));
+      provider = "gemini";
+      console.log("[Chat] Gemini reply received:", reply.slice(0, 80));
     } else {
-      console.log("[Chat] OpenAI unavailable, trying Gemini...");
-      reply = await requestGeminiChat(context, safeMessages);
+      console.log("[Chat] Gemini unavailable, trying OpenAI chat...");
+      reply = await requestOpenAIChat(context, safeMessages);
       if (reply) {
-        provider = "gemini";
-        console.log("[Chat] Gemini reply received:", reply.slice(0, 80));
+        provider = "openai";
+        console.log("[Chat] OpenAI reply received:", reply.slice(0, 80));
       }
     }
   } catch (error) {
-    console.error("[Chat] OpenAI call failed:", error.message);
-    console.log("[Chat] Trying Gemini after OpenAI error...");
-    reply = await requestGeminiChat(context, safeMessages);
-    if (reply) provider = "gemini";
+    console.error("[Chat] Primary AI call failed:", error.message);
+    console.log("[Chat] Trying fallback provider (OpenAI)...");
+    reply = await requestOpenAIChat(context, safeMessages);
+    if (reply) provider = "openai";
   }
 
   if (!reply) {
