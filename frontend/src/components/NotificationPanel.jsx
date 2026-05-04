@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "./NotificationPanel.module.css";
 import { useNotifications } from "../context/NotificationContext.jsx";
+import AiGuide from "./AiGuide";
 
 const NotificationPanel = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,6 +117,10 @@ const NotificationPanel = () => {
                 </button>
               )}
             </div>
+          </div>
+
+          <div className={styles.aiGuideWrap}>
+            <AiGuide surface="notifications" compact />
           </div>
 
           {loading ? (

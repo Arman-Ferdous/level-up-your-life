@@ -58,7 +58,11 @@ const fallbackEnv = {
   MONGO_URI: "mongodb://127.0.0.1:27017/level-up-your-life",
   CLIENT_ORIGIN: "http://localhost:5173",
   JWT_ACCESS_SECRET: "dev_access_secret_change_me",
-  JWT_REFRESH_SECRET: "dev_refresh_secret_change_me"
+  JWT_REFRESH_SECRET: "dev_refresh_secret_change_me",
+  OPENAI_API_KEY: "",
+  OPENAI_MODEL: "gpt-4o-mini",
+  GEMINI_API_KEY: "",
+  GEMINI_MODEL: "gemini-1.5-flash"
 };
 
 for (const [key, value] of Object.entries(fallbackEnv)) {
@@ -94,6 +98,10 @@ export const env = {
 
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
+  openaiApiKey: process.env.OPENAI_API_KEY || "",
+  openaiModel: process.env.OPENAI_MODEL || "gpt-4o-mini",
+  geminiApiKey: process.env.GEMINI_API_KEY || "",
+  geminiModel: process.env.GEMINI_MODEL || "gemini-1.5-flash",
 
   accessExpires: process.env.ACCESS_TOKEN_EXPIRES || "15m",
   refreshExpires: process.env.REFRESH_TOKEN_EXPIRES || "7d",

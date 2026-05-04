@@ -10,6 +10,7 @@ import { transactionRouter } from "./routes/transactionRoutes.js";
 import { adminRouter } from "./routes/admin.routes.js";
 import { challengeRouter } from "./routes/challengeRoutes.js";
 import { taskRouter } from "./routes/taskRoutes.js";
+import { aiRouter } from "./routes/ai.routes.js";
 import { notificationRouter } from "./routes/notificationRoutes.js";
 import { groupRouter } from "./routes/group.routes.js";
 import { avatarRouter } from "./routes/avatarRoutes.js";
@@ -20,7 +21,16 @@ export function createApp() {
 
   app.use(
     cors({
-      origin: env.clientOrigin,
+      origin: (origin, callback) => {
+        // In development, allow any localhost
+        if (env.nodeEnv === "development" && origin?.includes("localhost")) {
+          callback(null, true);
+        } else if (origin === env.clientOrigin) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
       credentials: true
     })
   );
@@ -44,6 +54,7 @@ export function createApp() {
   app.use("/api/transactions", transactionRouter);
   app.use("/api/admin", adminRouter);
   app.use("/api/tasks", taskRouter);
+  app.use("/api/ai", aiRouter);
   app.use("/api/challenges", challengeRouter);
   app.use("/api/notifications", notificationRouter);
   app.use("/api/groups", groupRouter);
