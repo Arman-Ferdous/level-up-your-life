@@ -39,44 +39,6 @@ const THEMES = {
       "--shadow": "0 2px 16px rgba(0,0,0,0.4)",
     },
   },
-  forest: {
-    name: "Forest",
-    icon: "🌿",
-    vars: {
-      "--bg": "#f0f7f0",
-      "--bg-secondary": "#ffffff",
-      "--card": "#ffffff",
-      "--card-header": "#e8f5e9",
-      "--text": "#1b3a1f",
-      "--text-muted": "#557a5a",
-      "--border": "#c8e6c9",
-      "--primary": "#4caf50",
-      "--primary-dark": "#2e7d32",
-      "--sidebar-bg": "#e8f5e9",
-      "--sidebar-text": "#1b3a1f",
-      "--input-bg": "#f1f8f1",
-      "--shadow": "0 2px 16px rgba(46,125,50,0.1)",
-    },
-  },
-  ocean: {
-    name: "Ocean",
-    icon: "🌊",
-    vars: {
-      "--bg": "#e8f4fd",
-      "--bg-secondary": "#ffffff",
-      "--card": "#ffffff",
-      "--card-header": "#e3f2fd",
-      "--text": "#0d2137",
-      "--text-muted": "#4a7a9b",
-      "--border": "#bbdefb",
-      "--primary": "#1976d2",
-      "--primary-dark": "#0d47a1",
-      "--sidebar-bg": "#e3f2fd",
-      "--sidebar-text": "#0d2137",
-      "--input-bg": "#f0f8ff",
-      "--shadow": "0 2px 16px rgba(25,118,210,0.1)",
-    },
-  },
   midnight: {
     name: "Midnight",
     icon: "🔮",
@@ -96,25 +58,6 @@ const THEMES = {
       "--shadow": "0 2px 16px rgba(124,77,255,0.2)",
     },
   },
-  rose: {
-    name: "Rose",
-    icon: "🌸",
-    vars: {
-      "--bg": "#fff5f7",
-      "--bg-secondary": "#ffffff",
-      "--card": "#ffffff",
-      "--card-header": "#fce4ec",
-      "--text": "#3d0a1a",
-      "--text-muted": "#9c4d6a",
-      "--border": "#f8bbd0",
-      "--primary": "#e91e63",
-      "--primary-dark": "#c2185b",
-      "--sidebar-bg": "#fce4ec",
-      "--sidebar-text": "#3d0a1a",
-      "--input-bg": "#fff0f3",
-      "--shadow": "0 2px 16px rgba(233,30,99,0.1)",
-    },
-  },
 };
 
 const ThemeContext = createContext(null);
@@ -132,7 +75,6 @@ export function ThemeProvider({ children }) {
       root.style.setProperty(key, value);
     });
     localStorage.setItem("app-theme", themeKey);
-    // Set data-theme for any CSS selectors
     root.setAttribute("data-theme", themeKey);
   }, [themeKey, theme]);
 
