@@ -143,6 +143,20 @@
   border-top: 1px solid rgba(148, 163, 184, 0.16);
   color: #64748b;
   font-size: 0.82rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.chatButton {
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  width: fit-content;
 }
 
 .surface_sidebar .footer {

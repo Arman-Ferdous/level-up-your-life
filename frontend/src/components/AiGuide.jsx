@@ -70,6 +70,10 @@ export default function AiGuide({ todayMood = null, surface = "home", compact = 
     }).catch(() => {});
   };
 
+  const openChat = () => {
+    window.dispatchEvent(new Event("open-ai-chat"));
+  };
+
   if (!user) return null;
 
   const suggestions = (guide?.suggestions || []).slice(0, compact ? 2 : 4);
@@ -114,6 +118,9 @@ export default function AiGuide({ todayMood = null, surface = "home", compact = 
 
         {!compact && (
           <div className={styles.footer}>
+            <button type="button" className={styles.chatButton} onClick={openChat}>
+              Chat with AI
+            </button>
             <small>LevelUp learns from what you click and will keep adjusting the nudges.</small>
           </div>
         )}

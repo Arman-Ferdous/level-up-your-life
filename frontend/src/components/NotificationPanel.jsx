@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import styles from "./NotificationPanel.module.css";
 import { useNotifications } from "../context/NotificationContext.jsx";
 import AiGuide from "./AiGuide";
 
 const NotificationPanel = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const bellRef = useRef(null);
   const panelRef = useRef(null);
   const { notifications, unreadCount, loading, markAsRead, markAllAsRead, deleteNotification } =
     useNotifications();
@@ -12,9 +14,10 @@ const NotificationPanel = () => {
   // Close panel when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (panelRef.current && !panelRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
+      const target = event.target;
+      const clickedInsidePanel = panelRef.current && panelRef.current.contains(target);
+      const clickedOnBell = bellRef.current && bellRef.current.contains(target);
+      if (!clickedInsidePanel && !clickedOnBell) setIsOpen(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -82,9 +85,86 @@ const NotificationPanel = () => {
     }
   };
 
+  const panelContent = (
+    <div className={styles.notificationPanel} ref={panelRef} role="dialog" aria-label="Notifications">
+      <div className={styles.notificationHeader}>
+        <span className={styles.headerTitle}>
+          Notifications {unreadCount > 0 && `(${unreadCount})`}
+        </span>
+        <div className={styles.headerActions}>
+          {unreadCount > 0 && (
+            <button
+              className={styles.headerBtn}
+              onClick={handleMarkAllAsRead}
+              title="Mark all as read"
+            >
+              Mark all read
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className={styles.aiGuideWrap}>
+        <AiGuide surface="notifications" compact />
+      </div>
+
+      {loading ? (
+        <div className={styles.loadingSpinner}>
+          <div className={styles.spinner}></div>
+        </div>
+      ) : notifications.length === 0 ? (
+        <div className={styles.emptyState}>
+          <div className={styles.emptyIcon}>📭</div>
+          <div className={styles.emptyText}>No notifications yet</div>
+        </div>
+      ) : (
+        <ul className={styles.notificationList}>
+          {notifications.map(notification => (
+            <li
+              key={notification._id}
+              className={`${styles.notificationItem} ${!notification.read ? styles.unread : ""}`}
+            >
+              <div className={styles.notificationMeta}>
+                <span
+                  className={`${styles.notificationType} ${styles[getNotificationTypeClass(notification.type)]}`}
+                >
+                  {getNotificationTypeLabel(notification.type)}
+                </span>
+                <span className={styles.notificationTime}>
+                  {formatTime(notification.createdAt)}
+                </span>
+              </div>
+
+              <div className={styles.notificationTitle}>{notification.title}</div>
+              <div className={styles.notificationMessage}>{notification.message}</div>
+
+              <div className={styles.notificationActions}>
+                {!notification.read && (
+                  <button
+                    className={styles.actionBtn}
+                    onClick={e => handleMarkAsRead(e, notification._id, notification.read)}
+                  >
+                    Mark as read
+                  </button>
+                )}
+                <button
+                  className={styles.actionBtn}
+                  onClick={e => handleDelete(e, notification._id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+
   return (
-    <div className={styles.notificationBell} ref={panelRef}>
+    <div className={styles.notificationBell}>
       <button
+        ref={bellRef}
         onClick={() => setIsOpen(!isOpen)}
         style={{
           background: "none",
@@ -100,81 +180,7 @@ const NotificationPanel = () => {
         {unreadCount > 0 && <div className={styles.badge}>{unreadCount}</div>}
       </button>
 
-      {isOpen && (
-        <div className={styles.notificationPanel}>
-          <div className={styles.notificationHeader}>
-            <span className={styles.headerTitle}>
-              Notifications {unreadCount > 0 && `(${unreadCount})`}
-            </span>
-            <div className={styles.headerActions}>
-              {unreadCount > 0 && (
-                <button
-                  className={styles.headerBtn}
-                  onClick={handleMarkAllAsRead}
-                  title="Mark all as read"
-                >
-                  Mark all read
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className={styles.aiGuideWrap}>
-            <AiGuide surface="notifications" compact />
-          </div>
-
-          {loading ? (
-            <div className={styles.loadingSpinner}>
-              <div className={styles.spinner}></div>
-            </div>
-          ) : notifications.length === 0 ? (
-            <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>📭</div>
-              <div className={styles.emptyText}>No notifications yet</div>
-            </div>
-          ) : (
-            <ul className={styles.notificationList}>
-              {notifications.map(notification => (
-                <li
-                  key={notification._id}
-                  className={`${styles.notificationItem} ${!notification.read ? styles.unread : ""}`}
-                >
-                  <div className={styles.notificationMeta}>
-                    <span
-                      className={`${styles.notificationType} ${styles[getNotificationTypeClass(notification.type)]}`}
-                    >
-                      {getNotificationTypeLabel(notification.type)}
-                    </span>
-                    <span className={styles.notificationTime}>
-                      {formatTime(notification.createdAt)}
-                    </span>
-                  </div>
-
-                  <div className={styles.notificationTitle}>{notification.title}</div>
-                  <div className={styles.notificationMessage}>{notification.message}</div>
-
-                  <div className={styles.notificationActions}>
-                    {!notification.read && (
-                      <button
-                        className={styles.actionBtn}
-                        onClick={e => handleMarkAsRead(e, notification._id, notification.read)}
-                      >
-                        Mark as read
-                      </button>
-                    )}
-                    <button
-                      className={styles.actionBtn}
-                      onClick={e => handleDelete(e, notification._id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+      {isOpen && createPortal(panelContent, document.body)}
     </div>
   );
 };

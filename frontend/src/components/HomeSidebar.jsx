@@ -50,7 +50,7 @@ export default function HomeSidebar() {
           })}
         </nav>
 
-        <AiGuide surface="sidebar" compact />
+        {/* AI guide removed from sidebar per preference; keep AI content in Home Section 2 only */}
 
         <div className={styles.footer}>
           <div className={styles.footerRow}>

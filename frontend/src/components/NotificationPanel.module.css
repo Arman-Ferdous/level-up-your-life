@@ -1,16 +1,20 @@
 .notificationBell {
-  position: relative;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1100;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  padding: 0.4rem;
+  border-radius: 8px;
+  transition: all 0.18s ease;
+  background: transparent;
 }
 
 .notificationBell:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
 .bellIcon {
@@ -35,29 +39,20 @@
 }
 
 .notificationPanel {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 0.5rem;
-  width: 380px;
+  /* Fix: position relative to viewport so panel never extends off-screen */
+  position: fixed;
+  top: 3.5rem; /* below the fixed bell */
+  right: 1rem;
+  margin-top: 0;
+  width: min(380px, calc(100vw - 2rem));
   background: white;
   border-radius: 8px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  max-height: 500px;
+  z-index: 1400;
+  max-height: calc(100vh - 4rem);
   overflow-y: auto;
   border: 1px solid #e5e7eb;
-}
-
-.notificationHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 8px 8px 0 0;
+  box-sizing: border-box;
 }
 
 .aiGuideWrap {
