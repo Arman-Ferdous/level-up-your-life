@@ -1,203 +1,228 @@
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 88px;
-  z-index: 30;
-  transition: width 220ms ease;
-  pointer-events: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 88px;
+    z-index: 30;
+    transition: width 220ms ease;
+    pointer-events: auto;
 }
 
 .sidebar:hover,
 .sidebar:focus-within {
-  width: 290px;
+    width: 290px;
 }
 
 .shell {
-  height: 100%;
-  padding: 1rem 0.7rem 1rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  background: rgba(9, 14, 31, 0.88);
-  backdrop-filter: blur(18px);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 18px 0 40px rgba(15, 23, 42, 0.18);
-  overflow: hidden;
+    height: 100%;
+    padding: 1rem 0.7rem 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: rgba(9, 14, 31, 0.88);
+    backdrop-filter: blur(18px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 18px 0 40px rgba(15, 23, 42, 0.18);
+    overflow: hidden;
+    min-height: 0;
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.6rem 0.7rem;
-  text-decoration: none;
-  color: #fff;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.6rem 0.7rem;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .brandMark {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-  background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
-  color: #0f172a;
-  flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
+    color: #0f172a;
+    flex-shrink: 0;
 }
 
 .brandText {
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  opacity: 0;
-  transform: translateX(-10px);
-  transition: opacity 180ms ease, transform 180ms ease;
-  white-space: nowrap;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+    white-space: nowrap;
 }
 
 .sidebar:hover .brandText,
 .sidebar:focus-within .brandText {
-  opacity: 1;
-  transform: translateX(0);
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .menu {
-  display: grid;
-  gap: 0.45rem;
+    display: grid;
+    gap: 0.45rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    min-height: 0;
+    scrollbar-width: none;
+}
+
+.menu::-webkit-scrollbar {
+    display: none;
 }
 
 .menuItem {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.8rem 0.8rem;
-  border-radius: 16px;
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.78);
-  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
-  white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.8rem 0.8rem;
+    border-radius: 16px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.78);
+    transition:
+        background 180ms ease,
+        color 180ms ease,
+        transform 180ms ease;
+    white-space: nowrap;
 }
 
 .menuItem:hover,
 .menuItemActive {
-  background: rgba(255, 255, 255, 0.11);
-  color: #fff;
+    background: rgba(255, 255, 255, 0.11);
+    color: #fff;
 }
 
 .menuIcon {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  flex-shrink: 0;
-  font-size: 1rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+    font-size: 1rem;
 }
 
 .menuLabel {
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 180ms ease, transform 180ms ease;
-  font-weight: 700;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+    font-weight: 700;
 }
 
 .sidebar:hover .menuLabel,
 .sidebar:focus-within .menuLabel {
-  opacity: 1;
-  transform: translateX(0);
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .footer {
-  margin-top: auto;
-  display: grid;
-  gap: 0.75rem;
+    display: grid;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .footerRow,
 .footerActions {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
 }
 
 .points,
 .footerLink,
 .logoutButton {
-  border-radius: 999px;
-  padding: 0.55rem 0.8rem;
-  font-size: 0.8rem;
-  font-weight: 800;
+    border-radius: 999px;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 800;
 }
 
 .menuButton {
-  background: transparent;
-  border: 0;
-  cursor: pointer;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
 }
 
 .menuButton:hover,
 .menuButton:focus-visible {
-  background: rgba(248, 113, 113, 0.18);
+    background: rgba(248, 113, 113, 0.18);
+}
+
+.logoutMenuItem {
+    color: rgba(248, 113, 113, 0.9);
+    width: 100%;
+    text-align: left;
 }
 
 .points {
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .footerLink {
-  text-decoration: none;
-  color: #0f172a;
-  background: #f8fafc;
+    text-decoration: none;
+    color: #0f172a;
+    background: #f8fafc;
 }
 
 .logoutButton {
-  border: 0;
-  cursor: pointer;
-  color: #fff;
-  background: rgba(248, 113, 113, 0.24);
+    border: 0;
+    cursor: pointer;
+    color: #fff;
+    background: rgba(248, 113, 113, 0.24);
 }
 
 @media (max-width: 1120px) {
-  .sidebar {
-    width: 72px;
-  }
+    .sidebar {
+        width: 72px;
+    }
 
-  .sidebar:hover,
-  .sidebar:focus-within {
-    width: 260px;
-  }
+    .sidebar:hover,
+    .sidebar:focus-within {
+        width: 260px;
+    }
 }
 
 @media (max-width: 768px) {
-  .sidebar {
-    position: sticky;
-    top: 0;
-    width: 100%;
-    height: auto;
-  }
+    .sidebar {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        height: auto;
+    }
 
-  .sidebar:hover,
-  .sidebar:focus-within {
-    width: 100%;
-  }
+    .sidebar:hover,
+    .sidebar:focus-within {
+        width: 100%;
+    }
 
-  .shell {
-    border-right: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
+    .shell {
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
-  .brandText,
-  .menuLabel {
-    opacity: 1;
-    transform: none;
-  }
+    .brandText,
+    .menuLabel {
+        opacity: 1;
+        transform: none;
+    }
 }

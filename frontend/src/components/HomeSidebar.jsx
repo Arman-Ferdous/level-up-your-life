@@ -49,14 +49,6 @@ export default function HomeSidebar() {
               </Link>
             );
           })}
-          <button
-            type="button"
-            className={`${styles.menuItem} ${styles.menuButton}`}
-            onClick={handleLogout}
-          >
-            <span className={styles.menuIcon}>🚪</span>
-            <span className={styles.menuLabel}>Logout</span>
-          </button>
         </nav>
 
         {/* AI guide removed from sidebar per preference; keep AI content in Home Section 2 only */}
@@ -69,21 +61,26 @@ export default function HomeSidebar() {
             </span>
           </div>
 
-          <div className={styles.footerActions}>
-            {user?.role === "admin" && (
-              <>
-                <Link to="/admin/users" className={styles.footerLink}>
-                  Admin
-                </Link>
-                <Link to="/admin/revenue" className={styles.footerLink}>
-                  Revenue
-                </Link>
-              </>
-            )}
-            <button type="button" className={styles.logoutButton} onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
+          {user?.role === "admin" && (
+            <div className={styles.footerActions}>
+              <Link to="/admin/users" className={styles.footerLink}>
+                Admin
+              </Link>
+              <Link to="/admin/revenue" className={styles.footerLink}>
+                Revenue
+              </Link>
+            </div>
+          )}
+
+          <button
+            type="button"
+            className={`${styles.menuItem} ${styles.menuButton} ${styles.logoutMenuItem}`}
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <span className={styles.menuIcon}>🚪</span>
+            <span className={styles.menuLabel}>Logout</span>
+          </button>
         </div>
       </div>
     </aside>
