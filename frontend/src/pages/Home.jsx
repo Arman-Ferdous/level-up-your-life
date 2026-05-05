@@ -252,6 +252,11 @@ export default function Home() {
                   </Link>
                   <p className={styles.heroHint}>25-minute focus sprint</p>
                 </div>
+
+                {/* ── Badge spotlight — visible instantly on login ── */}
+                <div className={styles.heroBadgeCard}>
+                  <Badge streak={streak} />
+                </div>
               </div>
 
               <div className={styles.tasksPanel}>
