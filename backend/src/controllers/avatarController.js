@@ -53,6 +53,17 @@ export const buyAvatar = asyncHandler(async (req, res) => {
     throw new AppError("User not found", 404);
   }
 
+  // To mark all Epic avatars as premium-only in mongosh:
+  // db.avatars.updateMany({ rarity: "epic" }, { $set: { isPremiumOnly: true } })
+  if (avatar.isPremiumOnly) {
+    const isPremium = await user.isPremiumActive();
+    if (!isPremium) {
+      return res
+        .status(403)
+        .json({ error: "This is a Premium-only item. Upgrade to unlock.", premiumRequired: true });
+    }
+  }
+
   const alreadyOwned = user.ownedAvatars.some(
     (id) => id.toString() === avatarId
   );

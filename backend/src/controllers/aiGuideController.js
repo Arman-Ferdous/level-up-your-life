@@ -15,6 +15,12 @@ function getLocalDayKey(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
+function getNextMidnight(date = new Date()) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0, 0);
+}
+
+const FREE_AI_DAILY_LIMIT = 5;
+
 function normalizeMood(mood) {
   if (!mood?.emoji) return { moodTag: "neutral", moodLabel: "neutral", moodEmoji: "🙂" };
 
@@ -580,7 +586,15 @@ export const chatWithAi = asyncHandler(async (req, res) => {
   }
 
   const [user, incompleteTaskCount, monthlyChallenge, moodEntry] = await Promise.all([
-    User.findById(userId).select({ points: 1, streak: 1, name: 1 }).lean(),
+    User.findById(userId).select({
+      points: 1,
+      streak: 1,
+      name: 1,
+      isPremium: 1,
+      premiumExpiresAt: 1,
+      aiMessagesUsedToday: 1,
+      aiMessagesResetAt: 1
+    }),
     Task.countDocuments({ userId, completed: false }),
     MonthlyChallenge.findOne({
       month: new Date().getMonth() + 1,
@@ -593,6 +607,31 @@ export const chatWithAi = asyncHandler(async (req, res) => {
 
   if (!user) {
     throw new AppError("User not found", 404);
+  }
+
+  const isPremium = await user.isPremiumActive();
+  if (!isPremium) {
+    const todayKey = getLocalDayKey();
+    const resetKey = user.aiMessagesResetAt ? getLocalDayKey(user.aiMessagesResetAt) : null;
+
+    if (!resetKey || resetKey !== todayKey) {
+      user.aiMessagesUsedToday = 0;
+      user.aiMessagesResetAt = new Date();
+    }
+
+    const used = user.aiMessagesUsedToday ?? 0;
+    if (used >= FREE_AI_DAILY_LIMIT) {
+      return res.status(429).json({
+        error: "Daily AI limit reached. Upgrade to Premium for unlimited chat.",
+        limitReached: true,
+        isPremium: false,
+        used: FREE_AI_DAILY_LIMIT,
+        limit: FREE_AI_DAILY_LIMIT
+      });
+    }
+
+    user.aiMessagesUsedToday = used + 1;
+    await user.save();
   }
 
   const mood = normalizeMood(moodEntry);
@@ -653,4 +692,49 @@ export const chatWithAi = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({ reply, provider });
+});
+
+export const getAiUsage = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.sub).select({
+    isPremium: 1,
+    premiumExpiresAt: 1,
+    aiMessagesUsedToday: 1,
+    aiMessagesResetAt: 1
+  });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  const isPremium = await user.isPremiumActive();
+  if (isPremium) {
+    return res.status(200).json({
+      used: 0,
+      limit: null,
+      remaining: null,
+      isPremium: true,
+      resetsAt: getNextMidnight()
+    });
+  }
+
+  const todayKey = getLocalDayKey();
+  const resetKey = user.aiMessagesResetAt ? getLocalDayKey(user.aiMessagesResetAt) : null;
+
+  if (!resetKey || resetKey !== todayKey) {
+    user.aiMessagesUsedToday = 0;
+    user.aiMessagesResetAt = new Date();
+    await user.save();
+  }
+
+  const used = user.aiMessagesUsedToday ?? 0;
+  const limit = FREE_AI_DAILY_LIMIT;
+  const remaining = Math.max(0, limit - used);
+
+  res.status(200).json({
+    used,
+    limit,
+    remaining,
+    isPremium: false,
+    resetsAt: getNextMidnight()
+  });
 });

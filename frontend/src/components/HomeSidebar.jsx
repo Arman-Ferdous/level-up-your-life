@@ -10,6 +10,7 @@ const MENU_ITEMS = [
   { to: "/tasks", label: "Tasks", icon: "✓" },
   { to: "/challenges", label: "Challenges", icon: "🏆" },
   { to: "/avatar-shop", label: "Avatar Shop", icon: "🎭" },
+  { to: "/subscription", label: "Subscription", icon: "👑" },
   { to: "/groups", label: "Groups", icon: "👥" },
   { to: "/calendar", label: "Calendar", icon: "📅" },
   { to: "/mood", label: "Mood", icon: "🧠" },
@@ -48,14 +49,6 @@ export default function HomeSidebar() {
               </Link>
             );
           })}
-          <button
-            type="button"
-            className={`${styles.menuItem} ${styles.menuButton}`}
-            onClick={handleLogout}
-          >
-            <span className={styles.menuIcon}>🚪</span>
-            <span className={styles.menuLabel}>Logout</span>
-          </button>
         </nav>
 
         {/* AI guide removed from sidebar per preference; keep AI content in Home Section 2 only */}
@@ -68,16 +61,26 @@ export default function HomeSidebar() {
             </span>
           </div>
 
-          <div className={styles.footerActions}>
-            {user?.role === "admin" && (
+          {user?.role === "admin" && (
+            <div className={styles.footerActions}>
               <Link to="/admin/users" className={styles.footerLink}>
                 Admin
               </Link>
-            )}
-            <button type="button" className={styles.logoutButton} onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
+              <Link to="/admin/revenue" className={styles.footerLink}>
+                Revenue
+              </Link>
+            </div>
+          )}
+
+          <button
+            type="button"
+            className={`${styles.menuItem} ${styles.menuButton} ${styles.logoutMenuItem}`}
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <span className={styles.menuIcon}>🚪</span>
+            <span className={styles.menuLabel}>Logout</span>
+          </button>
         </div>
       </div>
     </aside>

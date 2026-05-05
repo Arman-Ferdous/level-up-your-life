@@ -36,6 +36,10 @@ const avatarSchema = new mongoose.Schema(
       type: String,
       enum: ["common", "rare", "epic", "legendary"],
       default: "common"
+    },
+    isPremiumOnly: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }
