@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AdminAPI } from "../api/admin.api";
 import { useAuth } from "../context/AuthContext";
 import styles from "./AdminUsersPage.module.css";
 
 export default function AdminUsersPage() {
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, logout } = useAuth();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -26,6 +28,14 @@ export default function AdminUsersPage() {
   useEffect(() => {
     loadUsers();
   }, []);
+
+  async function handleLogout() {
+    try {
+      await logout();
+    } finally {
+      navigate("/login");
+    }
+  }
 
   async function handleDelete(userId) {
     const target = users.find((u) => u._id === userId);
@@ -50,9 +60,14 @@ export default function AdminUsersPage() {
     <div className={styles.page}>
       <div className={styles.headerRow}>
         <h1 className={styles.title}>Admin: User Management</h1>
-        <button className={styles.refreshBtn} onClick={loadUsers} disabled={loading}>
-          {loading ? "Refreshing..." : "Refresh"}
-        </button>
+        <div className={styles.headerActions}>
+          <button className={styles.refreshBtn} onClick={loadUsers} disabled={loading}>
+            {loading ? "Refreshing..." : "Refresh"}
+          </button>
+          <button className={styles.logoutBtn} onClick={handleLogout} type="button">
+            Logout
+          </button>
+        </div>
       </div>
 
       {error && <p className={styles.error}>{error}</p>}

@@ -48,6 +48,14 @@ export default function HomeSidebar() {
               </Link>
             );
           })}
+          <button
+            type="button"
+            className={`${styles.menuItem} ${styles.menuButton}`}
+            onClick={handleLogout}
+          >
+            <span className={styles.menuIcon}>🚪</span>
+            <span className={styles.menuLabel}>Logout</span>
+          </button>
         </nav>
 
         {/* AI guide removed from sidebar per preference; keep AI content in Home Section 2 only */}

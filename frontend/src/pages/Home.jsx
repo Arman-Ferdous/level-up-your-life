@@ -67,6 +67,7 @@ export default function Home() {
 
   if (!user) return null;
 
+
   const firstName = user.name?.split(" ")[0] || user.name;
   const badgeMilestones = [
     { key: "beginner", icon: "🌱", name: "First Step", unlockAt: 1 },
