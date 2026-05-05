@@ -16,6 +16,7 @@ import { groupRouter } from "./routes/group.routes.js";
 import { avatarRouter } from "./routes/avatarRoutes.js";
 import { rewardsRouter } from "./routes/rewards.routes.js";
 import { subscriptionRouter } from "./routes/subscription.routes.js";
+import leaderboardRoutes from "./routes/leaderboardRoutes.js";
 import { notFound, errorHandler } from "./middlewares/error.middleware.js";
 
 export function createApp() {
@@ -33,8 +34,8 @@ export function createApp() {
           callback(new Error("Not allowed by CORS"));
         }
       },
-      credentials: true
-    })
+      credentials: true,
+    }),
   );
 
   app.use(helmet());
@@ -44,11 +45,13 @@ export function createApp() {
   app.use(
     rateLimit({
       windowMs: 60 * 1000,
-      limit: 120
-    })
+      limit: 120,
+    }),
   );
 
-  app.get("/", (_req, res) => res.json({ success: true, message: "Backend is running" }));
+  app.get("/", (_req, res) =>
+    res.json({ success: true, message: "Backend is running" }),
+  );
   app.get("/health", (_req, res) => res.json({ ok: true }));
 
   app.use("/api/auth", authRouter);
@@ -63,6 +66,7 @@ export function createApp() {
   app.use("/api/avatars", avatarRouter);
   app.use("/api/rewards", rewardsRouter);
   app.use("/api/subscription", subscriptionRouter);
+  app.use("/api/leaderboard", leaderboardRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

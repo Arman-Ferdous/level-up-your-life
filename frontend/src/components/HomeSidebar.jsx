@@ -15,6 +15,7 @@ const MENU_ITEMS = [
   { to: "/calendar", label: "Calendar", icon: "📅" },
   { to: "/mood", label: "Mood", icon: "🧠" },
   { to: "/expense-tracker", label: "Expenses", icon: "💰" },
+  { to: "/leaderboard", label: "Leaderboard", icon: "🥇" },
 ];
 
 export default function HomeSidebar() {
@@ -59,6 +60,13 @@ export default function HomeSidebar() {
             <span className={styles.points}>
               {user?.selectedAvatar?.emoji} Pts {user?.points ?? 0}
             </span>
+            <Link
+              to="/settings/theme"
+              className={styles.footerLink}
+              title="Change Theme"
+            >
+              🎨
+            </Link>
           </div>
 
           {user?.role === "admin" && (
