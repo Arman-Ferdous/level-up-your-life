@@ -1,5 +1,6 @@
 .page {
   --rail-width: 88px;
+  --selector-width: 190px;
   min-height: 100vh;
   background:
     radial-gradient(circle at 12% 0%, rgba(249, 115, 22, 0.16) 0%, transparent 34%),
@@ -11,11 +12,55 @@
 
 .mainContent {
   margin-left: var(--rail-width);
+  margin-right: 0;
   height: 100vh;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   scrollbar-width: none;
+}
+
+.sectionSelector {
+  position: fixed;
+  top: 50%;
+  right: 0.9rem;
+  transform: translateY(-50%);
+  width: auto;
+  display: grid;
+  gap: 0.8rem;
+  justify-items: center;
+  padding: 0;
+  z-index: 2;
+}
+
+.sectionSelectorItem {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: rgba(37, 99, 235, 0.26);
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 10px 22px rgba(37, 99, 235, 0.08);
+}
+
+.sectionSelectorItem:hover,
+.sectionSelectorItemActive {
+  transform: scale(1.03);
+}
+
+.sectionSelectorDot {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  display: block;
+}
+
+.sectionSelectorItemActive .sectionSelectorDot {
+  background: #2563eb;
+  transform: scale(1.7);
+  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.12), 0 0 22px rgba(37, 99, 235, 0.25);
 }
 
 .mainContent::-webkit-scrollbar {
@@ -25,19 +70,64 @@
 
 .section {
   min-height: 100vh;
-  padding: 2rem 2rem 2.25rem;
+  padding: 3rem 2rem 2.75rem;
   scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.sectionBody {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1.5rem;
 }
 
-.heroSection {
+.sectionCue {
+  margin-top: 0.15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  padding-top: 0.5rem;
+  color: rgba(15, 23, 42, 0.34);
+  text-align: center;
+  user-select: none;
+}
+
+.sectionCueAbove {
+  flex-direction: column;
+}
+
+.sectionCueText {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sectionCueArrow {
+  font-size: 1.3rem;
+  line-height: 1;
+  color: rgba(37, 99, 235, 0.3);
+  text-shadow: 0 0 16px rgba(59, 130, 246, 0.34), 0 0 26px rgba(34, 197, 94, 0.18);
+  animation: cuePulse 1.8s ease-in-out infinite;
+}
+
+.heroSectionContent {
+  flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   align-items: stretch;
   gap: 0;
+  min-height: 0;
+}
+
+.heroSection {
   padding: 0;
 }
 
@@ -125,7 +215,7 @@
   align-self: stretch;
   justify-self: stretch;
   height: 100%;
-  padding: 3.5rem 3.5rem 3.5rem 2.5rem;
+  padding: 2rem 2rem 2rem 1.75rem;
   overflow: hidden;
 }
 
@@ -147,6 +237,7 @@
 
 .tasksPanel :global(.sidebar) {
   height: 100%;
+  max-height: calc(100vh - 5rem);
 }
 
 .tasksPanel :global(.taskSections) {
@@ -546,15 +637,37 @@
   }
 }
 
+@keyframes cuePulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.52;
+  }
+
+  50% {
+    transform: translateY(2px);
+    opacity: 0.82;
+  }
+}
+
 @media (max-width: 1120px) {
   .mainContent {
     margin-left: 72px;
+    margin-right: 0;
   }
 
-  .heroSection,
+  .sectionSelector {
+    display: none;
+  }
+
   .secondaryGrid,
   .badgeLayout,
   .sectionHeaderSplit {
+    grid-template-columns: 1fr;
+  }
+
+  .heroSectionContent,
+  .aiLayout {
     grid-template-columns: 1fr;
   }
 
@@ -581,6 +694,7 @@
 @media (max-width: 768px) {
   .page {
     --rail-width: 0px;
+    --selector-width: 0px;
   }
 
   .mainContent {
@@ -592,7 +706,11 @@
 
   .section {
     min-height: auto;
-    padding: 1.25rem 1rem 1.5rem;
+    padding: 1.5rem 1rem 1.75rem;
+  }
+
+  .sectionBody {
+    gap: 1rem;
   }
 
   .name {
@@ -606,15 +724,22 @@
   .badgeGrid {
     grid-template-columns: 1fr;
   }
+
+  .sectionCueText {
+    font-size: 0.7rem;
+  }
 }
 
 /* Monthly Challenge Section */
 .challengeSection {
-  min-height: auto;
-  padding: 1.5rem 2rem;
+  min-height: 100vh;
+  padding: 2rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .challengeCard {
+  width: min(100%, 1100px);
   border-radius: 24px;
   border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
@@ -624,7 +749,7 @@
 }
 
 .challengeCardContent {
-  padding: 2rem;
+  padding: 2.25rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

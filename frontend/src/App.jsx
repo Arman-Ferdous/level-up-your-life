@@ -15,7 +15,7 @@ import AvatarShopPage from "./pages/AvatarShop";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import GroupsPage from "./pages/GroupsPage";
 import CalendarPage from "./pages/CalendarPage";
-import AiChatLauncher from "./components/AiChatLauncher";
+import WeeklyReviewPage from "./pages/WeeklyReviewPage";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -50,12 +50,13 @@ function App() {
           <Route path="/avatar-shop" element={<ProtectedRoute><AvatarShopPage /></ProtectedRoute>} />
           <Route path="/groups" element={<ProtectedRoute><GroupsPage /></ProtectedRoute>} />
           <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+          <Route path="/weekly-review" element={<ProtectedRoute><WeeklyReviewPage /></ProtectedRoute>} />
           <Route path="/mood" element={<ProtectedRoute><MoodPage /></ProtectedRoute>} />
           <Route path="/expense-tracker" element={<ProtectedRoute><ExpenseTrackerPage /></ProtectedRoute>} />
           <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <AiChatLauncher />
+        
       </MoodProvider>
     </NotificationProvider>
   );

@@ -109,6 +109,10 @@ function buildFallbackGuide(context) {
 
 function buildFallbackChatReply(context, messages) {
   const lastUser = (messages || []).slice().reverse().find((m) => m.role === "user")?.content || "";
+  const recentAssistantLines = (messages || [])
+    .filter((m) => m.role === "assistant" && typeof m.content === "string")
+    .slice(-3)
+    .map((m) => m.content.trim().replace(/\s+/g, " "));
   const stressed = new Set(["sad", "anxious", "crying"]);
 
   const kw = (s) => (lastUser || "").toLowerCase().includes(s);
@@ -117,32 +121,41 @@ function buildFallbackChatReply(context, messages) {
   const generic = [];
 
   if (stressed.has(context.moodTag)) {
-    targeted.push("I can see you're not feeling your best right now. Take a breath. A small step like a 5-minute walk or a quick mood note can help.");
-    targeted.push("Rough moments happen. Keep today simple: drink water, stretch for 2 minutes, then pick one tiny task to complete.");
+    targeted.push("Sounds like today is heavy. Keep it small: breathe once, drink water, then do one easy thing.");
+    targeted.push("That’s a rough patch. Reset first, then choose one tiny task you can finish without thinking too hard.");
+    targeted.push("When the mood dips, aim for one steady action, not a perfect day. Even a short walk can help.");
   }
 
   if (kw("plan") || kw("day") || kw("steps")) {
-    targeted.push("Let's make a 3-step plan: 1) finish one task under 15 minutes, 2) do one medium task for 25 minutes, 3) close with a quick review.");
-    targeted.push("Plan for today: start with your easiest unfinished task, then one high-impact task, then a 5-minute cleanup to reset.");
+    targeted.push("Try a simple plan: start with the easiest task, then one useful task, then a quick reset.");
+    targeted.push("Make today lighter by choosing one quick win, one important task, and one short finish-up block.");
+    targeted.push("A clean plan for now: pick one thing to start, one thing to finish, and one thing to leave for later.");
   }
 
   if (kw("motivate") || kw("finish") || kw("task")) {
     const tasks = context.incompleteTaskCount || 0;
-    targeted.push(`You have ${tasks} unfinished ${tasks === 1 ? "task" : "tasks"}. Focus on one small action first; one completion is enough to build momentum.`);
-    targeted.push(`You are closer than you think. Pick just one of your ${tasks} tasks and give it 10 focused minutes right now.`);
+    targeted.push(`You have ${tasks} unfinished ${tasks === 1 ? "task" : "tasks"}. Pick one and move it forward for 10 minutes.`);
+    targeted.push(`One completion is enough to change the pace. Choose the smallest task you can finish first.`);
+    targeted.push(`You do not need to solve everything at once. Start with a tiny piece and let momentum do the rest.`);
   }
 
   if (kw("mood") || kw("recover") || kw("bad mood")) {
-    targeted.push("If you're in a bad mood, try this reset: breathe for 60 seconds, move your body for 2 minutes, then do one tiny task.");
-    targeted.push("Try a fast mood reset: short walk, one glass of water, then write one sentence about what you can control next.");
+    targeted.push("Try a quick reset: breathe for a minute, move a little, then return to one small task.");
+    targeted.push("Bad mood or not, you can still restart the day with water, movement, and one controllable step.");
+    targeted.push("Use a short reset before you push ahead: stand up, breathe, then choose the next easy thing.");
   }
 
-  generic.push("I'm here with you. Tell me what you want to work on, and I'll help you break it into one clear next step.");
-  generic.push("Nice idea. Want me to break that into one action you can start in the next 2 minutes?");
-  generic.push("Great, I can help. Do you want a 3-step plan or one focused next step?");
-  generic.push("Let's keep it simple: pick one target, set 10 minutes, and start. I can help choose the target.");
+  generic.push("Tell me what you want to work on and I’ll turn it into a concrete next move.");
+  generic.push("I can help with that. Want a fast start, a small plan, or a motivation boost?");
+  generic.push("Give me the goal and I’ll make it smaller and easier to begin.");
+  generic.push("We can keep this simple: choose one target and I’ll help you take the first step.");
+  generic.push("If you want, I can turn this into a 2-minute action instead of a big task.");
 
-  const pool = targeted.length > 0 ? targeted : generic;
+  const avoidPhrases = new Set(recentAssistantLines.map((line) => line.toLowerCase()));
+  const filteredTargeted = targeted.filter((line) => !avoidPhrases.has(line.toLowerCase()));
+  const filteredGeneric = generic.filter((line) => !avoidPhrases.has(line.toLowerCase()));
+
+  const pool = filteredTargeted.length > 0 ? filteredTargeted : filteredGeneric;
   if (pool.length === 0) return "I'm here. Tell me what you'd like help with.";
 
   return pool[Math.floor(Math.random() * pool.length)];
@@ -274,6 +287,11 @@ async function requestGeminiChat(context, messages) {
   const transcript = (messages || [])
     .map((m) => `${m.role === "assistant" ? "Assistant" : "User"}: ${m.content}`)
     .join("\n");
+  const recentAssistantLines = (messages || [])
+    .filter((m) => m.role === "assistant" && typeof m.content === "string")
+    .slice(-3)
+    .map((m) => m.content.trim())
+    .join("\n");
 
   const prompt = `You are a supportive productivity coach and chat bot inside LevelUp.
 User context:
@@ -290,7 +308,12 @@ ${JSON.stringify({
 Conversation:
 ${transcript}
 
-Reply as a concise, motivating assistant. Include one clear next step and optionally one short follow-up question.`;
+Recent assistant wording to avoid repeating:
+${recentAssistantLines || "None"}
+
+Reply as a concise, motivating assistant.
+Use fresh wording and avoid repeating the same opener or sentence structure as before.
+Include one clear next step and optionally one short follow-up question.`;
 
   const contents = [
     {
@@ -368,7 +391,14 @@ async function requestOpenAIChat(context, messages) {
   const systemPrompt = `You are a supportive productivity coach and chat bot inside an app called LevelUp.
 Help the user with motivation, planning, focus, mood check-ins, tasks, challenges, and habits.
 Use the user's context when helpful, but keep replies concise and conversational.
+Avoid canned phrasing and vary your openings, examples, and encouragement each turn.
 Ask one short follow-up question when it helps move the conversation forward.`;
+
+  const recentAssistantLines = messages
+    .filter((message) => message.role === "assistant" && typeof message.content === "string")
+    .slice(-3)
+    .map((message) => message.content.trim())
+    .join("\n");
 
   try {
     console.log("[OpenAI Chat] Sending request with", messages.length, "messages");
@@ -394,6 +424,10 @@ Ask one short follow-up question when it helps move the conversation forward.`;
               moodLabel: context.moodLabel,
               monthlyChallenge: context.monthlyChallenge?.title || null
             })}`
+          },
+          {
+            role: "system",
+            content: `Recent assistant wording to avoid repeating:\n${recentAssistantLines || "None"}`
           },
           ...messages
         ]
