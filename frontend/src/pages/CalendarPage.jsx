@@ -13,6 +13,7 @@ import { TransactionAPI } from "../api/transaction.api";
 import { MoodAPI } from "../api/mood.api";
 import { MoodContext } from "../context/MoodContext";
 import styles from "./CalendarPage.module.css";
+import { useNavigate } from "react-router-dom";
 
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MODE_OPTIONS = [
@@ -75,6 +76,8 @@ function getLastNDates(days) {
 }
 
 export default function CalendarPage() {
+  const navigate = useNavigate();
+  const [hoveredWeek, setHoveredWeek] = useState(null);
   const [activeMode, setActiveMode] = useState("tasks");
   const [monthCursor, setMonthCursor] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [tasks, setTasks] = useState([]);
@@ -82,6 +85,7 @@ export default function CalendarPage() {
   const [moods, setMoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  
 
   const { year, month, daysInMonth, firstWeekday } = useMemo(() => getMonthMeta(monthCursor), [monthCursor]);
 
@@ -196,6 +200,8 @@ export default function CalendarPage() {
 
   const monthLabel = monthCursor.toLocaleString("default", { month: "long", year: "numeric" });
 
+  
+
   return (
     <main className={styles.page}>
       <section className={styles.card}>
@@ -239,12 +245,17 @@ export default function CalendarPage() {
               </button>
             ))}
           </div>
+
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.legend}>
-          {activeMode === "tasks" && <span>Each color bar is one pending deadline task. 3+ tasks due on one day = severe pressure.</span>}
+          {activeMode === "tasks" && (
+            <span>
+              Each color bar is one pending deadline task. 3+ tasks due on one day = severe pressure.
+            </span>
+          )}
           {activeMode === "expense" && <span>Green means net earnings, red means net spending. Darker shade means higher magnitude.</span>}
           {activeMode === "mood" && <span>Highest point is your best mood and lowest point is your worst mood over the last 30 days.</span>}
         </div>
@@ -286,65 +297,91 @@ export default function CalendarPage() {
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className={styles.calendarWrap}>
-            <div className={styles.weekHeader}>
-              {WEEKDAY_LABELS.map((label) => (
-                <div key={label} className={styles.weekCell}>{label}</div>
-              ))}
-            </div>
+          <>
+          <div>
+            <div className={styles.calendarWrap}>
+              <div className={styles.weekHeader}>
+                {WEEKDAY_LABELS.map((label) => (
+                  <div key={label} className={styles.weekCell}>{label}</div>
+                ))}
+              </div>
 
-            <div className={styles.grid}>
-              {Array.from({ length: firstWeekday }).map((_, index) => (
-                <div key={`blank-${index}`} className={styles.dayCellEmpty} />
-              ))}
+              <div className={styles.grid}>
+                {/* Build flat cells array including leading blanks */}
+                {(() => {
+                  const cells = [];
+                  for (let i = 0; i < firstWeekday; i += 1) cells.push({ type: "empty", key: `blank-${i}` });
+                  for (let d = 1; d <= daysInMonth; d += 1) cells.push({ type: "day", day: d, key: getDateKey(year, month, d) });
 
-              {Array.from({ length: daysInMonth }).map((_, index) => {
-                const day = index + 1;
-                const dateKey = getDateKey(year, month, day);
+                  const weeks = [];
+                  for (let i = 0; i < cells.length; i += 7) {
+                    weeks.push(cells.slice(i, i + 7));
+                  }
 
-                if (activeMode === "tasks") {
-                  const dueTasks = taskDueByDay.get(dateKey) || [];
-                  const severe = dueTasks.length > 2;
+                  return weeks.map((week, wIndex) => {
+                    const weekStart = week.find((c) => c.type === "day")?.day || 1 + wIndex * 7 - firstWeekday;
+                    const weekEnd = Math.min(daysInMonth, (weekStart + 6));
+                    const startKey = getDateKey(year, month, weekStart);
+                    const endKey = getDateKey(year, month, weekEnd);
 
-                  return (
-                    <div
-                      key={dateKey}
-                      className={`${styles.dayCell} ${severe ? styles.dayCellSevere : ""}`}
-                    >
-                      <span className={styles.dayNum}>{day}</span>
-                      <div className={styles.segmentStack}>
-                        {dueTasks.slice(0, 5).map((task, taskIndex) => (
-                          <div
-                            key={task._id}
-                            className={styles.segment}
-                            style={{ backgroundColor: taskSegmentColor(taskIndex) }}
-                            title={task.title}
-                          />
-                        ))}
+                    return (
+                      <div
+                        key={`week-${wIndex}`}
+                        className={`${styles.weekRow} ${hoveredWeek === wIndex ? styles.weekRowHover : ""}`}
+                        style={{ display: "contents" }}
+                        onMouseEnter={() => setHoveredWeek(wIndex)}
+                        onMouseLeave={() => setHoveredWeek(null)}
+                        onClick={() => navigate(`/weekly-review?start=${startKey}&end=${endKey}`)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === "Enter") navigate(`/weekly-review?start=${startKey}&end=${endKey}`); }}
+                      >
+                        {week.map((cell) => {
+                          if (cell.type === "empty") return <div key={cell.key} className={styles.dayCellEmpty} />;
+                          const day = cell.day;
+                          const dateKey = cell.key;
+
+                          if (activeMode === "tasks") {
+                            const dueTasks = taskDueByDay.get(dateKey) || [];
+                            const severe = dueTasks.length > 2;
+                            const classes = [styles.dayCell];
+                            if (severe) classes.push(styles.dayCellSevere);
+                            const titleParts = [];
+                            if (dueTasks.length) titleParts.push(`Tasks: ${dueTasks.map((t) => t.title).join(", ")}`);
+
+                            return (
+                              <div key={dateKey} className={classes.join(" ")} title={titleParts.join(" — ")}>
+                                <span className={styles.dayNum}>{day}</span>
+                                <div className={styles.segmentStack}>
+                                  {dueTasks.slice(0, 5).map((task, taskIndex) => (
+                                    <div key={task._id} className={styles.segment} style={{ backgroundColor: taskSegmentColor(taskIndex) }} title={task.title} />
+                                  ))}
+                                </div>
+                                {dueTasks.length > 5 && <span className={styles.moreCount}>+{dueTasks.length - 5}</span>}
+                              </div>
+                            );
+                          }
+
+                          if (activeMode === "expense") {
+                            const net = expenseByDay.get(dateKey) || 0;
+                            return (
+                              <div key={dateKey} className={styles.dayCell} style={{ backgroundColor: getExpenseColor(net, maxExpenseMagnitude) }}>
+                                <span className={styles.dayNum}>{day}</span>
+                                {net !== 0 && <span className={styles.dayValue}>{net > 0 ? `+${Math.round(net)}` : Math.round(net)}</span>}
+                              </div>
+                            );
+                          }
+
+                          return <div key={dateKey} className={styles.dayCell} />;
+                        })}
                       </div>
-                      {dueTasks.length > 5 && <span className={styles.moreCount}>+{dueTasks.length - 5}</span>}
-                    </div>
-                  );
-                }
-
-                if (activeMode === "expense") {
-                  const net = expenseByDay.get(dateKey) || 0;
-                  return (
-                    <div
-                      key={dateKey}
-                      className={styles.dayCell}
-                      style={{ backgroundColor: getExpenseColor(net, maxExpenseMagnitude) }}
-                    >
-                      <span className={styles.dayNum}>{day}</span>
-                      {net !== 0 && <span className={styles.dayValue}>{net > 0 ? `+${Math.round(net)}` : Math.round(net)}</span>}
-                    </div>
-                  );
-                }
-
-                return null;
-              })}
+                    );
+                  });
+                })()}
+              </div>
             </div>
           </div>
+          </>
         )}
       </section>
     </main>

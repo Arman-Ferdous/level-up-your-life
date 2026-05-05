@@ -11,11 +11,16 @@ import ExpenseTrackerPage from "./pages/ExpenseTrackerPage";
 import TasksPage from "./pages/TasksPage";
 import PomodoroPage from "./pages/PomodoroPage";
 import ChallengesPage from "./pages/ChallengesPage";
+import AvatarShopPage from "./pages/AvatarShop";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import GroupsPage from "./pages/GroupsPage";
 import CalendarPage from "./pages/CalendarPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ThemeSelectionPage from "./pages/ThemeSelectionPage";
+import AiChatLauncher from "./components/AiChatLauncher";
+import SubscriptionPage from "./pages/SubscriptionPage";
+import AdminRevenuePage from "./pages/AdminRevenuePage";
+import WeeklyReviewPage from "./pages/WeeklyReviewPage";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -55,6 +60,127 @@ function App() {
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/settings/theme" element={<ProtectedRoute><ThemeSelectionPage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
+          <Route
+            path="/login"
+            element={
+              <GuestRoute>
+                <Login />
+              </GuestRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <GuestRoute>
+                <Register />
+              </GuestRoute>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pomodoro"
+            element={
+              <ProtectedRoute>
+                <PomodoroPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tasks"
+            element={
+              <ProtectedRoute>
+                <TasksPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/challenges"
+            element={
+              <ProtectedRoute>
+                <ChallengesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/avatar-shop"
+            element={
+              <ProtectedRoute>
+                <AvatarShopPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/groups"
+            element={
+              <ProtectedRoute>
+                <GroupsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <ProtectedRoute>
+                <CalendarPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/weekly-review"
+            element={
+              <ProtectedRoute>
+                <WeeklyReviewPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mood"
+            element={
+              <ProtectedRoute>
+                <MoodPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/expense-tracker"
+            element={
+              <ProtectedRoute>
+                <ExpenseTrackerPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/subscription"
+            element={
+              <ProtectedRoute>
+                <SubscriptionPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <AdminRoute>
+                <AdminUsersPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/revenue"
+            element={
+              <AdminRoute>
+                <AdminRevenuePage />
+              </AdminRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MoodProvider>
     </NotificationProvider>

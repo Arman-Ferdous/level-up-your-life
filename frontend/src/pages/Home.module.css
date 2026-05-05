@@ -1,43 +1,150 @@
 .page {
-  --rail-width: 88px;
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at 12% 0%, rgba(249, 115, 22, 0.16) 0%, transparent 34%),
-    radial-gradient(circle at 88% 8%, rgba(14, 165, 233, 0.14) 0%, transparent 32%),
-    linear-gradient(180deg, #f7f4ef 0%, #eef4f8 100%);
-  position: relative;
-  overflow: hidden;
+    --rail-width: 88px;
+    --selector-width: 190px;
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 12% 0%,
+            rgba(249, 115, 22, 0.16) 0%,
+            transparent 34%
+        ),
+        radial-gradient(
+            circle at 88% 8%,
+            rgba(14, 165, 233, 0.14) 0%,
+            transparent 32%
+        ),
+        linear-gradient(180deg, #f7f4ef 0%, #eef4f8 100%);
+    position: relative;
+    overflow: hidden;
 }
 
 .mainContent {
-  margin-left: var(--rail-width);
-  height: 100vh;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
+    margin-left: var(--rail-width);
+    margin-right: 0;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.sectionSelector {
+    position: fixed;
+    top: 50%;
+    right: 0.9rem;
+    transform: translateY(-50%);
+    width: auto;
+    display: grid;
+    gap: 0.8rem;
+    justify-items: center;
+    padding: 0;
+    z-index: 2;
+}
+
+.sectionSelectorItem {
+    width: 18px;
+    height: 18px;
+    border: 0;
+    border-radius: 999px;
+    padding: 0;
+    background: rgba(37, 99, 235, 0.26);
+    cursor: pointer;
+    transition:
+        transform 180ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease;
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.22),
+        0 10px 22px rgba(37, 99, 235, 0.08);
+}
+
+.sectionSelectorItem:hover,
+.sectionSelectorItemActive {
+    transform: scale(1.03);
+}
+
+.sectionSelectorDot {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    display: block;
+}
+
+.sectionSelectorItemActive .sectionSelectorDot {
+    background: #2563eb;
+    transform: scale(1.7);
+    box-shadow:
+        0 0 0 5px rgba(37, 99, 235, 0.12),
+        0 0 22px rgba(37, 99, 235, 0.25);
 }
 
 .mainContent::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .section {
-  min-height: 100vh;
-  padding: 2rem 2rem 2.25rem;
-  scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1.5rem;
+    min-height: 100vh;
+    padding: 3rem 2rem 2.75rem;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.sectionBody {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.sectionCue {
+    margin-top: 0.15rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+    padding-top: 0.5rem;
+    color: rgba(15, 23, 42, 0.34);
+    text-align: center;
+    user-select: none;
+}
+
+.sectionCueAbove {
+    flex-direction: column;
+}
+
+.sectionCueText {
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.sectionCueArrow {
+    font-size: 1.3rem;
+    line-height: 1;
+    color: rgba(37, 99, 235, 0.3);
+    text-shadow:
+        0 0 16px rgba(59, 130, 246, 0.34),
+        0 0 26px rgba(34, 197, 94, 0.18);
+    animation: cuePulse 1.8s ease-in-out infinite;
+}
+
+.heroSectionContent {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: stretch;
+    gap: 0;
+    min-height: 0;
 }
 
 .heroSection {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  align-items: stretch;
-  gap: 0;
-  padding: 0;
+    padding: 0;
 }
 
 .heroCopy,
@@ -46,302 +153,452 @@
 .badgeSpotlight,
 .quickLinks,
 .tasksPanel {
-  animation: fadeInUp 500ms ease-out both;
+    animation: fadeInUp 500ms ease-out both;
 }
 
 .heroCopy {
-  padding: 3.5rem 4rem 3.5rem 3.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
+    padding: 3.5rem 4rem 3.5rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
 }
 
 .greeting {
-  margin: 0;
-  color: #ef4444;
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+    margin: 0;
+    color: #ef4444;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 .name {
-  margin: 0.2rem 0 0.9rem;
-  font-size: clamp(3.4rem, 6vw, 6.4rem);
-  line-height: 0.9;
-  color: #0f172a;
-  font-weight: 900;
-  letter-spacing: -0.04em;
+    margin: 0.2rem 0 0.9rem;
+    font-size: clamp(3.4rem, 6vw, 6.4rem);
+    line-height: 0.9;
+    color: #0f172a;
+    font-weight: 900;
+    letter-spacing: -0.04em;
 }
 
 .sub {
-  margin: 0;
-  max-width: 42rem;
-  color: #334155;
-  font-size: 1.14rem;
-  line-height: 1.65;
+    margin: 0;
+    max-width: 42rem;
+    color: #334155;
+    font-size: 1.14rem;
+    line-height: 1.65;
 }
 
 .heroActions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .primaryAction,
 .secondaryAction,
 .cardButton,
 .quickLinkCard {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 .primaryAction {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #0f172a 0%, #2563eb 52%, #06b6d4 100%);
-  color: #fff;
-  border-radius: 999px;
-  width: 4.25rem;
-  height: 4.25rem;
-  padding: 0;
-  font-size: 1.55rem;
-  font-weight: 800;
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f172a 0%, #2563eb 52%, #06b6d4 100%);
+    color: #fff;
+    border-radius: 999px;
+    width: 4.25rem;
+    height: 4.25rem;
+    padding: 0;
+    font-size: 1.55rem;
+    font-weight: 800;
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2);
 }
 
 .heroHint {
-  margin: 0;
-  color: #475569;
-  font-size: 0.94rem;
+    margin: 0;
+    color: #475569;
+    font-size: 0.94rem;
+}
+
+.heroBadgeCard {
+    margin-top: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    border-radius: 28px;
+    padding: 1.25rem 2rem;
+    box-shadow:
+        0 8px 32px rgba(15, 23, 42, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.8) inset;
+    animation: fadeInUp 600ms ease-out both;
+    animation-delay: 200ms;
 }
 
 .tasksPanel {
-  position: relative;
-  align-self: stretch;
-  justify-self: stretch;
-  height: 100%;
-  padding: 3.5rem 3.5rem 3.5rem 2.5rem;
-  overflow: hidden;
+    position: relative;
+    align-self: stretch;
+    justify-self: stretch;
+    height: 100%;
+    padding: 2rem 2rem 2rem 1.75rem;
+    overflow: hidden;
 }
 
 .tasksPanel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(168, 85, 247, 0.16) 0%, rgba(236, 72, 153, 0.12) 100%),
-    rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  z-index: 0;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(168, 85, 247, 0.16) 0%,
+            rgba(236, 72, 153, 0.12) 100%
+        ),
+        rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    z-index: 0;
 }
 
 .tasksPanel > * {
-  position: relative;
-  z-index: 1;
+    position: relative;
+    z-index: 1;
 }
 
 .tasksPanel :global(.sidebar) {
-  height: 100%;
+    height: 100%;
+    max-height: calc(100vh - 5rem);
 }
 
 .tasksPanel :global(.taskSections) {
-  flex: 1;
+    flex: 1;
 }
 
 .tasksPanel :global(.sidebar) {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .sectionHeader {
-  max-width: 44rem;
+    max-width: 44rem;
 }
 
 .sectionHeaderSplit {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: 2rem;
-  align-items: start;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 2rem;
+    align-items: start;
 }
 
 .sectionHeaderRight {
-  align-self: start;
+    align-self: start;
 }
 
 .sectionKicker {
-  margin: 0 0 0.35rem;
-  color: #ef4444;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+    margin: 0 0 0.35rem;
+    color: #ef4444;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
 }
 
 .sectionTitle {
-  margin: 0;
-  color: #0f172a;
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  line-height: 1.05;
-  font-weight: 900;
+    margin: 0;
+    color: #0f172a;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.05;
+    font-weight: 900;
 }
 
 .sectionSubtitle {
-  margin: 0.65rem 0 0;
-  color: #475569;
-  font-size: 1rem;
-  line-height: 1.6;
+    margin: 0.65rem 0 0;
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 .secondaryGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.85fr);
-  gap: 1.25rem;
-  align-items: stretch;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.85fr);
+    gap: 1.25rem;
+    align-items: stretch;
+}
+
+.aiSection {
+    justify-content: center;
+}
+
+.aiLayout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 1.25rem;
+    align-items: stretch;
+}
+
+.aiChatCard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.5rem;
+    border-radius: 24px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(59, 130, 246, 0.16),
+            transparent 34%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.95),
+            rgba(240, 249, 255, 0.96)
+        );
+}
+
+.aiChatText {
+    margin: 0;
+    color: #475569;
+    font-size: 0.98rem;
+    line-height: 1.65;
+}
+
+.aiChatButton {
+    align-self: flex-start;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.8rem 1rem;
+    background: linear-gradient(135deg, #0f172a, #2563eb 55%, #0ea5e9);
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 14px 24px rgba(37, 99, 235, 0.22);
+}
+
+.aiPromptList {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.55rem;
+    color: #0f172a;
+    font-size: 0.94rem;
+    line-height: 1.5;
 }
 
 .moodCard,
 .quickLinkCard,
 .badgeTile {
-  border-radius: 24px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+    border-radius: 24px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
 }
 
 .moodCard {
-  background: rgba(255, 255, 255, 0.88);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+    background: rgba(255, 255, 255, 0.88);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.moodHintRow { margin-top: 0.25rem; }
+.moodHintRow {
+    margin-top: 0.25rem;
+}
 
 .balanceCard {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.2rem;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #ffffff, #fbfbff);
-  border: 1px solid rgba(15,23,42,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.2rem;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #ffffff, #fbfbff);
+    border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .balanceValue {
-  margin: 0.25rem 0 0 0;
-  font-size: 2rem;
-  font-weight: 900;
-  color: #0f172a;
+    margin: 0.25rem 0 0 0;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #0f172a;
 }
 
-.balanceSub { margin: 0; color: #64748b; font-size: 0.9rem; }
+.balanceSub {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.9rem;
+}
 
 .cardHeaderRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
 }
 
 .cardEyebrow {
-  margin: 0 0 0.25rem;
-  color: #f97316;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+    margin: 0 0 0.25rem;
+    color: #f97316;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 .cardTitle {
-  margin: 0;
-  color: #0f172a;
-  font-size: 1.4rem;
-  font-weight: 800;
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.4rem;
+    font-weight: 800;
 }
 
 .cardButton,
 .secondaryAction {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1rem;
-  border-radius: 999px;
-  background: #0f172a;
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 700;
-  white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .loadingText {
-  margin: 0;
-  color: #64748b;
+    margin: 0;
+    color: #64748b;
 }
 
 .moodState,
 .moodStateEmpty {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
 }
 
 .moodEmoji,
 .moodEmojiEmpty {
-  flex-shrink: 0;
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  display: grid;
-  place-items: center;
-  font-size: 2rem;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
 }
 
 .moodEmoji {
-  background: rgba(251, 146, 60, 0.16);
+    background: rgba(251, 146, 60, 0.16);
 }
 
 .moodEmojiEmpty {
-  background: rgba(148, 163, 184, 0.14);
+    background: rgba(148, 163, 184, 0.14);
 }
 
 .moodLabel {
-  margin: 0 0 0.2rem;
-  color: #0f172a;
-  font-size: 1.02rem;
-  font-weight: 800;
+    margin: 0 0 0.2rem;
+    color: #0f172a;
+    font-size: 1.02rem;
+    font-weight: 800;
 }
 
 .moodNote {
-  margin: 0;
-  color: #475569;
-  line-height: 1.55;
+    margin: 0;
+    color: #475569;
+    line-height: 1.55;
 }
 
 .quickLinks {
-  display: grid;
-  gap: 1rem;
+    display: grid;
+    gap: 1rem;
+}
+
+.bonusCard {
+    border-radius: 24px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+    background: linear-gradient(
+        135deg,
+        rgba(250, 204, 21, 0.2),
+        rgba(251, 146, 60, 0.12)
+    );
+    padding: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.bonusLocked {
+    background: rgba(15, 23, 42, 0.92);
+    color: #f8fafc;
+}
+
+.bonusLocked .cardTitle,
+.bonusLocked .bonusText {
+    color: #e2e8f0;
+}
+
+.bonusText {
+    margin: 0.5rem 0 0;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.bonusButton {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #0f172a;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.bonusButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.bonusStatus {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.bonusLink {
+    align-self: flex-start;
+    text-decoration: none;
+    font-weight: 700;
+    color: #fbbf24;
 }
 
 .quickLinkCard {
-  flex: 1;
-  min-height: 0;
-  background: rgba(15, 23, 42, 0.88);
-  color: #fff;
-  padding: 1.3rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  transition: transform 200ms ease, box-shadow 200ms ease;
+    flex: 1;
+    min-height: 0;
+    background: rgba(15, 23, 42, 0.88);
+    color: #fff;
+    padding: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition:
+        transform 200ms ease,
+        box-shadow 200ms ease;
 }
 
 .quickLinkCard:nth-child(2) {
-  background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 100%);
+    background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 100%);
 }
 
 .quickLinkCard:hover,
@@ -352,328 +609,372 @@
 .primaryAction:focus-visible,
 .cardButton:focus-visible,
 .secondaryAction:focus-visible {
-  transform: translateY(-2px);
+    transform: translateY(-2px);
 }
 
 .quickLinkIcon {
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
-  display: grid;
-  place-items: center;
-  font-size: 1.6rem;
-  background: rgba(255, 255, 255, 0.14);
-  flex-shrink: 0;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    background: rgba(255, 255, 255, 0.14);
+    flex-shrink: 0;
 }
 
 .quickLinkCard h3 {
-  margin: 0 0 0.25rem;
-  font-size: 1.05rem;
-  font-weight: 800;
+    margin: 0 0 0.25rem;
+    font-size: 1.05rem;
+    font-weight: 800;
 }
 
 .quickLinkCard p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.82);
-  line-height: 1.5;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.5;
 }
 
 .badgeSection {
-  justify-content: center;
+    justify-content: center;
 }
 
 .badgeLayout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: 2rem;
-  align-items: start;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 2rem;
+    align-items: start;
 }
 
 .badgesSection {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
 }
 
 .badgeSpotlight {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .habitsSection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
 }
 
-
 .badgeGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(100px, 1fr));
-  gap: 1.5rem;
-  max-width: 360px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(100px, 1fr));
+    gap: 1.5rem;
+    max-width: 360px;
 }
 
 .badgeTile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 0.75rem;
-  text-align: center;
-  transition: opacity 240ms ease, filter 240ms ease;
-  opacity: 1;
-  filter: grayscale(100%) brightness(0.88);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 0.75rem;
+    text-align: center;
+    transition:
+        opacity 240ms ease,
+        filter 240ms ease;
+    opacity: 1;
+    filter: grayscale(100%) brightness(0.88);
 }
 
 .badgeTileUnlocked {
-  opacity: 1;
-  filter: grayscale(0%) brightness(1);
+    opacity: 1;
+    filter: grayscale(0%) brightness(1);
 }
 
 .badgeTileIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  font-size: 2.2rem;
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
-  border: 2px solid rgba(249, 115, 22, 0.3);
-  transition: all 240ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-size: 2.2rem;
+    background: linear-gradient(
+        135deg,
+        rgba(249, 115, 22, 0.2) 0%,
+        rgba(168, 85, 247, 0.2) 100%
+    );
+    border: 2px solid rgba(249, 115, 22, 0.3);
+    transition: all 240ms ease;
 }
 
 .badgeTile.badge-beginner .badgeTileIcon {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  border-color: #10b981;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-color: #10b981;
 }
 
 .badgeTile.badge-bronze .badgeTileIcon {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  border-color: #f97316;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    border-color: #f97316;
 }
 
 .badgeTile.badge-silver .badgeTileIcon {
-  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-  border-color: #64748b;
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    border-color: #64748b;
 }
 
 .badgeTile.badge-gold .badgeTileIcon {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  border-color: #fbbf24;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-color: #fbbf24;
 }
 
 .badgeTile h3 {
-  margin: 0;
-  color: #0f172a;
-  font-size: 0.95rem;
-  font-weight: 800;
-  line-height: 1.2;
+    margin: 0;
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.2;
 }
 
 .badgeTile p {
-  margin: 0;
-  color: #64748b;
-  font-size: 0.82rem;
-  line-height: 1.4;
+    margin: 0;
+    color: #64748b;
+    font-size: 0.82rem;
+    line-height: 1.4;
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cuePulse {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.52;
+    }
+
+    50% {
+        transform: translateY(2px);
+        opacity: 0.82;
+    }
 }
 
 @media (max-width: 1120px) {
-  .mainContent {
-    margin-left: 72px;
-  }
+    .mainContent {
+        margin-left: 72px;
+        margin-right: 0;
+    }
 
-  .heroSection,
-  .secondaryGrid,
-  .badgeLayout,
-  .sectionHeaderSplit {
-    grid-template-columns: 1fr;
-  }
+    .sectionSelector {
+        display: none;
+    }
 
-  .tasksPanel {
-    padding-left: 0;
-  }
+    .secondaryGrid,
+    .badgeLayout,
+    .sectionHeaderSplit {
+        grid-template-columns: 1fr;
+    }
 
-  .heroCopy,
-  .tasksPanel {
-    padding: 1.25rem 1rem 1.5rem;
-  }
+    .heroSectionContent,
+    .aiLayout {
+        grid-template-columns: 1fr;
+    }
 
-  .badgeGrid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    max-width: none;
-  }
+    .tasksPanel {
+        padding-left: 0;
+    }
 
-  .badgesSection {
-    gap: 1rem;
-  }
+    .heroCopy,
+    .tasksPanel {
+        padding: 1.25rem 1rem 1.5rem;
+    }
+
+    .badgeGrid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        max-width: none;
+    }
+
+    .badgesSection {
+        gap: 1rem;
+    }
 }
 
 @media (max-width: 768px) {
-  .page {
-    --rail-width: 0px;
-  }
+    .page {
+        --rail-width: 0px;
+        --selector-width: 0px;
+    }
 
-  .mainContent {
-    margin-left: 0;
-    height: auto;
-    overflow: visible;
-    scroll-snap-type: none;
-  }
+    .mainContent {
+        margin-left: 0;
+        height: auto;
+        overflow: visible;
+        scroll-snap-type: none;
+    }
 
-  .section {
-    min-height: auto;
-    padding: 1.25rem 1rem 1.5rem;
-  }
+    .section {
+        min-height: auto;
+        padding: 1.5rem 1rem 1.75rem;
+    }
 
-  .name {
-    font-size: clamp(2.4rem, 14vw, 4rem);
-  }
+    .sectionBody {
+        gap: 1rem;
+    }
 
-  .quickLinkCard {
-    align-items: flex-start;
-  }
+    .name {
+        font-size: clamp(2.4rem, 14vw, 4rem);
+    }
 
-  .badgeGrid {
-    grid-template-columns: 1fr;
-  }
+    .quickLinkCard {
+        align-items: flex-start;
+    }
+
+    .badgeGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .sectionCueText {
+        font-size: 0.7rem;
+    }
 }
 
 /* Monthly Challenge Section */
 .challengeSection {
-  min-height: auto;
-  padding: 1.5rem 2rem;
+    min-height: 100vh;
+    padding: 2rem;
+    justify-content: center;
+    align-items: center;
 }
 
 .challengeCard {
-  border-radius: 24px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(59, 130, 246, 0.06) 100%),
-              rgba(255, 255, 255, 0.92);
-  overflow: hidden;
+    width: min(100%, 1100px);
+    border-radius: 24px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34, 197, 94, 0.06) 0%,
+            rgba(59, 130, 246, 0.06) 100%
+        ),
+        rgba(255, 255, 255, 0.92);
+    overflow: hidden;
 }
 
 .challengeCardContent {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+    padding: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .challengeCardTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
 }
 
 .challengeKicker {
-  margin: 0 0 0.35rem;
-  color: #22c55e;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+    margin: 0 0 0.35rem;
+    color: #22c55e;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
 }
 
 .challengeTitle {
-  margin: 0;
-  color: #0f172a;
-  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-  line-height: 1.1;
-  font-weight: 900;
+    margin: 0;
+    color: #0f172a;
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    line-height: 1.1;
+    font-weight: 900;
 }
 
 .challengeDesc {
-  margin: 0.65rem 0 0;
-  color: #475569;
-  font-size: 1rem;
-  line-height: 1.6;
-  max-width: 45rem;
+    margin: 0.65rem 0 0;
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 45rem;
 }
 
 .challengeCardStats {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  padding: 1.5rem 0;
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .challengeStat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
 }
 
 .challengeStatLabel {
-  font-size: 0.85rem;
-  color: #64748b;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .challengeStatValue {
-  font-size: 1.8rem;
-  font-weight: 900;
-  color: #0f172a;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #0f172a;
 }
 
 .challengeStatWinner {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: #0f172a;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0f172a;
 }
 
 .challengeCardActions {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }
 
 .challengeActionBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.9rem 1.5rem;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);
-  transition: all 200ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.5rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);
+    transition: all 200ms ease;
 }
 
 .challengeActionBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(34, 197, 94, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(34, 197, 94, 0.4);
 }
 
 .challengeCompleted {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #22c55e;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #22c55e;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
