@@ -13,6 +13,7 @@ export default function ThemeSelectionPage() {
         </p>
       </div>
 
+      <div className="ts-list">
       <div className="ts-grid">
         {Object.entries(themes).map(([key, theme]) => (
           <button
@@ -22,6 +23,24 @@ export default function ThemeSelectionPage() {
             style={{
               "--card-bg": theme.vars["--card"],
               "--card-text": theme.vars["--text"],
+              "--card-border": theme.vars["--border"],
+              "--card-primary": theme.vars["--primary"],
+              "--card-bg-main": theme.vars["--bg"],
+              "--card-sidebar": theme.vars["--sidebar-bg"],
+            }}
+          >
+            {/* Mini preview */}
+            <div className="ts-preview" style={{ background: theme.vars["--bg"] }}>
+              <div className="ts-preview-sidebar" style={{ background: theme.vars["--sidebar-bg"] }}>
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="ts-preview-item" style={{ background: theme.vars["--border"] }} />
+                ))}
+              </div>
+              <div className="ts-preview-main">
+                <div className="ts-preview-card" style={{ background: theme.vars["--card"], borderColor: theme.vars["--border"] }}>
+                  <div className="ts-preview-bar ts-preview-bar--primary" style={{ background: theme.vars["--primary"] }} />
+                  <div className="ts-preview-bar" style={{ background: theme.vars["--border"] }} />
+                  <div className="ts-preview-bar ts-preview-bar--short" style={{ background: theme.vars["--border"] }} />
               "--card-muted": theme.vars["--text-muted"],
               "--card-border": theme.vars["--border"],
               "--card-primary": theme.vars["--primary"],
@@ -72,6 +91,11 @@ export default function ThemeSelectionPage() {
             {/* Label */}
             <div className="ts-label">
               <span className="ts-icon">{theme.icon}</span>
+              <div className="ts-name-group">
+                <span className="ts-name">{theme.name}</span>
+                {themeKey === key && <span className="ts-active-tag">Active</span>}
+              </div>
+              {themeKey === key && <span className="ts-check">✓</span>}
               <span className="ts-name">{theme.name}</span>
               {themeKey === key && (
                 <span className="ts-check">✓</span>

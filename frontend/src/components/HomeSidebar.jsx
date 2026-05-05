@@ -57,6 +57,10 @@ export default function HomeSidebar() {
         <div className={styles.footer}>
           <div className={styles.footerRow}>
             <NotificationPanel />
+            <span className={styles.points}>Pts {user?.points ?? 0}</span>
+            <Link to="/settings/theme" className={styles.footerLink} title="Change Theme">
+              🎨
+            </Link>
             <span className={styles.points}>
               {user?.selectedAvatar?.emoji} Pts {user?.points ?? 0}
             </span>
