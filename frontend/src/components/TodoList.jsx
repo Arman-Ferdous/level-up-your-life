@@ -351,10 +351,19 @@ export default function TodoList({ initialShowForm = false, groupId, groupName }
                     </p>
                     {!task.completed && (
                       <p className={styles.groupProgressNames}>
-                        {getCheckedUsers(task)
-                          .map((checkedUserId) => groupMembers.find((member) => member.userId === checkedUserId)?.name)
-                          .filter(Boolean)
-                          .join(", ") || "No one has checked this task yet"}
+                        {getCheckedUsers(task).length === 0
+                          ? "No one has checked this task yet"
+                          : getCheckedUsers(task).map((checkedUserId, index) => {
+                              const member = groupMembers.find((item) => item.userId === checkedUserId);
+                              if (!member) return null;
+                              return (
+                                <span key={checkedUserId} className={styles.premiumName}>
+                                  {index > 0 && ", "}
+                                  {member.name}
+                                  {member.isPremium && <span className={styles.premiumBadge}>👑</span>}
+                                </span>
+                              );
+                            })}
                       </p>
                     )}
                   </div>
@@ -373,7 +382,10 @@ export default function TodoList({ initialShowForm = false, groupId, groupName }
 
                     {groupMembers.map((member) => (
                       <div key={member.userId} className={styles.habitHistoryRow}>
-                        <span className={styles.habitMemberName}>{member.name}</span>
+                        <span className={styles.habitMemberName}>
+                          {member.name}
+                          {member.isPremium && <span className={styles.premiumBadge}>👑</span>}
+                        </span>
                         <div className={styles.habitHistoryDays}>
                           {last15DayKeys.map((dayKey) => {
                             const completed = hasHabitCompletion(task, member.userId, dayKey);
