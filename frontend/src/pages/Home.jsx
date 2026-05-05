@@ -1,3 +1,4 @@
+import MotivationalQuote from "../components/MotivationalQuote";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/axios";
@@ -5,7 +6,6 @@ import { RewardsAPI } from "../api/rewards.api";
 import { useAuth } from "../context/AuthContext";
 import HomeSidebar from "../components/HomeSidebar";
 import Badge from "../components/Badge";
-import UpcomingTasksSidebar from "../components/UpcomingTasksSidebar";
 import MoodHexPicker from "../components/MoodHexPicker";
 import HabitStreakGrid from "../components/HabitStreakGrid";
 import styles from "./Home.module.css";
@@ -234,33 +234,11 @@ export default function Home() {
             <div className={styles.heroSectionContent}>
               <div className={styles.heroCopy}>
                 <p className={styles.greeting}>{getGreeting()},</p>
-                <h1 className={styles.name}>
-                  {user.selectedAvatar?.emoji} {firstName} 👋
-                </h1>
+                <h1 className={styles.name}>{firstName} 👋</h1>
+                <MotivationalQuote />
                 <p className={styles.sub}>
-                  Today's focus lives here. Jump straight into Pomodoro, track
-                  what matters, and keep the momentum moving.
+                  Today's focus lives here. Jump straight into Pomodoro, track what matters, and keep the momentum moving.
                 </p>
-
-                <div className={styles.heroActions}>
-                  <Link
-                    to="/pomodoro"
-                    className={styles.primaryAction}
-                    aria-label="Start Pomodoro"
-                  >
-                    <span aria-hidden="true">🕒</span>
-                  </Link>
-                  <p className={styles.heroHint}>25-minute focus sprint</p>
-                </div>
-
-                {/* ── Badge spotlight — visible instantly on login ── */}
-                <div className={styles.heroBadgeCard}>
-                  <Badge streak={streak} />
-                </div>
-              </div>
-
-              <div className={styles.tasksPanel}>
-                <UpcomingTasksSidebar />
               </div>
             </div>
           </div>

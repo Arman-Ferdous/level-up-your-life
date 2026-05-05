@@ -10,8 +10,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #123049;
-  background: #f5fafc;
 }
 
 * {
@@ -22,8 +20,67 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--bg, #f5fafc);
+  color: var(--text, #123049);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
   color: inherit;
+}
+/* Dark theme */
+[data-theme="dark"] body,
+[data-theme="dark"] .page,
+[data-theme="dark"] main {
+  background: #0f0f1a !important;
+  color: #e8e8f0 !important;
+}
+
+[data-theme="dark"] aside {
+  background: #1a1a2e !important;
+}
+
+[data-theme="dark"] section,
+[data-theme="dark"] article,
+[data-theme="dark"] div[class*="card"],
+[data-theme="dark"] div[class*="Card"] {
+  background: #1e1e2e !important;
+  color: #e8e8f0 !important;
+}
+
+/* Midnight theme */
+[data-theme="midnight"] body,
+[data-theme="midnight"] main {
+  background: #0a0a1a !important;
+  color: #e0e0ff !important;
+}
+
+[data-theme="midnight"] aside {
+  background: #12122a !important;
+}
+
+[data-theme="midnight"] section,
+[data-theme="midnight"] article,
+[data-theme="midnight"] div[class*="card"],
+[data-theme="midnight"] div[class*="Card"] {
+  background: #16163a !important;
+  color: #e0e0ff !important;
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] span,
+[data-theme="dark"] a {
+  color: #e8e8f0 !important;
+}
+
+[data-theme="midnight"] p,
+[data-theme="midnight"] h1,
+[data-theme="midnight"] h2,
+[data-theme="midnight"] h3,
+[data-theme="midnight"] span,
+[data-theme="midnight"] a {
+  color: #e0e0ff !important;
 }
