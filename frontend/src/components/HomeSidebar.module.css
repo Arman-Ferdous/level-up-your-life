@@ -20,12 +20,14 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background: rgba(9, 14, 31, 0.88);
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
     backdrop-filter: blur(18px);
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 1px solid var(--border);
     box-shadow: 18px 0 40px rgba(15, 23, 42, 0.18);
     overflow: hidden;
     min-height: 0;
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
 }
 
 .brand {
@@ -34,9 +36,14 @@
     gap: 0.85rem;
     padding: 0.6rem 0.7rem;
     text-decoration: none;
-    color: #fff;
+    color: var(--sidebar-text);
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.08);
+    transition: background-color 200ms ease;
+}
+
+.brand:hover {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .brandMark {
@@ -47,7 +54,7 @@
     place-items: center;
     font-weight: 900;
     background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
-    color: #0f172a;
+    color: var(--text);
     flex-shrink: 0;
 }
 
@@ -90,7 +97,10 @@
     padding: 0.8rem 0.8rem;
     border-radius: 16px;
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.78);
+    color: var(--sidebar-text);
+    background: transparent;
+    border: none;
+    cursor: pointer;
     transition:
         background 180ms ease,
         color 180ms ease,
@@ -113,6 +123,7 @@
     background: rgba(255, 255, 255, 0.08);
     flex-shrink: 0;
     font-size: 1rem;
+    transition: background 200ms ease;
 }
 
 .menuLabel {
@@ -132,18 +143,32 @@
 
 .footer {
     display: grid;
+    grid-template-rows: auto auto auto;
     gap: 0.5rem;
     flex-shrink: 0;
     padding-top: 0.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
+    transition: border-color 200ms ease;
 }
 
-.footerRow,
-.footerActions {
+.footerRow {
     display: flex;
     align-items: center;
     gap: 0.65rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+}
+
+.footerActions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+.footerButtonsFixed {
+    display: grid;
+    gap: 0.45rem;
 }
 
 .points,
@@ -159,6 +184,7 @@
     background: transparent;
     border: 0;
     cursor: pointer;
+    transition: background 200ms ease;
 }
 
 .menuButton:hover,
@@ -173,21 +199,46 @@
 }
 
 .points {
-    color: #fff;
+    color: var(--sidebar-text);
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    padding: 0.4rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.ptsLabel {
+    display: none;
+}
+
+.sidebar:hover .ptsLabel,
+.sidebar:focus-within .ptsLabel {
+    display: inline;
 }
 
 .footerLink {
     text-decoration: none;
-    color: #0f172a;
+    color: var(--text);
     background: #f8fafc;
+    transition: background 200ms ease, color 200ms ease;
+}
+
+[data-theme="dark"] .footerLink {
+    color: #e8e8f0;
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .logoutButton {
     border: 0;
     cursor: pointer;
-    color: #fff;
+    color: var(--sidebar-text);
     background: rgba(248, 113, 113, 0.24);
 }
 
@@ -218,11 +269,70 @@
     .shell {
         border-right: 0;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 0.7rem;
+        min-height: auto;
+    }
+
+    .brand {
+        flex-shrink: 0;
+        width: auto;
     }
 
     .brandText,
-    .menuLabel {
+    .menuLabel,
+    .ptsLabel {
         opacity: 1;
         transform: none;
+        display: inline;
+    }
+
+    .menu {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        gap: 0.3rem;
+        overflow-y: visible;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    .footer {
+        grid-template-rows: auto;
+        display: flex;
+        flex-direction: row;
+        gap: 0.3rem;
+        border-top: 0;
+        border-left: 1px solid rgba(255, 255, 255, 0.07);
+        padding-top: 0;
+        padding-left: 0.5rem;
+    }
+
+    .footerRow,
+    .footerActions,
+    .footerButtonsFixed {
+        display: flex;
+        gap: 0.3rem;
+    }
+
+    .points {
+        border: none;
+        background: transparent;
+        padding: 0.5rem 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    .menuButton {
+        width: auto;
+        height: 2rem;
+        min-width: 2rem;
+        justify-content: center;
+    }
+
+    .logoutMenuItem {
+        width: auto;
+        text-align: center;
     }
 }

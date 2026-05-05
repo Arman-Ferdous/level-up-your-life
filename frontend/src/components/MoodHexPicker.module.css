@@ -35,7 +35,7 @@
 .moodBtn:hover { transform: scale(1.04) translateZ(0); }
 
 .emoji { font-size: 1.6rem; }
-.label { font-size: 0.72rem; color: #0f172a; font-weight: 700; }
+.label { font-size: 0.72rem; color: var(--text); font-weight: 700; }
 
 .selected {
   background: linear-gradient(135deg, #f97316 0%, #f43f5e 100%);

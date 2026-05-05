@@ -33,13 +33,13 @@
 
 .title {
   margin: 0.2rem 0 0.1rem;
-  color: #0f172a;
+  color: var(--text);
   font-size: clamp(1.45rem, 3vw, 1.9rem);
 }
 
 .subtitle {
   margin: 0;
-  color: #475569;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
@@ -166,7 +166,7 @@
   font-size: clamp(2.2rem, 8vw, 4rem);
   font-weight: 800;
   line-height: 1;
-  color: #0f172a;
+  color: var(--text);
   text-align: center;
   letter-spacing: 0.04em;
 }
@@ -177,7 +177,7 @@
   border: 1px solid #bfdbfe;
   border-radius: 10px;
   background: #fff;
-  color: #0f172a;
+  color: var(--text);
   text-align: center;
   font-size: clamp(1.35rem, 4.6vw, 2.15rem);
   font-weight: 800;
@@ -257,7 +257,7 @@
 
 .status {
   margin: 0;
-  color: #0f172a;
+  color: var(--text);
   font-weight: 600;
 }
 

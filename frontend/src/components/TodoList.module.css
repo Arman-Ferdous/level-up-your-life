@@ -17,12 +17,12 @@
 .title {
   margin: 0;
   font-size: 1.3rem;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .scope {
   margin: 0.35rem 0 0;
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
@@ -215,13 +215,13 @@
 .taskTitle {
   margin: 0 0 0.5rem 0;
   font-size: 1rem;
-  color: #0f172a;
+  color: var(--text);
   word-break: break-word;
 }
 
 .taskDesc {
   margin: 0.5rem 0;
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 0.9rem;
   word-break: break-word;
 }
@@ -354,12 +354,12 @@
 .habitMemberName {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .premiumName {
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .premiumBadge {

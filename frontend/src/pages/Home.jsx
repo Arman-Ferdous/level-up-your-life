@@ -1,4 +1,3 @@
-import MotivationalQuote from "../components/MotivationalQuote";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/axios";
@@ -6,8 +5,10 @@ import { RewardsAPI } from "../api/rewards.api";
 import { useAuth } from "../context/AuthContext";
 import HomeSidebar from "../components/HomeSidebar";
 import Badge from "../components/Badge";
+import UpcomingTasksSidebar from "../components/UpcomingTasksSidebar";
 import MoodHexPicker from "../components/MoodHexPicker";
 import HabitStreakGrid from "../components/HabitStreakGrid";
+import GlobalChallengeLeaderboard from "../components/GlobalChallengeLeaderboard";
 import styles from "./Home.module.css";
 import { TransactionAPI } from "../api/transaction.api";
 import { ChallengeAPI } from "../api/challenge.api";
@@ -234,11 +235,33 @@ export default function Home() {
             <div className={styles.heroSectionContent}>
               <div className={styles.heroCopy}>
                 <p className={styles.greeting}>{getGreeting()},</p>
-                <h1 className={styles.name}>{firstName} 👋</h1>
-                <MotivationalQuote />
+                <h1 className={styles.name}>
+                  {user.selectedAvatar?.emoji} {firstName} 👋
+                </h1>
                 <p className={styles.sub}>
-                  Today's focus lives here. Jump straight into Pomodoro, track what matters, and keep the momentum moving.
+                  Today's focus lives here. Jump straight into Pomodoro, track
+                  what matters, and keep the momentum moving.
                 </p>
+
+                <div className={styles.heroActions}>
+                  <Link
+                    to="/pomodoro"
+                    className={styles.primaryAction}
+                    aria-label="Start Pomodoro"
+                  >
+                    <span aria-hidden="true">🕒</span>
+                  </Link>
+                  <p className={styles.heroHint}>25-minute focus sprint</p>
+                </div>
+
+                {/* ── Badge spotlight — visible instantly on login ── */}
+                <div className={styles.heroBadgeCard}>
+                  <Badge streak={streak} />
+                </div>
+              </div>
+
+              <div className={styles.tasksPanel}>
+                <UpcomingTasksSidebar />
               </div>
             </div>
           </div>
@@ -337,50 +360,51 @@ export default function Home() {
             </div>
 
             <div className={styles.sectionBody}>
-              <article className={styles.challengeCard}>
-                <div className={styles.challengeCardContent}>
-                  <div className={styles.challengeCardTop}>
-                    <div>
-                      <p className={styles.challengeKicker}>Global Challenge</p>
-                      <h2 className={styles.challengeTitle}>
-                        {monthlyChallenge.title}
-                      </h2>
-                      <p className={styles.challengeDesc}>
-                        {monthlyChallenge.description}
-                      </p>
+              <div className={styles.challengeContainer}>
+                <article className={styles.challengeCard}>
+                  <div className={styles.challengeCardContent}>
+                    <div className={styles.challengeCardTop}>
+                      <div>
+                        <p className={styles.challengeKicker}>Global Challenge</p>
+                        <h2 className={styles.challengeTitle}>
+                          {monthlyChallenge.title}
+                        </h2>
+                        <p className={styles.challengeDesc}>
+                          {monthlyChallenge.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className={styles.challengeCardStats}>
-                    <div className={styles.challengeStat}>
-                      <span className={styles.challengeStatLabel}>
-                        Participants
-                      </span>
-                      <span className={styles.challengeStatValue}>
-                        {monthlyChallenge.participantCount}
-                      </span>
-                    </div>
-                    <div className={styles.challengeStat}>
-                      <span className={styles.challengeStatLabel}>
-                        Completed
-                      </span>
-                      <span className={styles.challengeStatValue}>
-                        {monthlyChallenge.completedCount}
-                      </span>
-                    </div>
-                    {monthlyChallenge.winner && (
+                    <div className={styles.challengeCardStats}>
                       <div className={styles.challengeStat}>
                         <span className={styles.challengeStatLabel}>
-                          Winner
+                          Participants
                         </span>
-                        <span className={styles.challengeStatWinner}>
-                          👑 {monthlyChallenge.winner.name}
+                        <span className={styles.challengeStatValue}>
+                          {monthlyChallenge.participantCount}
                         </span>
                       </div>
-                    )}
-                  </div>
+                      <div className={styles.challengeStat}>
+                        <span className={styles.challengeStatLabel}>
+                          Completed
+                        </span>
+                        <span className={styles.challengeStatValue}>
+                          {monthlyChallenge.completedCount}
+                        </span>
+                      </div>
+                      {monthlyChallenge.winner && (
+                        <div className={styles.challengeStat}>
+                          <span className={styles.challengeStatLabel}>
+                            Winner
+                          </span>
+                          <span className={styles.challengeStatWinner}>
+                            👑 {monthlyChallenge.winner.name}
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
-                  <div className={styles.challengeCardActions}>
+                    <div className={styles.challengeCardActions}>
                     {!monthlyChallenge.currentUserEntry ? (
                       <Link
                         to="/challenges"
@@ -403,6 +427,13 @@ export default function Home() {
                   </div>
                 </div>
               </article>
+                <aside className={styles.leaderboardAside}>
+                  <GlobalChallengeLeaderboard 
+                    challengeId={monthlyChallenge._id}
+                    title="Global Leaderboard"
+                  />
+                </aside>
+              </div>
             </div>
 
             <div className={styles.sectionCue} aria-hidden="true">

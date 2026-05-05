@@ -3,8 +3,9 @@
   min-height: 100vh;
   padding: 0 0 4rem 0;
   font-family: 'Segoe UI', sans-serif;
-  background: var(--bg, #f8f9fa);
-  color: var(--text, #1a1a2e);
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 /* Hero */
@@ -36,7 +37,7 @@
 }
 .lb-title-icon { font-size: 2.6rem; }
 .lb-subtitle {
-  color: var(--text-muted, #666);
+  color: var(--text-muted);
   font-size: 1rem;
   margin: 0;
 }
@@ -53,16 +54,19 @@
 .lb-tab {
   flex: 1;
   padding: 0.65rem 1rem;
-  border: 2px solid var(--border, #e0e0e0);
+  border: 2px solid var(--border);
   border-radius: 999px;
   background: transparent;
-  color: var(--text-muted, #777);
+  color: var(--text-muted);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }
-.lb-tab:hover { border-color: #f5a623; color: #f5a623; }
+.lb-tab:hover { 
+  border-color: #f5a623; 
+  color: #f5a623; 
+}
 .lb-tab--active {
   background: #f5a623;
   border-color: #f5a623;
@@ -80,7 +84,7 @@
 .lb-state {
   text-align: center;
   padding: 4rem 1rem;
-  color: var(--text-muted, #888);
+  color: var(--text-muted);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,7 +92,7 @@
 }
 .lb-spinner {
   width: 40px; height: 40px;
-  border: 3px solid var(--border, #e0e0e0);
+  border: 3px solid var(--border);
   border-top-color: #f5a623;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -113,13 +117,14 @@
   gap: 0.3rem;
   flex: 1;
   max-width: 180px;
-  background: var(--card, #fff);
+  background: var(--card);
   border-radius: 16px;
   padding: 1.2rem 0.75rem 0;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  border: 1px solid var(--border, #eee);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
   overflow: hidden;
   position: relative;
+  transition: background-color 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
 }
 .lb-podium-card--1 { transform: translateY(-20px); }
 .lb-podium-medal { font-size: 1.8rem; }
@@ -133,9 +138,9 @@
 .lb-podium-card--1 .lb-podium-avatar { background: linear-gradient(135deg, #FFD700, #FFA500); }
 .lb-podium-card--2 .lb-podium-avatar { background: linear-gradient(135deg, #C0C0C0, #888); }
 .lb-podium-card--3 .lb-podium-avatar { background: linear-gradient(135deg, #CD7F32, #8B4513); }
-.lb-podium-name { font-weight: 700; font-size: 0.9rem; text-align: center; }
+.lb-podium-name { font-weight: 700; font-size: 0.9rem; text-align: center; color: var(--text); }
 .lb-podium-streak { font-size: 0.8rem; color: #f06d06; font-weight: 600; }
-.lb-podium-points { font-size: 0.8rem; color: var(--text-muted, #888); margin-bottom: 0.75rem; }
+.lb-podium-points { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; }
 .lb-podium-bar {
   width: 100%; height: 10px;
   margin-top: auto;
@@ -149,13 +154,15 @@
 .lb-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--card, #fff);
+  background: var(--card);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  box-shadow: var(--shadow);
+  transition: background-color 200ms ease, box-shadow 200ms ease;
 }
 .lb-table thead tr {
-  background: var(--card-header, #f5f5f5);
+  background: var(--card-header);
+  transition: background-color 200ms ease;
 }
 .lb-table th {
   padding: 1rem 1.25rem;
@@ -164,12 +171,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-muted, #888);
+  color: var(--text-muted);
 }
 .lb-table td {
   padding: 0.9rem 1.25rem;
-  border-top: 1px solid var(--border, #f0f0f0);
+  border-top: 1px solid var(--border);
   font-size: 0.95rem;
+  color: var(--text);
 }
 .lb-row--top td { background: rgba(245, 166, 35, 0.04); }
 .lb-rank-cell { font-weight: 700; font-size: 1.1rem; min-width: 60px; }
@@ -197,7 +205,105 @@
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  .lb-table { background: #1e1e2e; }
-  .lb-table thead tr { background: #2a2a3e; }
-  .lb-podium-card { background: #1e1e2e; border-color: #333; }
+  .lb-table { background: var(--card); }
+  .lb-table thead tr { background: var(--card-header); }
+  .lb-podium-card { background: var(--card); border-color: var(--border); }
+}
+
+/* Challenge Leaderboard Styles */
+.lb-challenge-info {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+}
+
+.lb-challenge-info-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: background-color 200ms ease, border-color 200ms ease;
+  box-shadow: var(--shadow);
+}
+
+.lb-challenge-info-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.lb-challenge-info-desc {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.lb-challenge-info-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Challenge Table Specific */
+.lb-table--challenge {
+  background: var(--card);
+}
+
+.lb-table--challenge thead tr {
+  background: var(--card-header);
+  border-bottom: 2px solid var(--border);
+}
+
+.lb-table--challenge thead th {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.lb-table--challenge thead th:last-child {
+  text-align: right;
+}
+
+.lb-table--challenge td:last-child {
+  text-align: right;
+}
+
+.lb-row--completed {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%);
+  transition: all 150ms ease;
+}
+
+.lb-row--completed:hover {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.22) 0%, rgba(34, 197, 94, 0.12) 100%);
+  box-shadow: inset 0 0 8px rgba(34, 197, 94, 0.1);
+}
+
+.lb-row--completed td {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.lb-badge--success {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.15) 100%);
+  color: #15803d;
+  font-weight: 600;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 0.35rem 0.85rem;
+}
+
+.lb-badge--pending {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
+  color: #7e22ce;
+  font-weight: 600;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  padding: 0.35rem 0.85rem;
+}
+
+.lb-time {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
 }

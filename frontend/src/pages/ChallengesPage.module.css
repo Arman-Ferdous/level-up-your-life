@@ -40,7 +40,7 @@
 .panelTitle {
   margin: 0 0 1rem 0;
   font-size: 1.1rem;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .error {
@@ -68,7 +68,7 @@
 label {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text);
 }
 
 input,

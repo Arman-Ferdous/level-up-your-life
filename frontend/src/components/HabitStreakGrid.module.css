@@ -18,13 +18,13 @@
   font-size: clamp(1.8rem, 3vw, 2.6rem);
   line-height: 1.05;
   font-weight: 900;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .subtitle {
   margin: 0;
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .habitRow {
@@ -48,7 +48,7 @@
   margin: 0;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,13 +74,13 @@
   margin: 0;
   font-size: 0.98rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .nextGoal {
   margin: 0;
   font-size: 0.82rem;
-  color: #475569;
+  color: var(--text-muted);
   font-weight: 600;
 }
 

@@ -3,7 +3,7 @@
   background: transparent;
   border-radius: 0;
   padding: 0 0 5.5rem 0;
-  color: #101828;
+  color: var(--text);
     padding: 0 0 4rem 0;
   min-height: 0;
   overflow: hidden;
@@ -36,7 +36,7 @@
   margin: 0;
     gap: 0.55rem;
   font-weight: 800;
-  color: #101828;
+  color: var(--text);
 }
 
 .addButton {

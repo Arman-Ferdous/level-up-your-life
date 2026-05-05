@@ -25,12 +25,12 @@
     margin: 0;
     font-size: clamp(1.8rem, 2.4vw, 2.6rem);
     font-weight: 900;
-    color: #0f172a;
+    color: var(--text);
 }
 
 .description {
     margin: 0.5rem 0 0;
-    color: #475569;
+    color: var(--text-muted);
     line-height: 1.6;
     max-width: 40rem;
 }
@@ -45,7 +45,7 @@
 .points {
     font-size: 1.2rem;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--text);
     padding: 0.5rem 1rem;
     background: linear-gradient(135deg, #fef3c7, #fde68a);
     border-radius: 999px;
@@ -164,7 +164,7 @@
     margin-left: auto;
     text-decoration: none;
     background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #0f172a;
+    color: var(--text);
     font-weight: 800;
     font-size: 0.85rem;
     border-radius: 999px;
@@ -213,12 +213,12 @@
     margin: 0 0 0.25rem;
     font-size: 1.5rem;
     font-weight: 900;
-    color: #0f172a;
+    color: var(--text);
 }
 
 .sectionDesc {
     margin: 0;
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
@@ -290,7 +290,7 @@
     text-align: center;
     text-decoration: none;
     background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #0f172a;
+    color: var(--text);
     font-weight: 800;
     font-size: 0.78rem;
     border-radius: 10px;
@@ -380,14 +380,14 @@
     margin: 0;
     font-size: 1rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text);
     text-align: center;
 }
 
 .desc {
     margin: 0;
     font-size: 0.8rem;
-    color: #64748b;
+    color: var(--text-muted);
     text-align: center;
     line-height: 1.4;
 }
@@ -395,7 +395,7 @@
 .cost {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text);
     text-align: center;
     padding: 0.5rem 0;
     border-top: 1px solid #e2e8f0;
@@ -491,7 +491,7 @@
 .modalPrimary {
     text-decoration: none;
     background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #0f172a;
+    color: var(--text);
     font-weight: 800;
     border-radius: 999px;
     padding: 0.6rem 1rem;

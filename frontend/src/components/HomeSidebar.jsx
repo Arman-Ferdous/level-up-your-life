@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import AiGuide from "./AiGuide";
 import NotificationPanel from "./NotificationPanel";
 import styles from "./HomeSidebar.module.css";
@@ -15,11 +16,11 @@ const MENU_ITEMS = [
   { to: "/calendar", label: "Calendar", icon: "📅" },
   { to: "/mood", label: "Mood", icon: "🧠" },
   { to: "/expense-tracker", label: "Expenses", icon: "💰" },
-  { to: "/leaderboard", label: "Leaderboard", icon: "🥇" },
 ];
 
 export default function HomeSidebar() {
   const { user, logout } = useAuth();
+  const { themeKey, setThemeKey, themes } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -27,6 +28,14 @@ export default function HomeSidebar() {
     await logout();
     navigate("/login");
   }
+
+  const themeKeys = Object.keys(themes);
+  const currentThemeIndex = themeKeys.indexOf(themeKey);
+  
+  const handleThemeToggle = () => {
+    const nextIndex = (currentThemeIndex + 1) % themeKeys.length;
+    setThemeKey(themeKeys[nextIndex]);
+  };
 
   return (
     <aside className={styles.sidebar} aria-label="Dashboard navigation">
@@ -57,20 +66,9 @@ export default function HomeSidebar() {
         <div className={styles.footer}>
           <div className={styles.footerRow}>
             <NotificationPanel />
-            <span className={styles.points}>Pts {user?.points ?? 0}</span>
-            <Link to="/settings/theme" className={styles.footerLink} title="Change Theme">
-              🎨
-            </Link>
             <span className={styles.points}>
-              {user?.selectedAvatar?.emoji} Pts {user?.points ?? 0}
+              {user?.selectedAvatar?.emoji} <span className={styles.ptsLabel}>Pts</span> {user?.points ?? 0}
             </span>
-            <Link
-              to="/settings/theme"
-              className={styles.footerLink}
-              title="Change Theme"
-            >
-              🎨
-            </Link>
           </div>
 
           {user?.role === "admin" && (
@@ -78,33 +76,33 @@ export default function HomeSidebar() {
               <Link to="/admin/users" className={styles.footerLink}>
                 Admin
               </Link>
-            )}
-            <button type="button" className={styles.logoutButton} onClick={handleLogout}>
-              Logout
-            </button>
-            <Link
-              to="/settings/theme"
-              className={styles.footerLink}
-              style={{ marginTop: "0.5rem", display: "block", textAlign: "center" }}
-            >
-              🎨 Theme
-            </Link>
-          </div>
               <Link to="/admin/revenue" className={styles.footerLink}>
                 Revenue
               </Link>
             </div>
           )}
 
-          <button
-            type="button"
-            className={`${styles.menuItem} ${styles.menuButton} ${styles.logoutMenuItem}`}
-            onClick={handleLogout}
-            title="Logout"
-          >
-            <span className={styles.menuIcon}>🚪</span>
-            <span className={styles.menuLabel}>Logout</span>
-          </button>
+          <div className={styles.footerButtonsFixed}>
+            <button
+              type="button"
+              className={`${styles.menuItem} ${styles.menuButton}`}
+              onClick={handleThemeToggle}
+              title={`Switch theme (currently ${themes[themeKey]?.name || "Light"})`}
+            >
+              <span className={styles.menuIcon}>{themes[themeKey]?.icon || "☀️"}</span>
+              <span className={styles.menuLabel}>{themes[themeKey]?.name || "Light"}</span>
+            </button>
+
+            <button
+              type="button"
+              className={`${styles.menuItem} ${styles.menuButton} ${styles.logoutMenuItem}`}
+              onClick={handleLogout}
+              title="Logout"
+            >
+              <span className={styles.menuIcon}>🚪</span>
+              <span className={styles.menuLabel}>Logout</span>
+            </button>
+          </div>
         </div>
       </div>
     </aside>
