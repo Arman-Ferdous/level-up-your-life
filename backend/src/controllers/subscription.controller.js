@@ -37,7 +37,12 @@ export const paySubscription = asyncHandler(async (req, res) => {
     status: "success"
   });
 
-  const premiumExpiresAt = new Date(Date.now() + THIRTY_DAYS_MS);
+  const currentExpiryMs = user.premiumExpiresAt ? new Date(user.premiumExpiresAt).getTime() : 0;
+  const renewalBaseMs =
+    Number.isFinite(currentExpiryMs) && currentExpiryMs > Date.now()
+      ? currentExpiryMs
+      : Date.now();
+  const premiumExpiresAt = new Date(renewalBaseMs + THIRTY_DAYS_MS);
   user.isPremium = true;
   user.premiumExpiresAt = premiumExpiresAt;
   await user.save();
