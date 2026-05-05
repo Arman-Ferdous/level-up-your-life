@@ -130,7 +130,6 @@ export default function AiChatLauncher() {
       {!open && (
         <button type="button" className={styles.fab} onClick={() => setOpen(true)} aria-label="Open AI chat">
           <span className={styles.fabIcon}>✨</span>
-          <span className={styles.fabText}>Chat with AI</span>
         </button>
       )}
 
