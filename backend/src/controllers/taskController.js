@@ -19,7 +19,7 @@ const HABIT_STREAK_REWARDS = [
   { days: 5, points: 15 },
   { days: 10, points: 50 },
   { days: 15, points: 100 },
-  { days: 30, points: 200 }
+  { days: 30, points: 200 },
 ];
 
 function getWeekdayCode(date) {
@@ -28,11 +28,20 @@ function getWeekdayCode(date) {
 
 function hasHabitCompletionForDay(history, userId, dayKey) {
   if (!Array.isArray(history)) return false;
-  return history.some((entry) => String(entry.userId) === String(userId) && entry.dayKey === dayKey);
+  return history.some(
+    (entry) =>
+      String(entry.userId) === String(userId) && entry.dayKey === dayKey,
+  );
 }
 
-function computeHabitCurrentStreak({ reminderWeekdays, history, userId, today = new Date() }) {
-  if (!Array.isArray(reminderWeekdays) || reminderWeekdays.length === 0) return 0;
+function computeHabitCurrentStreak({
+  reminderWeekdays,
+  history,
+  userId,
+  today = new Date(),
+}) {
+  if (!Array.isArray(reminderWeekdays) || reminderWeekdays.length === 0)
+    return 0;
 
   const scheduled = new Set(reminderWeekdays);
   let streak = 0;
@@ -67,7 +76,7 @@ function normalizeTaskType(taskType, isGroupTask) {
 function normalizeTaskForResponse(task, isGroupTask) {
   return {
     ...task,
-    type: normalizeTaskType(task.type, isGroupTask)
+    type: normalizeTaskType(task.type, isGroupTask),
   };
 }
 
@@ -78,7 +87,7 @@ async function getAccessibleGroup(groupId, userId, includeMembers = false) {
 
   const group = await Group.findOne({
     _id: groupId,
-    "members.userId": userId
+    "members.userId": userId,
   })
     .select(includeMembers ? { _id: 1, members: 1 } : { _id: 1 })
     .lean();
@@ -104,7 +113,7 @@ async function buildGroupMembersPayload(group) {
     return {
       userId: memberId,
       name: usersById.get(memberId)?.name || "Unknown",
-      role: member.role || "Novice"
+      role: member.role || "Novice",
     };
   });
 }
@@ -127,14 +136,26 @@ async function ensureTaskAccess(task, userId) {
 
 export const createTask = asyncHandler(async (req, res) => {
   const userId = req.user.sub;
-  const { title, description, type, dueDate, priority, reminderWeekdays, reminderTime, groupId } = req.body;
+  const {
+    title,
+    description,
+    type,
+    dueDate,
+    priority,
+    reminderWeekdays,
+    reminderTime,
+    groupId,
+  } = req.body;
   const isGroupTask = Boolean(groupId);
 
   if (isGroupTask) {
     await getAccessibleGroup(groupId, userId);
 
     if (type === "deadline") {
-      throw new AppError("Group tasks do not support deadline type. Use one-time task with a due date.", 400);
+      throw new AppError(
+        "Group tasks do not support deadline type. Use one-time task with a due date.",
+        400,
+      );
     }
 
     if (type === "once" && !dueDate) {
@@ -150,15 +171,19 @@ export const createTask = asyncHandler(async (req, res) => {
     title,
     description: description || "",
     type: normalizedType,
-    dueDate: (normalizedType === "deadline" || (isGroupTask && normalizedType === "once")) && dueDate
-      ? new Date(dueDate)
-      : null,
-    reminderWeekdays: normalizedType === "habit" ? reminderWeekdays ?? [] : [],
+    dueDate:
+      (normalizedType === "deadline" ||
+        (isGroupTask && normalizedType === "once")) &&
+      dueDate
+        ? new Date(dueDate)
+        : null,
+    reminderWeekdays:
+      normalizedType === "habit" ? (reminderWeekdays ?? []) : [],
     reminderTime: reminderTime || null,
     priority: priority || "medium",
     completed: false,
     groupCompletionUsers: [],
-    habitCompletionHistory: []
+    habitCompletionHistory: [],
   });
 
   await createNotification(
@@ -167,7 +192,7 @@ export const createTask = asyncHandler(async (req, res) => {
     "task_reminder",
     "Task Created",
     `Your task "${task.title}" was created successfully.`,
-    task.title
+    task.title,
   );
 
   const taskResponse = normalizeTaskForResponse(task.toObject(), isGroupTask);
@@ -198,11 +223,11 @@ export const getTasks = asyncHandler(async (req, res) => {
     }
   }
 
-  const taskDocs = await Task.find(query)
-    .sort({ createdAt: -1 })
-    .lean();
+  const taskDocs = await Task.find(query).sort({ createdAt: -1 }).lean();
 
-  const tasks = taskDocs.map((task) => normalizeTaskForResponse(task, isGroupTaskQuery));
+  const tasks = taskDocs.map((task) =>
+    normalizeTaskForResponse(task, isGroupTaskQuery),
+  );
 
   if (isGroupTaskQuery && group) {
     groupMembers = await buildGroupMembersPayload(group);
@@ -214,7 +239,16 @@ export const getTasks = asyncHandler(async (req, res) => {
 export const updateTask = asyncHandler(async (req, res) => {
   const userId = req.user.sub;
   const { id } = req.params;
-  const { title, description, type, dueDate, completed, priority, reminderWeekdays, reminderTime } = req.body;
+  const {
+    title,
+    description,
+    type,
+    dueDate,
+    completed,
+    priority,
+    reminderWeekdays,
+    reminderTime,
+  } = req.body;
   const isCompletionOnlyUpdate =
     completed !== undefined &&
     title === undefined &&
@@ -237,9 +271,12 @@ export const updateTask = asyncHandler(async (req, res) => {
   if (title !== undefined) updateData.title = title;
   if (description !== undefined) updateData.description = description;
   if (type !== undefined) updateData.type = type;
-  if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
-  if (reminderWeekdays !== undefined) updateData.reminderWeekdays = reminderWeekdays;
-  if (reminderTime !== undefined) updateData.reminderTime = reminderTime || null;
+  if (dueDate !== undefined)
+    updateData.dueDate = dueDate ? new Date(dueDate) : null;
+  if (reminderWeekdays !== undefined)
+    updateData.reminderWeekdays = reminderWeekdays;
+  if (reminderTime !== undefined)
+    updateData.reminderTime = reminderTime || null;
   if (priority !== undefined) updateData.priority = priority;
   let rewardTaskCompletion = false;
 
@@ -260,7 +297,8 @@ export const updateTask = asyncHandler(async (req, res) => {
 
   const isGroupTask = Boolean(task.groupId);
   const currentType = normalizeTaskType(task.type, isGroupTask);
-  const nextType = type !== undefined ? normalizeTaskType(type, isGroupTask) : currentType;
+  const nextType =
+    type !== undefined ? normalizeTaskType(type, isGroupTask) : currentType;
 
   let group = null;
 
@@ -268,7 +306,10 @@ export const updateTask = asyncHandler(async (req, res) => {
     group = await getAccessibleGroup(task.groupId, userId, true);
 
     if (type === "deadline") {
-      throw new AppError("Group tasks do not support deadline type. Use one-time task with a due date.", 400);
+      throw new AppError(
+        "Group tasks do not support deadline type. Use one-time task with a due date.",
+        400,
+      );
     }
 
     if (nextType === "once") {
@@ -298,7 +339,8 @@ export const updateTask = asyncHandler(async (req, res) => {
 
       const currentUserId = String(userId);
       const existingIndex = history.findIndex(
-        (entry) => String(entry.userId) === currentUserId && entry.dayKey === todayKey
+        (entry) =>
+          String(entry.userId) === currentUserId && entry.dayKey === todayKey,
       );
 
       if (completed && existingIndex === -1) {
@@ -314,22 +356,39 @@ export const updateTask = asyncHandler(async (req, res) => {
         const currentStreak = computeHabitCurrentStreak({
           reminderWeekdays: task.reminderWeekdays,
           history,
-          userId
+          userId,
         });
 
-        const claimedMilestones = new Set((task.habitRewardMilestones || []).map(Number));
+        // ── Update user.streak so Badge component reflects real progress ──
+        await User.findByIdAndUpdate(userId, {
+          $max: { streak: currentStreak },
+        });
+
+        const claimedMilestones = new Set(
+          (task.habitRewardMilestones || []).map(Number),
+        );
         const newRewards = HABIT_STREAK_REWARDS.filter(
-          (milestone) => currentStreak >= milestone.days && !claimedMilestones.has(milestone.days)
+          (milestone) =>
+            currentStreak >= milestone.days &&
+            !claimedMilestones.has(milestone.days),
         );
 
         if (newRewards.length > 0) {
-          const earnedPoints = newRewards.reduce((sum, milestone) => sum + milestone.points, 0);
-          const nextMilestones = [...claimedMilestones, ...newRewards.map((milestone) => milestone.days)]
+          const earnedPoints = newRewards.reduce(
+            (sum, milestone) => sum + milestone.points,
+            0,
+          );
+          const nextMilestones = [
+            ...claimedMilestones,
+            ...newRewards.map((milestone) => milestone.days),
+          ]
             .map(Number)
             .sort((a, b) => a - b);
 
           updateData.habitRewardMilestones = nextMilestones;
-          await User.findByIdAndUpdate(userId, { $inc: { points: earnedPoints } });
+          await User.findByIdAndUpdate(userId, {
+            $inc: { points: earnedPoints },
+          });
         }
       }
 
@@ -343,7 +402,7 @@ export const updateTask = asyncHandler(async (req, res) => {
 
       const currentUserId = String(userId);
       const existingIndex = completionUsers.findIndex(
-        (entry) => String(entry.userId) === currentUserId
+        (entry) => String(entry.userId) === currentUserId,
       );
 
       if (completed && existingIndex === -1) {
@@ -354,9 +413,11 @@ export const updateTask = asyncHandler(async (req, res) => {
         completionUsers.splice(existingIndex, 1);
       }
 
-      const completedUserIdSet = new Set(completionUsers.map((entry) => String(entry.userId)));
+      const completedUserIdSet = new Set(
+        completionUsers.map((entry) => String(entry.userId)),
+      );
       const allMembersComplete = (group.members || []).every((member) =>
-        completedUserIdSet.has(String(member.userId))
+        completedUserIdSet.has(String(member.userId)),
       );
 
       updateData.groupCompletionUsers = completionUsers;
@@ -366,7 +427,12 @@ export const updateTask = asyncHandler(async (req, res) => {
       updateData.completed = completed;
       updateData.completedOn = completed ? new Date() : null;
 
-      if (completed && !existingTask.completed && !existingTask.rewarded && !isGroupTask) {
+      if (
+        completed &&
+        !existingTask.completed &&
+        !existingTask.rewarded &&
+        !isGroupTask
+      ) {
         updateData.rewarded = true;
         rewardTaskCompletion = true;
       }
@@ -387,18 +453,21 @@ export const updateTask = asyncHandler(async (req, res) => {
     }
   }
 
-  const updatedTaskDoc = await Task.findOneAndUpdate(
-    { _id: id },
-    updateData,
-    { new: true, runValidators: true }
-  );
+  const updatedTaskDoc = await Task.findOneAndUpdate({ _id: id }, updateData, {
+    new: true,
+    runValidators: true,
+  });
 
   if (rewardTaskCompletion) {
     await User.findByIdAndUpdate(userId, { $inc: { points: 10 } });
   }
 
-  const updatedTask = normalizeTaskForResponse(updatedTaskDoc.toObject(), isGroupTask);
-  const groupMembers = isGroupTask && group ? await buildGroupMembersPayload(group) : [];
+  const updatedTask = normalizeTaskForResponse(
+    updatedTaskDoc.toObject(),
+    isGroupTask,
+  );
+  const groupMembers =
+    isGroupTask && group ? await buildGroupMembersPayload(group) : [];
 
   if (!isGroupTask && completed === true && existingTask.completed !== true) {
     await createNotification(
@@ -407,7 +476,7 @@ export const updateTask = asyncHandler(async (req, res) => {
       "task_completed",
       "Task Completed",
       `Great work! You completed "${task.title}".`,
-      task.title
+      task.title,
     );
   }
 
@@ -419,7 +488,7 @@ export const updateTask = asyncHandler(async (req, res) => {
       "task_due",
       "Deadline Added",
       `A due date was set for "${task.title}".`,
-      task.title
+      task.title,
     );
   }
 

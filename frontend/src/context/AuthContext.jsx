@@ -55,8 +55,17 @@ export default function AuthProvider({ children }) {
     }
   }
 
+  async function refreshUser() {
+    try {
+      const res = await AuthAPI.me();
+      setUser(res.data.user);
+    } catch {
+      // keep current user if refresh fails
+    }
+  }
+
   return (
-    <AuthCtx.Provider value={{ user, loading, login, register, logout, syncUser }}>
+    <AuthCtx.Provider value={{ user, loading, login, register, logout, syncUser, refreshUser }}>
       {children}
     </AuthCtx.Provider>
   );

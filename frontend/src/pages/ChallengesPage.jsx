@@ -429,7 +429,12 @@ export default function ChallengesPage() {
                           {(leaderboardData?.leaderboard || challenge.leaderboard || []).map((entry) => (
                             <div key={`${entry.userId || "unknown"}-${entry.rank}`} className={styles.leaderboardRow}>
                               <span>#{entry.rank}</span>
-                              <span>{entry.name}</span>
+                              <span>
+                                {entry.name}
+                                {(entry.isPremium || entry.user?.isPremium) && (
+                                  <span className={styles.premiumBadge}>👑</span>
+                                )}
+                              </span>
                               <span>{entry.completed ? "Completed" : "Registered"}</span>
                             </div>
                           ))}
