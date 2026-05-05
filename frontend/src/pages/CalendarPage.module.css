@@ -201,11 +201,86 @@
   background: linear-gradient(180deg, #fff5f5, #fff);
 }
 
+.dayCellHectic {
+  outline: 3px solid rgba(220, 38, 38, 0.18);
+  background: linear-gradient(180deg, #fff7f7, #fff);
+}
+
+.dayCellBusy {
+  outline: 2px solid rgba(245, 158, 11, 0.12);
+  background: linear-gradient(180deg, #fffbf0, #fff);
+}
+
+.pressureLegendItem {
+  display: inline-block;
+  margin-left: 0.6rem;
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.suggestBtn {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  padding: 0.18rem 0.4rem;
+  font-size: 0.72rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.suggestModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+
+.suggestModal {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 420px;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.2);
+}
+
+.suggestModalHeader {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.suggestModalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
 .moreCount {
   display: inline-block;
   margin-top: 0.3rem;
   font-size: 0.74rem;
   color: #64748b;
+}
+
+/* Week row hover styling – highlights all cells in the hovered week */
+.weekRow {
+  display: contents;
+  cursor: pointer;
+}
+
+.weekRowHover > .dayCell,
+.weekRowHover > .dayCellEmpty {
+  background: linear-gradient(180deg, #eff6ff, #ffffff);
+  transition: background 120ms ease, transform 120ms ease;
+}
+.weekRowHover > .dayCell {
+  transform: translateY(-3px);
 }
 
 .dayValue {

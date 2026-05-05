@@ -205,7 +205,9 @@ export default function UpcomingTasksSidebar() {
   return (
     <div className={styles.sidebar}>
       <div className={styles.header}>
-        <h3 className={styles.title}>Tasks</h3>
+        <Link to="/tasks" className={styles.titleLink} aria-label="Open tasks page">
+          <h3 className={styles.title}>Tasks</h3>
+        </Link>
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
