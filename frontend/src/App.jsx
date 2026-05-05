@@ -15,15 +15,12 @@ import AvatarShopPage from "./pages/AvatarShop";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import GroupsPage from "./pages/GroupsPage";
 import CalendarPage from "./pages/CalendarPage";
-<<<<<<< HEAD
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ThemeSelectionPage from "./pages/ThemeSelectionPage";
-=======
 import AiChatLauncher from "./components/AiChatLauncher";
 import SubscriptionPage from "./pages/SubscriptionPage";
 import AdminRevenuePage from "./pages/AdminRevenuePage";
 import WeeklyReviewPage from "./pages/WeeklyReviewPage";
->>>>>>> main
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -49,7 +46,6 @@ function App() {
     <NotificationProvider>
       <MoodProvider>
         <Routes>
-<<<<<<< HEAD
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
         <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
@@ -64,7 +60,6 @@ function App() {
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/settings/theme" element={<ProtectedRoute><ThemeSelectionPage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
-=======
           <Route
             path="/login"
             element={
@@ -186,7 +181,6 @@ function App() {
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
->>>>>>> main
         </Routes>
       </MoodProvider>
     </NotificationProvider>

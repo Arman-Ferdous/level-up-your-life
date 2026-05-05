@@ -13,13 +13,10 @@ import { taskRouter } from "./routes/taskRoutes.js";
 import { aiRouter } from "./routes/ai.routes.js";
 import { notificationRouter } from "./routes/notificationRoutes.js";
 import { groupRouter } from "./routes/group.routes.js";
-<<<<<<< HEAD
 import leaderboardRoutes from "./routes/leaderboardRoutes.js";
-=======
 import { avatarRouter } from "./routes/avatarRoutes.js";
 import { rewardsRouter } from "./routes/rewards.routes.js";
 import { subscriptionRouter } from "./routes/subscription.routes.js";
->>>>>>> main
 import { notFound, errorHandler } from "./middlewares/error.middleware.js";
 
 export function createApp() {
@@ -64,14 +61,11 @@ export function createApp() {
   app.use("/api/challenges", challengeRouter);
   app.use("/api/notifications", notificationRouter);
   app.use("/api/groups", groupRouter);
-<<<<<<< HEAD
   app.use("/api/leaderboard", leaderboardRoutes);
   app.use("/api/notifications", notificationRouter);
-=======
   app.use("/api/avatars", avatarRouter);
   app.use("/api/rewards", rewardsRouter);
   app.use("/api/subscription", subscriptionRouter);
->>>>>>> main
 
   app.use(notFound);
   app.use(errorHandler);
