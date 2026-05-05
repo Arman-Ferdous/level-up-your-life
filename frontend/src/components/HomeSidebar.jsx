@@ -74,6 +74,18 @@ export default function HomeSidebar() {
               <Link to="/admin/users" className={styles.footerLink}>
                 Admin
               </Link>
+            )}
+            <button type="button" className={styles.logoutButton} onClick={handleLogout}>
+              Logout
+            </button>
+            <Link
+              to="/settings/theme"
+              className={styles.footerLink}
+              style={{ marginTop: "0.5rem", display: "block", textAlign: "center" }}
+            >
+              🎨 Theme
+            </Link>
+          </div>
               <Link to="/admin/revenue" className={styles.footerLink}>
                 Revenue
               </Link>
