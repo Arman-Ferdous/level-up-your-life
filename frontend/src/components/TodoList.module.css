@@ -357,6 +357,16 @@
   color: #0f172a;
 }
 
+.premiumName {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.premiumBadge {
+  margin-left: 0.25rem;
+  font-size: 0.75rem;
+}
+
 .habitHistoryDays {
   display: grid;
   grid-template-columns: repeat(15, minmax(0, 1fr));

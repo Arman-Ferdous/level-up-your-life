@@ -68,7 +68,15 @@ export const login = asyncHandler(async (req, res) => {
   const fullUser = await User.findById(user._id).populate("selectedAvatar");
 
   res.cookie("refreshToken", refreshToken, refreshCookieOptions());
-  res.json({ user: userDto(fullUser), accessToken });
+  const isPremium = await fullUser.isPremiumActive();
+  res.json({
+    user: {
+      ...userDto(fullUser),
+      isPremium,
+      premiumExpiresAt: fullUser.premiumExpiresAt
+    },
+    accessToken
+  });
 });
 
 export const logout = asyncHandler(async (req, res) => {
@@ -116,5 +124,12 @@ export const refresh = asyncHandler(async (req, res) => {
 export const me = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.sub).populate("selectedAvatar");
   if (!user) throw new AppError("User not found", 404);
-  res.json({ user: userDto(user) });
+  const isPremium = await user.isPremiumActive();
+  res.json({
+    user: {
+      ...userDto(user),
+      isPremium,
+      premiumExpiresAt: user.premiumExpiresAt
+    }
+  });
 });

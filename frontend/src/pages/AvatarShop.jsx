@@ -12,6 +12,7 @@ export default function AvatarShopPage() {
   const [error, setError] = useState("");
   const [buyingId, setBuyingId] = useState("");
   const [equipingId, setEquipingId] = useState("");
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   async function loadAvatars() {
     setLoading(true);
@@ -36,6 +37,12 @@ export default function AvatarShopPage() {
   }, []);
 
   async function handleBuy(avatarId) {
+    const avatar = avatars.find((item) => item._id === avatarId);
+    if (avatar?.isPremiumOnly && !user?.isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
+
     setBuyingId(avatarId);
     setError("");
     try {
@@ -46,7 +53,11 @@ export default function AvatarShopPage() {
         syncUser({ ...user, points: res.data.points });
       }
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to buy avatar");
+      if (err?.response?.data?.premiumRequired) {
+        setShowPremiumModal(true);
+      } else {
+        setError(err?.response?.data?.message || "Failed to buy avatar");
+      }
     } finally {
       setBuyingId("");
     }
@@ -107,33 +118,41 @@ export default function AvatarShopPage() {
             <h2 className={styles.sectionTitle}>🍎 Fruits</h2>
             <p className={styles.sectionDesc}>5 points each</p>
             <div className={styles.grid}>
-              {groupedByCategory.fruit.map(avatar => (
-                <div key={avatar._id} className={styles.avatarCard}>
-                  <div className={styles.avatarDisplay}>
-                    <span className={styles.emoji}>{avatar.emoji}</span>
+              {groupedByCategory.fruit.map((avatar) => {
+                const premiumLocked = avatar.isPremiumOnly && !user?.isPremium;
+                return (
+                  <div
+                    key={avatar._id}
+                    className={`${styles.avatarCard} ${avatar.isPremiumOnly ? styles.premiumOnly : ""} ${premiumLocked ? styles.premiumLocked : ""}`}
+                  >
+                    {avatar.isPremiumOnly && <span className={styles.premiumBadge}>👑 Premium</span>}
+                    {premiumLocked && <div className={styles.lockOverlay}>🔒</div>}
+                    <div className={styles.avatarDisplay}>
+                      <span className={styles.emoji}>{avatar.emoji}</span>
+                    </div>
+                    <h3 className={styles.name}>{avatar.name}</h3>
+                    <p className={styles.desc}>{avatar.description}</p>
+                    <div className={styles.cost}>{avatar.cost} pts</div>
+                    {isOwned(avatar._id) ? (
+                      <button
+                        className={`${styles.btn} ${isEquipped(avatar._id) ? styles.equipped : styles.equip}`}
+                        onClick={() => handleEquip(avatar._id)}
+                        disabled={equipingId === avatar._id || isEquipped(avatar._id)}
+                      >
+                        {isEquipped(avatar._id) ? "✓ Equipped" : (equipingId === avatar._id ? "Equipping..." : "Equip")}
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.btn}
+                        onClick={() => handleBuy(avatar._id)}
+                        disabled={buyingId === avatar._id || (user?.points || 0) < avatar.cost}
+                      >
+                        {buyingId === avatar._id ? "Buying..." : "Buy"}
+                      </button>
+                    )}
                   </div>
-                  <h3 className={styles.name}>{avatar.name}</h3>
-                  <p className={styles.desc}>{avatar.description}</p>
-                  <div className={styles.cost}>{avatar.cost} pts</div>
-                  {isOwned(avatar._id) ? (
-                    <button
-                      className={`${styles.btn} ${isEquipped(avatar._id) ? styles.equipped : styles.equip}`}
-                      onClick={() => handleEquip(avatar._id)}
-                      disabled={equipingId === avatar._id || isEquipped(avatar._id)}
-                    >
-                      {isEquipped(avatar._id) ? "✓ Equipped" : (equipingId === avatar._id ? "Equipping..." : "Equip")}
-                    </button>
-                  ) : (
-                    <button
-                      className={styles.btn}
-                      onClick={() => handleBuy(avatar._id)}
-                      disabled={buyingId === avatar._id || (user?.points || 0) < avatar.cost}
-                    >
-                      {buyingId === avatar._id ? "Buying..." : "Buy"}
-                    </button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
@@ -142,33 +161,41 @@ export default function AvatarShopPage() {
             <h2 className={styles.sectionTitle}>🌻 Flowers</h2>
             <p className={styles.sectionDesc}>5 points each</p>
             <div className={styles.grid}>
-              {groupedByCategory.flower.map(avatar => (
-                <div key={avatar._id} className={styles.avatarCard}>
-                  <div className={styles.avatarDisplay}>
-                    <span className={styles.emoji}>{avatar.emoji}</span>
+              {groupedByCategory.flower.map((avatar) => {
+                const premiumLocked = avatar.isPremiumOnly && !user?.isPremium;
+                return (
+                  <div
+                    key={avatar._id}
+                    className={`${styles.avatarCard} ${avatar.isPremiumOnly ? styles.premiumOnly : ""} ${premiumLocked ? styles.premiumLocked : ""}`}
+                  >
+                    {avatar.isPremiumOnly && <span className={styles.premiumBadge}>👑 Premium</span>}
+                    {premiumLocked && <div className={styles.lockOverlay}>🔒</div>}
+                    <div className={styles.avatarDisplay}>
+                      <span className={styles.emoji}>{avatar.emoji}</span>
+                    </div>
+                    <h3 className={styles.name}>{avatar.name}</h3>
+                    <p className={styles.desc}>{avatar.description}</p>
+                    <div className={styles.cost}>{avatar.cost} pts</div>
+                    {isOwned(avatar._id) ? (
+                      <button
+                        className={`${styles.btn} ${isEquipped(avatar._id) ? styles.equipped : styles.equip}`}
+                        onClick={() => handleEquip(avatar._id)}
+                        disabled={equipingId === avatar._id || isEquipped(avatar._id)}
+                      >
+                        {isEquipped(avatar._id) ? "✓ Equipped" : (equipingId === avatar._id ? "Equipping..." : "Equip")}
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.btn}
+                        onClick={() => handleBuy(avatar._id)}
+                        disabled={buyingId === avatar._id || (user?.points || 0) < avatar.cost}
+                      >
+                        {buyingId === avatar._id ? "Buying..." : "Buy"}
+                      </button>
+                    )}
                   </div>
-                  <h3 className={styles.name}>{avatar.name}</h3>
-                  <p className={styles.desc}>{avatar.description}</p>
-                  <div className={styles.cost}>{avatar.cost} pts</div>
-                  {isOwned(avatar._id) ? (
-                    <button
-                      className={`${styles.btn} ${isEquipped(avatar._id) ? styles.equipped : styles.equip}`}
-                      onClick={() => handleEquip(avatar._id)}
-                      disabled={equipingId === avatar._id || isEquipped(avatar._id)}
-                    >
-                      {isEquipped(avatar._id) ? "✓ Equipped" : (equipingId === avatar._id ? "Equipping..." : "Equip")}
-                    </button>
-                  ) : (
-                    <button
-                      className={styles.btn}
-                      onClick={() => handleBuy(avatar._id)}
-                      disabled={buyingId === avatar._id || (user?.points || 0) < avatar.cost}
-                    >
-                      {buyingId === avatar._id ? "Buying..." : "Buy"}
-                    </button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
@@ -177,34 +204,42 @@ export default function AvatarShopPage() {
             <h2 className={styles.sectionTitle}>🪆 Dolls & Friends</h2>
             <p className={styles.sectionDesc}>15 points each - Rare</p>
             <div className={styles.grid}>
-              {groupedByCategory.doll.map(avatar => (
-                <div key={avatar._id} className={`${styles.avatarCard} ${styles.rare}`}>
-                  <div className={styles.rarity}>Rare</div>
-                  <div className={styles.avatarDisplay}>
-                    <span className={styles.emoji}>{avatar.emoji}</span>
+              {groupedByCategory.doll.map((avatar) => {
+                const premiumLocked = avatar.isPremiumOnly && !user?.isPremium;
+                return (
+                  <div
+                    key={avatar._id}
+                    className={`${styles.avatarCard} ${styles.rare} ${avatar.isPremiumOnly ? styles.premiumOnly : ""} ${premiumLocked ? styles.premiumLocked : ""}`}
+                  >
+                    <div className={styles.rarity}>Rare</div>
+                    {avatar.isPremiumOnly && <span className={styles.premiumBadge}>👑 Premium</span>}
+                    {premiumLocked && <div className={styles.lockOverlay}>🔒</div>}
+                    <div className={styles.avatarDisplay}>
+                      <span className={styles.emoji}>{avatar.emoji}</span>
+                    </div>
+                    <h3 className={styles.name}>{avatar.name}</h3>
+                    <p className={styles.desc}>{avatar.description}</p>
+                    <div className={styles.cost}>{avatar.cost} pts</div>
+                    {isOwned(avatar._id) ? (
+                      <button
+                        className={`${styles.btn} ${isEquipped(avatar._id) ? styles.equipped : styles.equip}`}
+                        onClick={() => handleEquip(avatar._id)}
+                        disabled={equipingId === avatar._id || isEquipped(avatar._id)}
+                      >
+                        {isEquipped(avatar._id) ? "✓ Equipped" : (equipingId === avatar._id ? "Equipping..." : "Equip")}
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.btn}
+                        onClick={() => handleBuy(avatar._id)}
+                        disabled={buyingId === avatar._id || (user?.points || 0) < avatar.cost}
+                      >
+                        {buyingId === avatar._id ? "Buying..." : "Buy"}
+                      </button>
+                    )}
                   </div>
-                  <h3 className={styles.name}>{avatar.name}</h3>
-                  <p className={styles.desc}>{avatar.description}</p>
-                  <div className={styles.cost}>{avatar.cost} pts</div>
-                  {isOwned(avatar._id) ? (
-                    <button
-                      className={`${styles.btn} ${isEquipped(avatar._id) ? styles.equipped : styles.equip}`}
-                      onClick={() => handleEquip(avatar._id)}
-                      disabled={equipingId === avatar._id || isEquipped(avatar._id)}
-                    >
-                      {isEquipped(avatar._id) ? "✓ Equipped" : (equipingId === avatar._id ? "Equipping..." : "Equip")}
-                    </button>
-                  ) : (
-                    <button
-                      className={styles.btn}
-                      onClick={() => handleBuy(avatar._id)}
-                      disabled={buyingId === avatar._id || (user?.points || 0) < avatar.cost}
-                    >
-                      {buyingId === avatar._id ? "Buying..." : "Buy"}
-                    </button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
@@ -213,37 +248,66 @@ export default function AvatarShopPage() {
             <h2 className={styles.sectionTitle}>🚀 Vehicles</h2>
             <p className={styles.sectionDesc}>20-30 points - Epic & Legendary</p>
             <div className={styles.grid}>
-              {groupedByCategory.car.map(avatar => (
-                <div key={avatar._id} className={`${styles.avatarCard} ${avatar.rarity === "legendary" ? styles.legendary : styles.epic}`}>
-                  <div className={styles.rarity}>{avatar.rarity}</div>
-                  <div className={styles.avatarDisplay}>
-                    <span className={styles.emoji}>{avatar.emoji}</span>
+              {groupedByCategory.car.map((avatar) => {
+                const premiumLocked = avatar.isPremiumOnly && !user?.isPremium;
+                return (
+                  <div
+                    key={avatar._id}
+                    className={`${styles.avatarCard} ${avatar.rarity === "legendary" ? styles.legendary : styles.epic} ${avatar.isPremiumOnly ? styles.premiumOnly : ""} ${premiumLocked ? styles.premiumLocked : ""}`}
+                  >
+                    <div className={styles.rarity}>{avatar.rarity}</div>
+                    {avatar.isPremiumOnly && <span className={styles.premiumBadge}>👑 Premium</span>}
+                    {premiumLocked && <div className={styles.lockOverlay}>🔒</div>}
+                    <div className={styles.avatarDisplay}>
+                      <span className={styles.emoji}>{avatar.emoji}</span>
+                    </div>
+                    <h3 className={styles.name}>{avatar.name}</h3>
+                    <p className={styles.desc}>{avatar.description}</p>
+                    <div className={styles.cost}>{avatar.cost} pts</div>
+                    {isOwned(avatar._id) ? (
+                      <button
+                        className={`${styles.btn} ${isEquipped(avatar._id) ? styles.equipped : styles.equip}`}
+                        onClick={() => handleEquip(avatar._id)}
+                        disabled={equipingId === avatar._id || isEquipped(avatar._id)}
+                      >
+                        {isEquipped(avatar._id) ? "✓ Equipped" : (equipingId === avatar._id ? "Equipping..." : "Equip")}
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.btn}
+                        onClick={() => handleBuy(avatar._id)}
+                        disabled={buyingId === avatar._id || (user?.points || 0) < avatar.cost}
+                      >
+                        {buyingId === avatar._id ? "Buying..." : "Buy"}
+                      </button>
+                    )}
                   </div>
-                  <h3 className={styles.name}>{avatar.name}</h3>
-                  <p className={styles.desc}>{avatar.description}</p>
-                  <div className={styles.cost}>{avatar.cost} pts</div>
-                  {isOwned(avatar._id) ? (
-                    <button
-                      className={`${styles.btn} ${isEquipped(avatar._id) ? styles.equipped : styles.equip}`}
-                      onClick={() => handleEquip(avatar._id)}
-                      disabled={equipingId === avatar._id || isEquipped(avatar._id)}
-                    >
-                      {isEquipped(avatar._id) ? "✓ Equipped" : (equipingId === avatar._id ? "Equipping..." : "Equip")}
-                    </button>
-                  ) : (
-                    <button
-                      className={styles.btn}
-                      onClick={() => handleBuy(avatar._id)}
-                      disabled={buyingId === avatar._id || (user?.points || 0) < avatar.cost}
-                    >
-                      {buyingId === avatar._id ? "Buying..." : "Buy"}
-                    </button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         </>
+      )}
+
+      {showPremiumModal && (
+        <div className={styles.modalBackdrop} role="dialog" aria-modal="true">
+          <div className={styles.modalCard}>
+            <div className={styles.modalTitle}>👑 Premium Item</div>
+            <p className={styles.modalText}>Subscribe to unlock this avatar.</p>
+            <div className={styles.modalActions}>
+              <a className={styles.modalPrimary} href="/subscription">
+                Go to Subscription
+              </a>
+              <button
+                type="button"
+                className={styles.modalSecondary}
+                onClick={() => setShowPremiumModal(false)}
+              >
+                Maybe later
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -91,6 +91,20 @@
   background: rgba(245, 158, 11, 0.18);
 }
 
+.premiumTag {
+  margin-top: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(250, 204, 21, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 .closeButton {
   border: 0;
   background: rgba(255, 255, 255, 0.14);
@@ -177,6 +191,76 @@
   display: grid;
   gap: 0.75rem;
   padding: 0 1rem 1rem;
+}
+
+.usageText {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.nudgeBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.22));
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #f8fafc;
+}
+
+.nudgeText {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.nudgeButton {
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  background: #f59e0b;
+  color: #0f172a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(245, 158, 11, 0.35);
+}
+
+.limitCard {
+  margin: 0 1rem 1.1rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  display: grid;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+.limitTitle {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.limitSubtitle {
+  margin: 0;
+  font-size: 0.82rem;
+  color: rgba(248, 250, 252, 0.78);
+}
+
+.limitButton {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #0f172a;
+  font-weight: 800;
+  text-decoration: none;
 }
 
 .input {

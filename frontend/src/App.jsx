@@ -16,6 +16,8 @@ import AdminUsersPage from "./pages/AdminUsersPage";
 import GroupsPage from "./pages/GroupsPage";
 import CalendarPage from "./pages/CalendarPage";
 import AiChatLauncher from "./components/AiChatLauncher";
+import SubscriptionPage from "./pages/SubscriptionPage";
+import AdminRevenuePage from "./pages/AdminRevenuePage";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -52,7 +54,9 @@ function App() {
           <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
           <Route path="/mood" element={<ProtectedRoute><MoodPage /></ProtectedRoute>} />
           <Route path="/expense-tracker" element={<ProtectedRoute><ExpenseTrackerPage /></ProtectedRoute>} />
+          <Route path="/subscription" element={<ProtectedRoute><SubscriptionPage /></ProtectedRoute>} />
           <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
+          <Route path="/admin/revenue" element={<AdminRoute><AdminRevenuePage /></AdminRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <AiChatLauncher />

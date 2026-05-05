@@ -28,6 +28,7 @@ export default function Navbar() {
                 <Link to="/tasks" style={styles.link}>Tasks</Link>
                 <Link to="/challenges" style={styles.link}>Challenges</Link>
                 <Link to="/avatar-shop" style={styles.link}>Avatar Shop</Link>
+                <Link to="/subscription" style={styles.link}>👑 Subscription</Link>
                 <Link to="/groups" style={styles.link}>Groups</Link>
                 <Link to="/calendar" style={styles.link}>Calendar</Link>
                 <Link to="/mood" style={styles.link}>Mood</Link>
@@ -35,7 +36,12 @@ export default function Navbar() {
               </>
             )}
             <span style={styles.points}>Points: {user?.points ?? 0}</span>
-            {user.role === "admin" && <Link to="/admin/users" style={styles.link}>Admin</Link>}
+            {user.role === "admin" && (
+              <>
+                <Link to="/admin/users" style={styles.link}>Admin</Link>
+                <Link to="/admin/revenue" style={styles.link}>Revenue</Link>
+              </>
+            )}
             <NotificationPanel />
             <button onClick={handleLogout} style={styles.logoutBtn}>
               Logout

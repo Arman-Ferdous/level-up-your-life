@@ -18,9 +18,26 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Avatar",
       default: null
-    }
+    },
+    adminBalance: { type: Number, default: 0 },
+    isPremium: { type: Boolean, default: false },
+    premiumExpiresAt: { type: Date, default: null },
+    lastLoginBonusAt: { type: Date, default: null },
+    aiMessagesUsedToday: { type: Number, default: 0 },
+    aiMessagesResetAt: { type: Date, default: null }
   },
   { timestamps: true }
 );
+
+userSchema.methods.isPremiumActive = async function () {
+  if (!this.isPremium) return false;
+
+  const expiresAt = this.premiumExpiresAt?.getTime() ?? 0;
+  if (expiresAt > Date.now()) return true;
+
+  this.isPremium = false;
+  await this.save();
+  return false;
+};
 
 export const User = mongoose.model("User", userSchema);

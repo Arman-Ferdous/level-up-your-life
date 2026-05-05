@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/axios";
+import { RewardsAPI } from "../api/rewards.api";
 import { useAuth } from "../context/AuthContext";
 import HomeSidebar from "../components/HomeSidebar";
 import Badge from "../components/Badge";
@@ -11,6 +12,7 @@ import styles from "./Home.module.css";
 import { TransactionAPI } from "../api/transaction.api";
 import { ChallengeAPI } from "../api/challenge.api";
 import AiGuide from "../components/AiGuide";
+import ToastStack from "../components/ToastStack";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -20,13 +22,17 @@ function getGreeting() {
 }
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, syncUser } = useAuth();
   const [todayMood, setTodayMood] = useState(null);
   const [moodLoading, setMoodLoading] = useState(true);
   const [balanceLoading, setBalanceLoading] = useState(true);
   const [balance, setBalance] = useState(null);
   const [monthlyChallenge, setMonthlyChallenge] = useState(null);
   const [monthlyChallengeLoading, setMonthlyChallengeLoading] = useState(true);
+  const [dailyStatus, setDailyStatus] = useState(null);
+  const [dailyLoading, setDailyLoading] = useState(false);
+  const [dailyClaiming, setDailyClaiming] = useState(false);
+  const [toasts, setToasts] = useState([]);
 
   useEffect(() => {
     const today = new Date();
@@ -64,6 +70,75 @@ export default function Home() {
       .catch(() => setMonthlyChallenge(null))
       .finally(() => setMonthlyChallengeLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (!user?.isPremium) {
+      setDailyStatus(null);
+      return;
+    }
+
+    let active = true;
+    setDailyLoading(true);
+
+    RewardsAPI.getDailyStatus()
+      .then((res) => {
+        if (active) setDailyStatus(res.data);
+      })
+      .catch(() => {
+        if (active) setDailyStatus(null);
+      })
+      .finally(() => {
+        if (active) setDailyLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [user?.isPremium]);
+
+  const notify = (message, type = "info") => {
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const toast = { id, message, type };
+
+    setToasts((prev) => [...prev, toast]);
+
+    window.setTimeout(() => {
+      setToasts((prev) => prev.filter((item) => item.id !== id));
+    }, 3000);
+  };
+
+  const dismissToast = (id) => {
+    setToasts((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  async function handleClaimDailyBonus() {
+    if (dailyClaiming) return;
+    setDailyClaiming(true);
+    try {
+      const res = await RewardsAPI.claimDailyBonus();
+      if (res.data?.success) {
+        notify("+50 coins!", "success");
+        if (user) {
+          syncUser({ ...user, points: res.data.newBalance });
+        }
+        setDailyStatus({
+          canClaim: false,
+          alreadyClaimedToday: true,
+          isPremium: true
+        });
+      } else {
+        setDailyStatus({
+          canClaim: false,
+          alreadyClaimedToday: true,
+          isPremium: true
+        });
+      }
+    } catch {
+      notify("Could not claim daily bonus.", "error");
+    } finally {
+      setDailyClaiming(false);
+    }
+  }
 
   if (!user) return null;
 
@@ -229,6 +304,43 @@ export default function Home() {
             </article>
 
             <div className={styles.quickLinks}>
+              {user?.isPremium ? (
+                <article className={styles.bonusCard}>
+                  <div>
+                    <p className={styles.cardEyebrow}>Daily Bonus</p>
+                    <h3 className={styles.cardTitle}>Claim 50 coins</h3>
+                    <p className={styles.bonusText}>Premium perk for checking in each day.</p>
+                  </div>
+                  {dailyLoading ? (
+                    <span className={styles.bonusStatus}>Checking...</span>
+                  ) : dailyStatus?.alreadyClaimedToday ? (
+                    <button type="button" className={styles.bonusButton} disabled>
+                      ✓ Claimed — Come back tomorrow
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className={styles.bonusButton}
+                      onClick={handleClaimDailyBonus}
+                      disabled={dailyClaiming}
+                    >
+                      {dailyClaiming ? "Claiming..." : "Claim Daily Bonus 🎁 (+50 coins)"}
+                    </button>
+                  )}
+                </article>
+              ) : (
+                <article className={`${styles.bonusCard} ${styles.bonusLocked}`}>
+                  <div>
+                    <p className={styles.cardEyebrow}>Daily Bonus</p>
+                    <h3 className={styles.cardTitle}>🔒 Daily Bonus — Premium perk</h3>
+                    <p className={styles.bonusText}>Upgrade to unlock 50 coins every day.</p>
+                  </div>
+                  <Link to="/subscription" className={styles.bonusLink}>
+                    Upgrade
+                  </Link>
+                </article>
+              )}
+
               <div className={styles.balanceCard}>
                 <div>
                   <p className={styles.cardEyebrow}>Current balance</p>
@@ -302,6 +414,7 @@ export default function Home() {
           </div>
         </section>
       </div>
+      <ToastStack toasts={toasts} onClose={dismissToast} />
     </main>
   );
 }

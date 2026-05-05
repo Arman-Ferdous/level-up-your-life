@@ -10,6 +10,7 @@ const MENU_ITEMS = [
   { to: "/tasks", label: "Tasks", icon: "✓" },
   { to: "/challenges", label: "Challenges", icon: "🏆" },
   { to: "/avatar-shop", label: "Avatar Shop", icon: "🎭" },
+  { to: "/subscription", label: "Subscription", icon: "👑" },
   { to: "/groups", label: "Groups", icon: "👥" },
   { to: "/calendar", label: "Calendar", icon: "📅" },
   { to: "/mood", label: "Mood", icon: "🧠" },
@@ -70,9 +71,14 @@ export default function HomeSidebar() {
 
           <div className={styles.footerActions}>
             {user?.role === "admin" && (
-              <Link to="/admin/users" className={styles.footerLink}>
-                Admin
-              </Link>
+              <>
+                <Link to="/admin/users" className={styles.footerLink}>
+                  Admin
+                </Link>
+                <Link to="/admin/revenue" className={styles.footerLink}>
+                  Revenue
+                </Link>
+              </>
             )}
             <button type="button" className={styles.logoutButton} onClick={handleLogout}>
               Logout
