@@ -14,6 +14,7 @@ export default function ThemeSelectionPage() {
       </div>
 
       <div className="ts-list">
+      <div className="ts-grid">
         {Object.entries(themes).map(([key, theme]) => (
           <button
             key={key}
@@ -40,6 +41,49 @@ export default function ThemeSelectionPage() {
                   <div className="ts-preview-bar ts-preview-bar--primary" style={{ background: theme.vars["--primary"] }} />
                   <div className="ts-preview-bar" style={{ background: theme.vars["--border"] }} />
                   <div className="ts-preview-bar ts-preview-bar--short" style={{ background: theme.vars["--border"] }} />
+              "--card-muted": theme.vars["--text-muted"],
+              "--card-border": theme.vars["--border"],
+              "--card-primary": theme.vars["--primary"],
+              "--card-bg-main": theme.vars["--bg"],
+            }}
+          >
+            {/* Mini preview */}
+            <div
+              className="ts-preview"
+              style={{ background: theme.vars["--bg"] }}
+            >
+              <div
+                className="ts-preview-sidebar"
+                style={{ background: theme.vars["--sidebar-bg"] }}
+              >
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="ts-preview-item"
+                    style={{ background: theme.vars["--border"] }}
+                  />
+                ))}
+              </div>
+              <div className="ts-preview-main">
+                <div
+                  className="ts-preview-card"
+                  style={{
+                    background: theme.vars["--card"],
+                    borderColor: theme.vars["--border"],
+                  }}
+                >
+                  <div
+                    className="ts-preview-bar ts-preview-bar--primary"
+                    style={{ background: theme.vars["--primary"] }}
+                  />
+                  <div
+                    className="ts-preview-bar"
+                    style={{ background: theme.vars["--border"] }}
+                  />
+                  <div
+                    className="ts-preview-bar ts-preview-bar--short"
+                    style={{ background: theme.vars["--border"] }}
+                  />
                 </div>
               </div>
             </div>
@@ -52,9 +96,22 @@ export default function ThemeSelectionPage() {
                 {themeKey === key && <span className="ts-active-tag">Active</span>}
               </div>
               {themeKey === key && <span className="ts-check">✓</span>}
+              <span className="ts-name">{theme.name}</span>
+              {themeKey === key && (
+                <span className="ts-check">✓</span>
+              )}
             </div>
           </button>
         ))}
+      </div>
+
+      <div className="ts-current">
+        <p>
+          Currently using:{" "}
+          <strong>
+            {themes[themeKey].icon} {themes[themeKey].name}
+          </strong>
+        </p>
       </div>
     </div>
   );

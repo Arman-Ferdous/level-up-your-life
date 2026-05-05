@@ -21,6 +21,8 @@ import AiChatLauncher from "./components/AiChatLauncher";
 import SubscriptionPage from "./pages/SubscriptionPage";
 import AdminRevenuePage from "./pages/AdminRevenuePage";
 import WeeklyReviewPage from "./pages/WeeklyReviewPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
+import ThemeSelectionPage from "./pages/ThemeSelectionPage";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -178,6 +180,22 @@ function App() {
               <AdminRoute>
                 <AdminRevenuePage />
               </AdminRoute>
+            }
+          />
+          <Route
+            path="/leaderboard"
+            element={
+              <ProtectedRoute>
+                <LeaderboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/theme"
+            element={
+              <ProtectedRoute>
+                <ThemeSelectionPage />
+              </ProtectedRoute>
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
